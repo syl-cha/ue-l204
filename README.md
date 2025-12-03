@@ -64,7 +64,7 @@ erDiagram
         INT etudiant_id FK
         INT cours_id FK
         TIMESTAMP date_inscription
-        DECIMAL(4,2) note
+        DECIMAL note "4,2"
         ENUM statut "en_attente, valide, refuse, abandonne"
         BOOLEAN valide
     }
@@ -86,7 +86,7 @@ erDiagram
     %% Relations
     %% ---------------------------------------------------------
     
-    %% Héritage (1 utilisateur peut être 0 ou 1 étudiant/enseignant)
+    %% Héritage
     UTILISATEUR ||--o| ENSEIGNANT : "est spécialisé en"
     UTILISATEUR ||--o| ETUDIANT : "est spécialisé en"
 
