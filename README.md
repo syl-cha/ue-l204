@@ -64,7 +64,7 @@ erDiagram
         INT etudiant_id FK
         INT cours_id FK
         TIMESTAMP date_inscription
-        DECIMAL note "4,2"
+        DECIMAL note "4.2"
         ENUM statut "en_attente, valide, refuse, abandonne"
         BOOLEAN valide
     }
@@ -101,4 +101,6 @@ erDiagram
     %% Auto-jointure pour les prérequis
     COURS ||--o{ PREREQUIS : "requiert"
     COURS ||--o{ PREREQUIS : "est requis pour"
+    
+    %% Fin du diagramme (nécessaire pour éviter les erreurs de parsing)
     ```
