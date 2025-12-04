@@ -56,7 +56,7 @@ function isConnecte(): bool {
 
 ## Difficultés rencontrées / pas encore résolues
 
-- Prise en main de la bdd avec PDO : configuration PDO différente selon Windows / Linux, activation des extensions PDO MySQL ou du serveur Apache - Résolue
+- Prise en main de la BDD avec PDO : configuration PDO différente selon Windows / Linux, activation des extensions PDO MySQL ou du serveur Apache - Résolue
 
 - Problème : les mots de passe fournis dans la BDD ne correspondaient pas au hash réel de "123456". Nous avons fait des tests avec password_hash() et password_verify() → découverte que le hash était invalide → remplacement des mots de passe hachés directement en BDD. - Résolue
 
