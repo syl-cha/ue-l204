@@ -1,13 +1,32 @@
--- -----------------------------------------------------------------
---                Base de données : universite
--- -----------------------------------------------------------------
+-- requêtes nécessaires à la création de la base de donnée universite
+-- v 0.2
+-- 2025-12-03
 
--- TABLES
+-- ----------------------------------------------------------------------------
+--                  NETTOYAGE
+-- ----------------------------------------------------------------------------
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS inscription;
+DROP TABLE IF EXISTS enseigne;
+DROP TABLE IF EXISTS prerequis;
+DROP TABLE IF EXISTS etudiant;
+DROP TABLE IF EXISTS enseignant;
+DROP TABLE IF EXISTS cours;
+DROP TABLE IF EXISTS utilisateur;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------------------------------------------------------
+--                  CRÉATION DES TABLES
+-- ----------------------------------------------------------------------------
 
 CREATE TABLE utilisateur (
   id INT PRIMARY KEY AUTO_INCREMENT,
   login VARCHAR(255) UNIQUE NOT NULL,
   mot_de_passe VARCHAR(255) NOT NULL,
+  mot_de_passe_provisoire BOOLEAN DEFAULT TRUE,
   nom VARCHAR(100) NOT NULL,
   prenom VARCHAR(100) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
@@ -46,8 +65,13 @@ CREATE TABLE cours (
   actif BOOLEAN DEFAULT TRUE
 );
 
--- TABLES DE LIAISON
+-- ----------------------------------------------------------------------------
+--                  TABLES DE LIAISON
+-- ----------------------------------------------------------------------------
 
+-- fonctionnement d'un prérequis :
+-- l'ID d'un coursA 
+-- suivi de l'ID d'un coursB nécessaire pour suivre coursA
 CREATE TABLE prerequis (
   cours_id INT NOT NULL,
   prerequis_cours_id INT NOT NULL,
