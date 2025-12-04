@@ -118,14 +118,25 @@
 {\titlefont \fontsize{40pt}{36pt}\selectfont Rapport intermédiaire}\\
 \vspace*{2cm}
 % \includegraphics[width=0.9\linewidth]{hero_section.png}}
-\author{Sylvain \textsl{Chambon},\\%
-Jade \textsl{Faroux},\\%
-Jeanne \textsl{Salvadori},\\ %
-Zoé \textsl{Van De Moortele}}
+\author{Sylvain Chambon,\\%
+Jade Faroux,\\%
+Jeanne Salvadori,\\ %
+Zoé Van De Moortele}
 \date{\today}}
 \begin{document}
 
 \maketitle
+
+\clearpage
+
+\tableofcontents
+
+\tcblistof[\section*]{sql}{Tables des requêtes SQL}
+
+\tcblistof[\section*]{php}{Tables des scripts PHP}
+
+
+\clearpage
 
 \section{La méthode de travail}
 
@@ -430,45 +441,45 @@ Création et mise en forme d'une page \texttt{index.php} contenant un formulaire
         qui permet de stocker les variables nécessaires permettant de se connecter à MySQL,
         de gérer les erreurs et de récupérer les résultats dans un tableau associatif.
 
-\begin{php}[title={Gestion de la connexion PDO},label=php:pdo]
-  function getPDO(): PDO {
-      $host = 'localhost';
-      $dbname = 'universite1';
-      $user = 'root';
-      $pass = 'root';
+  \begin{php}[title={Gestion de la connexion PDO},label=php:pdo]
+    function getPDO(): PDO {
+        $host = 'localhost';
+        $dbname = 'universite1';
+        $user = 'root';
+        $pass = 'root';
 
-      $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
+        $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
 
-        return new PDO($dsn, $user, $pass, [
-          PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-          PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
-    }
-\end{php}
+          return new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+          ]);
+      }
+  \end{php}
 
   \item Utilisation de requêtes préparées pour éviter les injections SQL
   \item Vérification des utilisateurs via la table utilisateur
   \item Mise en place de sessions via des fonctions :
-  \begin{itemize}
-    \item \texttt{setConnecte()}  $\longrightarrow$ enregistre l’utilisateur connecté (voir Script PHP \no{\ref{php:set}}); 
-    \item \texttt{isConnecte()}  $\longrightarrow$ vérifie l’état de connexion (voir Script PHP \no{\ref{php:is}}).
-  \end{itemize}
+        \begin{itemize}
+          \item \texttt{setConnecte()}  $\longrightarrow$ enregistre l’utilisateur connecté (voir Script PHP \no{\ref{php:set}});
+          \item \texttt{isConnecte()}  $\longrightarrow$ vérifie l’état de connexion (voir Script PHP \no{\ref{php:is}}).
+        \end{itemize}
 
-  \begin{php}[title={Fonction \texttt{setConnecte()}},label=php:set]
-function setConnecte(array $user): void {
-  startSession();
+\begin{php}[title={Fonction \texttt{setConnecte()}},label=php:set]
+  function setConnecte(array $user): void {
+    startSession();
   $_SESSION['user_id'] = (int) $user['id'];
   $_SESSION['login']   = $user['login'];
   $_SESSION['role']    = $user['role'];
-} 
-  \end{php}
+  }
+\end{php}
 
-  \begin{php}[title={Fonction \texttt{isConnecte()}},label=php:is]
-    function isConnecte(): bool {
-    startSession();
-    return isset($_SESSION['user_id']);
-}
-  \end{php}
+\begin{php}[title={Fonction \texttt{isConnecte()}},label=php:is]
+  function isConnecte(): bool {
+  startSession();
+  return isset($_SESSION['user_id']);
+  }
+\end{php}
 
 \end{itemize}
 
@@ -478,5 +489,47 @@ La page pages/accueil.php n’est accessible que si l’utilisateur est connect�
 
 \section{Difficultés rencontrées / pas encore résolues}
 
+\begin{itemize}
+  \item Prise en main de la BDD avec PDO : configuration PDO différente selon Windows / Linux, activation des extensions PDO MySQL ou du serveur Apache [\faCheckSquare[regular]\quad Résolue]
+
+  \item Problème : les mots de passe fournis dans la BDD ne correspondaient pas au hash réel de "\texttt{123456}". Nous avons fait des tests avec \texttt{password\_hash()} et \texttt{password\_verify()}
+        $\longrightarrow$ découverte que le hash était invalide $\longrightarrow$ remplacement des mots de passe hachés directement en BDD. [\faCheckSquare[regular]\quad Résolue]
+
+  \item Gestion des chemins relatifs entre les pages (\texttt{index.php}, \texttt{pages/accueil.php}, \texttt{pages/deconnexion.php}) : erreurs 404 ou redirections incorrectes à cause de chemins mal construits - [\faCheckSquare[regular]\quad Résolue]
+
+  \item Manque de temps personnel pour cette semaine pour la plupart d'entre nous à causes de raisons personnelles. À adapter en deuxième semaine.
+\end{itemize}
 \section{Projections pour la 2\ieme{} semaine}
+
+\subsection{Les tâches restantes}
+
+Notre but en deuxième semaine sera de mettre en place les fonctionnalités liées aux étudiants et aux professeurs une fois connectés, et de perfectionner le système de gestion de connexion et des rôles :
+
+\begin{itemize}
+  \item Finaliser le système de connexion : ajouter un bouton déconnexion sur chaque page et améliorer si besoin
+  \item Créer la page d’accueil (affiche différentes fonctionnalités selon le rôle de l'utilisateur connecté)
+  \item Créer une page listant des données depuis la BDD
+  \item Créer une page d’ajout (INSERT INTO) pour un nouveau cours par exemple
+  \item Vérification poussée des données utilisateurs
+  \item Gestion des rôles. Exemple : redirection automatique si un étudiant tente d’accéder à une page admin
+  \item Tester en continu
+  \item Rédiger le rapport final
+\end{itemize}
+
+\subsection{L'organisation du groupe}
+
+\begin{description}
+  \item[Sylvain] : Création du GitHub et de la base de données. Mise en forme du rapport final.
+  \item[Zoé] Réflexion sur le scénario du projet et des fonctionnalités.
+  \item[Jeanne] Création de la page de connexion et des fonctions utiles à la connexion/déconnexion
+  \item[Jade] Réflexion sur le projet et ses fonctionnalités
+\end{description}
+
+\subsection{Tâches communes}
+
+\begin{itemize}
+  \item Rédaction du rapport intermédaire
+  \item Mise en commun des idées
+  \item Communication continue
+\end{itemize}
 \end{document}
