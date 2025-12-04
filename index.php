@@ -12,8 +12,10 @@
     <?php
     $password = '123456';
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $hashed_from_db = '$2y$12$8lEF4mLbx1nmmCQtPkVf.OiP146XEotYWBIPPWnZCmp2HyIMbwqBq';
     var_dump($hashed_password);
     echo "<br>Verify : " . password_verify($password, $hashed_password);
+    echo "<br>Verify : " . password_verify($password, $hashed_from_db);
     ?>
   </p>
 </body>
