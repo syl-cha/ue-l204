@@ -78,7 +78,7 @@ Notre but en deuxième semaine sera de mettre en place les fonctionnalités lié
 
 - Créer une page listant des données depuis la BDD
 
-- Créer une page d’ajout (INSERT INTO) pour un nouveau cours, ou encore un nouvel étudiant
+- Créer une page d’ajout (INSERT INTO) pour un nouveau cours par exemple
 
 - Vérification poussée des données utilisateurs
 
