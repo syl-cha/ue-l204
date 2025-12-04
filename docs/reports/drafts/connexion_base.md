@@ -54,7 +54,7 @@ function isConnecte(): bool {
 - La page pages/accueil.php n’est accessible que si l’utilisateur est connecté, sinon redirection automatique
 
 
-## Difficultés rencontrées / pas encore résolues
+# Difficultés rencontrées / pas encore résolues
 
 - Prise en main de la BDD avec PDO : configuration PDO différente selon Windows / Linux, activation des extensions PDO MySQL ou du serveur Apache - Résolue
 
@@ -67,10 +67,10 @@ function isConnecte(): bool {
 
 
 
-## Projections pour la 2e semaine
+# Projections pour la 2e semaine
 
 
-1. Les tâches restantes :
+### Les tâches restantes :
 Notre but en deuxième semaine sera de mettre en place les fonctionnalités liées aux étudiants et aux professeurs une fois connectés, et de perfectionner le système de gestion de connexion et des rôles :
 - Finaliser le système de connexion : ajouter un bouton déconnexion sur chaque page et améliorer si besoin
 
@@ -89,13 +89,13 @@ Notre but en deuxième semaine sera de mettre en place les fonctionnalités lié
 - Rédiger le rapport final
 
 
-2. L'organisation du groupe :
+### L'organisation du groupe :
 - Sylvain : Création du GitHub et de la base de données + Mise en forme du rapport final
 - Zoé : Réflexion sur le scénario du projet et des fonctionnalités
 - Jeanne : Création de la page de connexion et des fonctions utiles à la connexion/déconnexion
 - Jade : Réflexion sur le projet et ses fonctionnalités
 
-Tâches communes :
+### Tâches communes :
 - Rédaction du rapport intermédaire
 - Mise en commun des idées
 - Communication continue
