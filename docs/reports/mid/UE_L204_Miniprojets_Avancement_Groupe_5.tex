@@ -128,14 +128,18 @@ Zoé \textsl{Van De Moortele}}
 \maketitle
 
 \section{La méthode de travail}
+
 \subsection{Outils utilisés}
 \begin{itemize}
-  \item Teams pour la communication et le partage de fichiers ;
-  \item GitHub pour la mise en commun du code sur un \href{https://github.com/syl-cha/ue-l204}{dépôt}
+  \item \textbf{Teams} pour la communication et le partage de fichiers ;
+  \item \textbf{GitHub} pour la mise en commun du code sur un \href{https://github.com/syl-cha/ue-l204}{dépôt}
         et pouvoir mieux gérer les modifications via le système de branche ;
   \item Forum de groupe de l'UE : communication et retour sur l'avancement du projet ;
-  \item Word pour une rédaction commune et \LaTeX pour la finalisation des rapports ;
-  \item un système d'intelligence artificielle générationnelle (Gemini) pour générer les entrées dans les tables.
+  \item \textbf{Word} pour une rédaction commune et \LaTeX pour la finalisation des rapports ;
+  \item un système d'intelligence artificielle générationnelle (\textbf{Gemini}) pour générer les entrées dans les tables.
+  \item \textbf{PhpMyAdmin} pour la création des tables et la génération des entrées dans ces table
+  \item \textbf{VS Code} (ou autre éditeurs) : rédaction du code
+  \item \textbf{XAMPP} sous Windows ou un stack \textbf{LAMP} sous Linux.
 \end{itemize}
 
 \subsection{Étude préliminaire}
@@ -208,7 +212,7 @@ Avant d’enregistrer quoi que ce soit dans la BDD, tests de sécurité à effec
 
 Nous avons modélisé notre base de données dans \href{https://app.diagrams.net/}{diagrams.net}.
 Nous avons pensé à définir deux utilisateurs pour notre base de données : l'enseignant et l'étudiant.
-En structurant notre base, nous nous sommes aperçu que ces deux entités partageaient beaucoup 
+En structurant notre base, nous nous sommes aperçu que ces deux entités partageaient beaucoup
 d'attributs donc nous avons préférer définir l'entité plus générale d'\texttt{utilisateur}
 et définir les entités \texttt{enseignant} et \texttt{etudiant} comme des héritages de l'entité
 \texttt{utilisateur} avec certains attributs spécifiques.
@@ -227,8 +231,8 @@ Nous aurons enfin des tables de liaison :
 L'entité \texttt{utilisateur} aura les attributs (voir requête \no{\ref{sql:utilisateur}}) :
 \begin{itemize}
   \item \texttt{login} : identifiant de connexion ;
-  \item \texttt{mot\_de\_passe} : mot de passe pour la connextion : 
-  il sera encrypté par l'application (ce n'est pas de la responsabilité de la BBD) ;
+  \item \texttt{mot\_de\_passe} : mot de passe pour la connextion :
+        il sera encrypté par l'application (ce n'est pas de la responsabilité de la BBD) ;
   \item \texttt{mot\_de\_passe\_provisoire} : booléen servant de drapeau pour savoir si le mot de passe initial a été changé ou pas ;
   \item \texttt{nom}, \texttt{prenom}, \texttt{email} : pour renseigner des élément lié à la personne et son contact ;
   \item \texttt{role} : trois rôles sont défini ici pour pouvoir tester les droits relatifs à chaque utilisateur de la BDD ;
@@ -237,7 +241,7 @@ L'entité \texttt{utilisateur} aura les attributs (voir requête \no{\ref{sql:ut
 \end{itemize}
 
 \begin{sql}[title={Création de la table \texttt{utilisateur}},label={sql:utilisateur}]
-CREATE TABLE utilisateur (
+  CREATE TABLE utilisateur (
   id INT PRIMARY KEY AUTO_INCREMENT,
   login VARCHAR(255) UNIQUE NOT NULL,
   mot_de_passe VARCHAR(255) NOT NULL,
@@ -248,7 +252,7 @@ CREATE TABLE utilisateur (
   role ENUM('enseignant', 'etudiant', 'admin') NOT NULL,
   date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   actif BOOLEAN DEFAULT TRUE
-);
+  );
 \end{sql}
 
 On se rend compte que tous ces attributs serons partagés à la fois par les enseignants et par les étudiants.
@@ -256,7 +260,7 @@ On se rend compte que tous ces attributs serons partagés à la fois par les ens
 Un ajout d'un utilisateur dans la BDD peut donc se déclarer ainsi (voir exemple de requête \no{\ref{sql:utilisateur:creation}})
 
 \begin{sql}[title={Création d'un utilisateur dans la table},label={sql:utilisateur:creation}]
-(1, 'turing', '<mot-de-passe>', 'Turing', 'Alan', 'alan.turing@univ.fr', 'enseignant'),
+  (1, 'turing', '<mot-de-passe>', 'Turing', 'Alan', 'alan.turing@univ.fr', 'enseignant'),
 \end{sql}
 
 \subsubsection{Entité \texttt{enseignant}}
@@ -273,7 +277,7 @@ On constate la présence d'une clé étrangère afin de lier l'entité \texttt{e
 avec une entité \texttt{utilisateur} existante (héritage).
 
 \begin{sql}[title={Création de la table \texttt{enseignant}},label={sql:enseignant}]
-CREATE TABLE enseignant (
+  CREATE TABLE enseignant (
   id INT PRIMARY KEY AUTO_INCREMENT,
   utilisateur_id INT UNIQUE NOT NULL,
   bureau VARCHAR(50),
@@ -281,14 +285,14 @@ CREATE TABLE enseignant (
   specialite VARCHAR(255),
   statut ENUM('titulaire', 'vacataire', 'contractuel') DEFAULT 'titulaire',
   FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
-);
+  );
 \end{sql}
 
 On ajoutera un enseignant ainsi dans la base (voir exemple de requête \no{\ref{sql:enseignant:creation}})
 
 \begin{sql}[title={Création d'un enseignant dans la table},label={sql:enseignant:creation}]
-INSERT INTO enseignant (utilisateur_id, bureau, telephone, specialite, statut) VALUES
-(1, 'B101', '0102030401', 'Intelligence Artificielle', 'titulaire');
+  INSERT INTO enseignant (utilisateur_id, bureau, telephone, specialite, statut) VALUES
+  (1, 'B101', '0102030401', 'Intelligence Artificielle', 'titulaire');
 \end{sql}
 
 
@@ -305,21 +309,21 @@ On constate ici aussi la présence d'une clé étrangère afin de lier l'entité
 avec une entité \texttt{utilisateur} existante (héritage, comme pour l'entité \texttt{enseignant}).
 
 \begin{sql}[title={Création de la table \texttt{etudiant}},label={sql:etudiant}]
-CREATE TABLE etudiant (
+  CREATE TABLE etudiant (
   id INT PRIMARY KEY AUTO_INCREMENT,
   utilisateur_id INT UNIQUE NOT NULL,
   numero_etudiant VARCHAR(20) UNIQUE NOT NULL,
   niveau ENUM('L1', 'L2', 'L3', 'M1', 'M2') NOT NULL,
   date_inscription DATE NOT NULL,
   FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
-);
+  );
 \end{sql}
 
 Pour ajouter un étudiant dans la base, on pourra procéder ainsi (voir exemple de requête \no{\ref{sql:etudiant:creation}})
 
 \begin{sql}[title={Création d'un étudiant dans la table},label={sql:etudiant:creation}]
-INSERT INTO etudiant (utilisateur_id, numero_etudiant, niveau, date_inscription) VALUES
-(12, '20250001', 'L3', '2024-09-01');
+  INSERT INTO etudiant (utilisateur_id, numero_etudiant, niveau, date_inscription) VALUES
+  (12, '20250001', 'L3', '2024-09-01');
 \end{sql}
 
 \subsubsection{Entité \texttt{cours}}
@@ -336,7 +340,7 @@ L'entité \texttt{cours} a les attributs suivants :
 \end{itemize}
 
 \begin{sql}[title={Création de la table \texttt{cours}},label={sql:cours}]
-CREATE TABLE cours (
+  CREATE TABLE cours (
   id INT PRIMARY KEY AUTO_INCREMENT,
   code VARCHAR(20) UNIQUE NOT NULL,
   nom VARCHAR(255) NOT NULL,
@@ -345,13 +349,13 @@ CREATE TABLE cours (
   capacite_max INT DEFAULT 30,
   annee_universitaire VARCHAR(9) NOT NULL,  -- "2025-2026"
   actif BOOLEAN DEFAULT TRUE
-);
+  );
 \end{sql}
 
 La création d'un cours peut s'effectuer à l'aide de la requête suivante :
 \begin{sql}[title={Création d'un cours dans la table},label={sql:cours:creation}]
-INSERT INTO cours (code, nom, credits, description, annee_universitaire) VALUES
-('INFO-L101', 'Introduction à l''Algorithmique', 6, 'Logique, pseudo-code, variables et boucles', '2025-2026');
+  INSERT INTO cours (code, nom, credits, description, annee_universitaire) VALUES
+  ('INFO-L101', 'Introduction à l''Algorithmique', 6, 'Logique, pseudo-code, variables et boucles', '2025-2026');
 \end{sql}
 
 \subsubsection{Tables de liaison}
@@ -371,14 +375,14 @@ la deuxièmes référençant un Cours B nécessaire pour suivre le Cours A. Ains
 Voici comment nous avons donc défini cette table :
 
 \begin{sql}[title={Table de liaison \texttt{prerequis}},label={sql:prerequis}]
-CREATE TABLE prerequis (
+  CREATE TABLE prerequis (
   cours_id INT NOT NULL,
   prerequis_cours_id INT NOT NULL,
   PRIMARY KEY (cours_id, prerequis_cours_id),
   FOREIGN KEY (cours_id) REFERENCES cours(id) ON DELETE CASCADE,
   FOREIGN KEY (prerequis_cours_id) REFERENCES cours(id) ON DELETE CASCADE,
   CHECK (cours_id != prerequis_cours_id)
-);
+  );
 \end{sql}
 
 La dernière ligne \no{7} permet d'interdire un auto-référencement.
@@ -386,15 +390,92 @@ La dernière ligne \no{7} permet d'interdire un auto-référencement.
 
 Pour déclarer une telle relation, nous pouvons faire (voir exemple de requête ci-dessous \no{\ref{sql:prerequis:creation}}) :
 \begin{sql}[title={Création d'une relation de prérequis},label={sql:prerequis:creation}]
-INSERT INTO prerequis (cours_id, prerequis_cours_id) VALUES
-((SELECT id FROM cours WHERE code='INFO-L201'), (SELECT id FROM cours WHERE code='INFO-L101'));
+  INSERT INTO prerequis (cours_id, prerequis_cours_id) VALUES
+  ((SELECT id FROM cours WHERE code='INFO-L201'), (SELECT id FROM cours WHERE code='INFO-L101'));
 \end{sql}
 
 On remarque que plutôt que d'utiliser directement les ID des cours, on utilise l'attribut \texttt{code}
-sur une condition dans une clause qui va nous permettre de retrouver l'ID du cours. Cette méthode est plus robuste car 
+sur une condition dans une clause qui va nous permettre de retrouver l'ID du cours. Cette méthode est plus robuste car
 si l'ID d'un cours venait à changer alors on ne perdrait pas la relation de prérequis.
 
 \includepdf[pages={1},angle=90]{UE_L204_mini-Projet_DB.pdf}
+
+\subsection{Connexion à la base de données}
+
+Nous avons mis en place un système de connexion sécurisé permettant d’accéder à l’espace étudiant/enseignant.
+Pour l'instant, on peut s'y connecter et accéder à la page qui permettra aux utilisateurs selon leurs rôles
+d'effectuer diverses actions la recherche ou la modification dans la BDD. Cette page est en attente de développement :
+seul un bouton de déconnexion est présent, qui renvoie à une page \texttt{deconnexion.php} qui détruit la session
+et puis redirige vers \texttt{index.php}.
+
+\subsubsection{Mise en place de la page de connexion et de déconnexion}
+
+Création et mise en forme d'une page \texttt{index.php} contenant un formulaire de connexion (HTML/CSS) :
+\begin{itemize}
+  \item Saisie de l’identifiant et du mot de passe
+  \item Vérification du remplissage des champs
+  \item Affichage d’un message d’erreur si les données entrées sont incorrectes (voir photo)
+  \item Si connecté $\longrightarrow$ \texttt{accueil.php} avec bouton de déconnexion  $\longrightarrow$ \texttt{deconnexion.php} et redirection vers \texttt{index.php}
+\end{itemize}
+
+
+\begin{center}
+  \includegraphics[width=\linewidth]{index.png}
+\end{center}
+
+\subsubsection{Gestion sécurisée de la base de données}
+
+\begin{itemize}
+  \item Création d’une connexion PDO dans \texttt{functions.php} (voir Script PHP \no{\ref{php:pdo}})
+        qui permet de stocker les variables nécessaires permettant de se connecter à MySQL,
+        de gérer les erreurs et de récupérer les résultats dans un tableau associatif.
+
+\begin{php}[title={Gestion de la connexion PDO},label=php:pdo]
+  function getPDO(): PDO {
+      $host = 'localhost';
+      $dbname = 'universite1';
+      $user = 'root';
+      $pass = 'root';
+
+      $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
+
+        return new PDO($dsn, $user, $pass, [
+          PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+          PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+    }
+\end{php}
+
+  \item Utilisation de requêtes préparées pour éviter les injections SQL
+  \item Vérification des utilisateurs via la table utilisateur
+  \item Mise en place de sessions via des fonctions :
+  \begin{itemize}
+    \item \texttt{setConnecte()}  $\longrightarrow$ enregistre l’utilisateur connecté (voir Script PHP \no{\ref{php:set}}); 
+    \item \texttt{isConnecte()}  $\longrightarrow$ vérifie l’état de connexion (voir Script PHP \no{\ref{php:is}}).
+  \end{itemize}
+
+  \begin{php}[title={Fonction \texttt{setConnecte()}},label=php:set]
+function setConnecte(array $user): void {
+  startSession();
+  $_SESSION['user_id'] = (int) $user['id'];
+  $_SESSION['login']   = $user['login'];
+  $_SESSION['role']    = $user['role'];
+} 
+  \end{php}
+
+  \begin{php}[title={Fonction \texttt{isConnecte()}},label=php:is]
+    function isConnecte(): bool {
+    startSession();
+    return isset($_SESSION['user_id']);
+}
+  \end{php}
+
+\end{itemize}
+
+\subsubsection{Page d’accueil protégée}
+La page pages/accueil.php n’est accessible que si l’utilisateur est connecté, sinon redirection automatique
+
+
 \section{Difficultés rencontrées / pas encore résolues}
 
 \section{Projections pour la 2\ieme{} semaine}
