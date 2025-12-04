@@ -1,0 +1,342 @@
+\documentclass[12pt,a4paper,svgnames]{simplereport}
+
+% Packages
+\usepackage{boxes}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{pdfpages}
+\usepackage{setspace}
+\captionsetup{
+    font={small,it},           % Taille small et italique pour toute la légende
+    labelfont={bf,color=black}, % Label en gras et en bleu
+    textfont={color=black!60},    % Texte de la légende en noir
+    labelsep=endash,           % Séparateur avec tiret cadratin
+    format=plain,              % Format simple
+    justification=justified,   % Justification du texte
+    width=0.8\linewidth        % Largeur à 80% de la ligne (ajustez selon besoin)
+}
+\geometry{margin=2.5cm}
+\graphicspath{{images/}}
+
+% Définition des couleurs
+\definecolor{backColor}{RGB}{248,248,248}
+\definecolor{subColor}{RGB}{70,130,180}
+
+% Configuration de tcolorbox
+\tcbuselibrary{minted,skins,breakable}
+
+% Environnement pour le code JavaScript
+\newtcblisting{javascriptcode}{
+    listing engine=minted,
+    minted style=colorful,
+    minted language=javascript,
+    minted options={
+        fontsize=\small,
+        linenos,
+        numbersep=3mm,
+        firstnumber=1,
+        breaklines,breakanywhere,
+        breakbytoken
+    },
+    colback=backColor,
+    colframe=subColor,
+    listing only,
+    left=5mm,
+    enhanced,
+    sharp corners,
+    boxrule=0pt,
+    breakable,
+    overlay={
+        \begin{tcbclipinterior}
+            \fill[subColor!30] (frame.south west) rectangle ([xshift=5mm]frame.north west);
+        \end{tcbclipinterior}
+    }
+}
+
+% Configuration des liens
+\hypersetup{
+    colorlinks=true,
+    linkcolor=orange,
+    urlcolor=orange,
+    citecolor=orange
+}
+
+
+\newcommand{\codetext}[1]{%
+\textcolor{Crimson}{\texttt{#1}}
+}
+
+\usepackage{titletoc}
+
+% Espacement standard pour les pointillés (ajuste l'espace pour le numéro de page)
+\contentsmargin{2.5em} 
+
+% Format pour \part (ex: I, II, III)
+% Le texte de la partie (ex: "Introduction") sera en gras
+\titlecontents{part}
+  [0em]                                      % Indentation à gauche
+  {\addvspace{10pt}\bfseries}                % Espace AVANT (réduit) + format texte
+  {\textcolor{orange}{\thecontentslabel}\quad} % Format du NUMÉRO (orange + espace)
+  {\bfseries}                                  % Format si pas de numéro (gras)
+  {\ \titlerule*[.5pc]{.}\ \contentspage}     % Pointillés et page
+  [\addvspace{2pt}]                          % Espace APRES (réduit)
+
+% Format pour \section (ex: 1, 2, 3)
+% Le texte de la section sera en police normale
+\titlecontents{section}
+  [1.5em]                                    % Indentation (plus grande que part)
+  {\addvspace{2pt}}                         % Espace AVANT (très réduit)
+  {\textcolor{orange}{\thecontentslabel}\quad} % Format du NUMÉRO (orange + espace)
+  {}                                         % Format si pas de numéro
+  {\ \titlerule*[.5pc]{.}\ \contentspage}     % Pointillés et page
+  []                                         % Pas d'espace APRES
+
+% Format pour \subsection (ex: 1.1, 1.2)
+\titlecontents{subsection}
+  [3.0em]                                    % Indentation (plus grande que section)
+  {\addvspace{1pt}}                         % Espace AVANT (minimal)
+  {\textcolor{orange}{\thecontentslabel}\quad} % Format du NUMÉRO (orange + espace)
+  {}                                         % Format si pas de numéro
+  {\ \titlerule*[.5pc]{.}\ \contentspage}     % Pointillés et page
+  []                                         % Pas d'espace APRES
+
+% Format pour \subsubsection (ex: 1.2.1, 1.2.2)
+\titlecontents{subsubsection}
+  [4.5em]                                    % Indentation (plus grande que subsection)
+  {\addvspace{1pt}}                         % Espace AVANT (minimal)
+  {\textcolor{orange}{\thecontentslabel}\quad} % Format du NUMÉRO (orange + espace)
+  {}                                         % Format si pas de numéro
+  {\ \titlerule*[.5pc]{.}\ \contentspage}     % Pointillés et page
+  []                                         % Pas d'espace APRES
+
+  % Titre
+
+\title{UE-L204 MINI-PROJET\\
+\vspace*{2cm}
+{\titlefont \fontsize{40pt}{36pt}\selectfont Rapport intermédiaire}\\
+\vspace*{2cm}
+% \includegraphics[width=0.9\linewidth]{hero_section.png}}
+\author{Sylvain \textsl{Chambon},\\%
+Jade \textsl{Faroux},\\%
+Jeanne \textsl{Salvadori},\\ %
+Zoé \textsl{Van De Moortele}}
+\date{\today}}
+\begin{document}
+
+\maketitle
+
+\section{La méthode de travail}
+\subsection{Outils utilisés}
+\begin{itemize}
+  \item Teams pour la communication et le partage de fichiers ;
+  \item GitHub pour la mise en commun du code sur un \href{https://github.com/syl-cha/ue-l204}{dépôt}
+        et pouvoir mieux gérer les modifications via le système de branche ;
+  \item Forum de groupe de l'UE : communication et retour sur l'avancement du projet ;
+  \item Word pour une rédaction commune et \LaTeX pour la finalisation des rapports ;
+  \item un système d'intelligence artificielle générationnelle (Gemini) pour générer les entrées dans les tables.
+\end{itemize}
+
+\subsection{Étude préliminaire}
+
+\subsection{Scénario}
+
+Créer un site universitaire avec différents niveaux d’accès : étudiant et professeur, éventuellement un administrateur.
+
+Les professeurs peuvent :
+\begin{itemize}
+  \item Créer, modifier, supprimer des cours.
+  \item Voir la liste d’étudiant inscrit.
+  \item Gérer les inscriptions (accepter/refuser les étudiants dans leurs cours).
+  \item Modifier leur profil (informations personnelles).
+\end{itemize}
+
+Les étudiants peuvent :
+\begin{itemize}
+  \item Consulter l’ensemble des cours disponibles.
+  \item Rechercher des cours (nom, professeur, domaine).
+  \item S’inscrire à des cours.
+  \item Modifier leur profil (informations personnelles).
+\end{itemize}
+
+Si assez de temps, mettre en place un système de note (prof donne des notes et les étudiants peuvent y accéder), et d’emploi du temps.
+
+\subsection{Objectifs adaptés à notre scénario}
+
+\subsubsection{Page de connexion}
+
+\begin{itemize}
+  \item Formulaire d’entrée où l’utilisateur entre son login et mot de passe.
+  \item Système vérifie si cet utilisateur existe dans la BDD.
+  \item Le mot de passe doit être crypté.
+  \item Si correct, accès au portail étudiant ou professeur.
+  \item Si incorrect, message d’erreur.
+  \item Changement de mot de passe lors de la première connexion (sécurité).
+\end{itemize}
+
+\subsubsection{Page de recherche}
+
+\begin{itemize}
+  \item Champ de recherche de cours (par nom, professeur ou domaine).
+  \item Doit interroger la BDD avec les critères de recherche.
+  \item Afficher les résultats sous forme de tableau, ou message d’erreur si aucun résultat.
+\end{itemize}
+
+\subsubsection{Page d’ajout de contenu}
+
+\begin{itemize}
+  \item Les professeurs ont une page dédiée pour ajouter, modifier ou supprimer leur cours.
+  \item Les professeurs et étudiants peuvent modifier leurs informations personnelles (mail, tel, mot de passe...).
+  \item Toutes ces modifications doivent être enregistrées dans la BDD.
+\end{itemize}
+
+\subsubsection{Vérification des données}
+
+Avant d’enregistrer quoi que ce soit dans la BDD, tests de sécurité à effectuer systématiquement :
+\begin{itemize}
+  \item Avant d’enregistrer quoi que ce soit dans la BDD, tests de sécurité à effectuer systématiquement :
+  \item Vérifier que les champs obligatoires soient remplis
+  \item Les formats des entrées doivent être corrects
+  \item Pas de caractères dangereux (balise html)
+  \item Messages d’erreur si une de ces vérifications est non conforme
+\end{itemize}
+
+\section{Avancement du projet}
+
+\subsection{Base de données}
+
+Nous avons modélisé notre base de données dans \href{https://app.diagrams.net/}{diagrams.net}.
+Nous avons pensé à définir deux utilisateurs pour notre base de données : l'enseignant et l'étudiant.
+En structurant notre base, nous nous sommes aperçu que ces deux entités partageaient beaucoup 
+d'attributs donc nous avons préférer définir l'entité plus générale d'\texttt{utilisateur}
+et définir les entités \texttt{enseignant} et \texttt{etudiant} comme des héritages de l'entité
+\texttt{utilisateur} avec certains attributs spécifiques.
+
+Dans cette base de données, nous aurons évidemment aussi une entité \texttt{cours}.
+\medskip
+
+Nous aurons enfin des tables de liaison :
+\begin{itemize}
+  \item une table permettant d'associer des enseignants avec des cours (entité \texttt{enseigne}) ;
+  \item un autre permttant d'associer des étudiants avec des cours (entité \texttt{etudiant}) ;
+  \item une dernière permettant de définir des contraintes sur les inscriptions dans certains cours (entité \texttt{prerequis}).
+\end{itemize}
+
+\subsubsection{Entité \texttt{utilisateur}}
+L'entité \texttt{utilisateur} aura les attributs (voir requête \no{\ref{sql:utilisateur}}) :
+\begin{itemize}
+  \item \texttt{login} : identifiant de connexion ;
+  \item \texttt{mot\_de\_passe} : mot de passe pour la connextion : 
+  il sera encrypté par l'application (ce n'est pas de la responsabilité de la BBD) ;
+  \item \texttt{mot\_de\_passe\_provisoire} : booléen servant de drapeau pour savoir si le mot de passe initial a été changé ou pas ;
+  \item \texttt{nom}, \texttt{prenom}, \texttt{email} : pour renseigner des élément lié à la personne et son contact ;
+  \item \texttt{role} : trois rôles sont défini ici pour pouvoir tester les droits relatifs à chaque utilisateur de la BDD ;
+  \item \texttt{date\_creation} pour stocker la date à laquelle l'utilisateur a été saisi dans la BDD ;
+  \item \texttt{actif} drapeau pour connaître si la personne est encore en activité dans la faculté.
+\end{itemize}
+
+\begin{sql}[title={Création de la table \texttt{utilisateur}},label={sql:utilisateur}]
+CREATE TABLE utilisateur (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  login VARCHAR(255) UNIQUE NOT NULL,
+  mot_de_passe VARCHAR(255) NOT NULL,
+  mot_de_passe_provisoire BOOLEAN DEFAULT TRUE,
+  nom VARCHAR(100) NOT NULL,
+  prenom VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  role ENUM('enseignant', 'etudiant', 'admin') NOT NULL,
+  date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  actif BOOLEAN DEFAULT TRUE
+);
+\end{sql}
+
+On se rend compte que tous ces attributs serons partagés à la fois par les enseignants et par les étudiants.
+
+Un ajout d'un utilisateur dans la BDD peut donc se déclarer ainsi (voir exemple de requête \no{\ref{sql:utilisateur:creation}})
+
+\begin{sql}[title={Création d'un utilisateur dans la table},label={sql:utilisateur:creation}]
+(1, 'turing', '<mot-de-passe>', 'Turing', 'Alan', 'alan.turing@univ.fr', 'enseignant'),
+\end{sql}
+
+\subsubsection{Entité \texttt{enseignant}}
+
+L'entité \texttt{enseignant} hérite de de l'entité \texttt{utilisateur} avec quelques spécificités :
+\begin{itemize}
+  \item \texttt{bureau} : localisation de la salle de travail de l'enseignant ;
+  \item \texttt{telephone} : numéro ;
+  \item \texttt{specialite} : domaine d'expertise ;
+  \item \texttt{statut} : sous quel titre l'enseignant a-t-il été embauché.
+\end{itemize}
+
+On constate la présence d'une clé étrangère afin de lier l'entité \texttt{enseignant}
+avec une entité \texttt{utilisateur} existante (héritage).
+
+\begin{sql}[title={Création de la table \texttt{enseignant}},label={sql:enseignant}]
+CREATE TABLE enseignant (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  utilisateur_id INT UNIQUE NOT NULL,
+  bureau VARCHAR(50),
+  telephone VARCHAR(20),
+  specialite VARCHAR(255),
+  statut ENUM('titulaire', 'vacataire', 'contractuel') DEFAULT 'titulaire',
+  FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
+);
+\end{sql}
+
+On ajoutera un enseignant ainsi dans la base (voir exemple de requête \no{\ref{sql:enseignant:creation}})
+
+\begin{sql}[title={Création d'un enseignant dans la table},label={sql:enseignant:creation}]
+INSERT INTO enseignant (utilisateur_id, bureau, telephone, specialite, statut) VALUES
+(1, 'B101', '0102030401', 'Intelligence Artificielle', 'titulaire');
+\end{sql}
+
+
+
+\subsubsection{Entité \texttt{etudiant}}
+
+L'entité \texttt{etudiant} hérite de de l'entité \texttt{utilisateur} avec quelques spécificités :
+\begin{itemize}
+  \item le classique \texttt{numero\_etudiant}, comme référence nationale ;
+  \item \texttt{niveau} qui référence si l'étudiant est en licence ou master et en quelle année ;
+  \item \texttt{date\_inscription} qui peut-être de la \texttt{date\_creation} si l'étudiant n'a pas validé ses frais de scolarité par exemple.
+\end{itemize}
+On constate ici aussi la présence d'une clé étrangère afin de lier l'entité \texttt{étudiant}
+avec une entité \texttt{utilisateur} existante (héritage, comme pour l'entité \texttt{enseignant}).
+
+\begin{sql}[title={Création de la table \texttt{etudiant}},label={sql:etudiant}]
+CREATE TABLE etudiant (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  utilisateur_id INT UNIQUE NOT NULL,
+  numero_etudiant VARCHAR(20) UNIQUE NOT NULL,
+  niveau ENUM('L1', 'L2', 'L3', 'M1', 'M2') NOT NULL,
+  date_inscription DATE NOT NULL,
+  FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
+);
+\end{sql}
+
+Pour ajouter un étudiant dans la base, on pourra procéder ainsi (voir exemple de requête \no{\ref{sql:etudiant:creation}})
+
+\begin{sql}[title={Création d'un étudiant dans la table},label={sql:etudiant:creation}]
+INSERT INTO etudiant (utilisateur_id, numero_etudiant, niveau, date_inscription) VALUES
+(12, '20250001', 'L3', '2024-09-01');
+\end{sql}
+
+\subsubsection{Entité \texttt{cours}}
+
+\begin{sql}[title={Création de la table \texttt{etudiant}},label={sql:cours}]
+CREATE TABLE etudiant (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  utilisateur_id INT UNIQUE NOT NULL,
+  numero_etudiant VARCHAR(20) UNIQUE NOT NULL,
+  niveau ENUM('L1', 'L2', 'L3', 'M1', 'M2') NOT NULL,
+  date_inscription DATE NOT NULL,
+  FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
+);
+\end{sql}
+
+
+\section{Difficultés rencontrées / pas encore résolues}
+
+\section{Projections pour la 2\ieme{} semaine}
+\end{document}
