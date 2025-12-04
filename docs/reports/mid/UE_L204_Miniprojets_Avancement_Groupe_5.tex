@@ -324,18 +324,77 @@ INSERT INTO etudiant (utilisateur_id, numero_etudiant, niveau, date_inscription)
 
 \subsubsection{Entité \texttt{cours}}
 
-\begin{sql}[title={Création de la table \texttt{etudiant}},label={sql:cours}]
-CREATE TABLE etudiant (
+L'entité \texttt{cours} a les attributs suivants :
+\begin{itemize}
+  \item \texttt{code} joue le rôle d'identifiant visuel et sera pratique pour les recherches ;
+  \item \texttt{nom} intitulé du cours ;
+  \item \texttt{credits} pour garder le nombre de crédits ECTS ;
+  \item \texttt{description} pour donner le détail sdu contenu du cours ou un syllabus ;
+  \item \texttt{capacite\_max} pour gérer le nombre d'étudiants qui peuvent s'inscrire ;
+  \item \texttt{annee\_universitaire} indique quand le cours est proposé ;
+  \item \texttt{actif} en un drapeau booléen permettant de savoir si le cours est proposé en enseignement ou pas.
+\end{itemize}
+
+\begin{sql}[title={Création de la table \texttt{cours}},label={sql:cours}]
+CREATE TABLE cours (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  utilisateur_id INT UNIQUE NOT NULL,
-  numero_etudiant VARCHAR(20) UNIQUE NOT NULL,
-  niveau ENUM('L1', 'L2', 'L3', 'M1', 'M2') NOT NULL,
-  date_inscription DATE NOT NULL,
-  FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id) ON DELETE CASCADE
+  code VARCHAR(20) UNIQUE NOT NULL,
+  nom VARCHAR(255) NOT NULL,
+  credits INT NOT NULL CHECK (credits > 0),
+  description TEXT,
+  capacite_max INT DEFAULT 30,
+  annee_universitaire VARCHAR(9) NOT NULL,  -- "2025-2026"
+  actif BOOLEAN DEFAULT TRUE
 );
 \end{sql}
 
+La création d'un cours peut s'effectuer à l'aide de la requête suivante :
+\begin{sql}[title={Création d'un cours dans la table},label={sql:cours:creation}]
+INSERT INTO cours (code, nom, credits, description, annee_universitaire) VALUES
+('INFO-L101', 'Introduction à l''Algorithmique', 6, 'Logique, pseudo-code, variables et boucles', '2025-2026');
+\end{sql}
 
+\subsubsection{Tables de liaison}
+
+À ce stade, nous n'avons généré dans la base qu'une seule table de liaison : celles concernant les prérequis.
+
+Pour les autres tables de liaison (\texttt{enseigne} et \texttt{inscription}),
+nous pensons qu'il faudra plutôt les faire depuis l'interface.
+
+Un prérequis pour un cours fonctionne ainsi : on réunit deux ID de cours, la première référençant un Cours A,
+la deuxièmes référençant un Cours B nécessaire pour suivre le Cours A. Ainsi, cette relation est bien une relation \textit{many-to-many} :
+\begin{itemize}
+  \item le Cours A ayant besoin de plusieurs cours pour être suivi ;
+  \item le Cours A pouvant être nécessaire à d'autres cours.
+\end{itemize}
+
+Voici comment nous avons donc défini cette table :
+
+\begin{sql}[title={Table de liaison \texttt{prerequis}},label={sql:prerequis}]
+CREATE TABLE prerequis (
+  cours_id INT NOT NULL,
+  prerequis_cours_id INT NOT NULL,
+  PRIMARY KEY (cours_id, prerequis_cours_id),
+  FOREIGN KEY (cours_id) REFERENCES cours(id) ON DELETE CASCADE,
+  FOREIGN KEY (prerequis_cours_id) REFERENCES cours(id) ON DELETE CASCADE,
+  CHECK (cours_id != prerequis_cours_id)
+);
+\end{sql}
+
+La dernière ligne \no{7} permet d'interdire un auto-référencement.
+\medskip
+
+Pour déclarer une telle relation, nous pouvons faire (voir exemple de requête ci-dessous \no{\ref{sql:prerequis:creation}}) :
+\begin{sql}[title={Création d'une relation de prérequis},label={sql:prerequis:creation}]
+INSERT INTO prerequis (cours_id, prerequis_cours_id) VALUES
+((SELECT id FROM cours WHERE code='INFO-L201'), (SELECT id FROM cours WHERE code='INFO-L101'));
+\end{sql}
+
+On remarque que plutôt que d'utiliser directement les ID des cours, on utilise l'attribut \texttt{code}
+sur une condition dans une clause qui va nous permettre de retrouver l'ID du cours. Cette méthode est plus robuste car 
+si l'ID d'un cours venait à changer alors on ne perdrait pas la relation de prérequis.
+
+\includepdf[pages={1},angle=90]{UE_L204_mini-Projet_DB.pdf}
 \section{Difficultés rencontrées / pas encore résolues}
 
 \section{Projections pour la 2\ieme{} semaine}
