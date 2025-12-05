@@ -137,10 +137,9 @@ Zoé Van De Moortele}
 
 
 \clearpage
+\part{Méthode travail}
 
-\section{La méthode de travail}
-
-\subsection{Outils utilisés}
+\section{Outils utilisés}
 \begin{itemize}
   \item \textbf{Teams} pour la communication et le partage de fichiers ;
   \item \textbf{GitHub} pour la mise en commun du code sur un \href{https://github.com/syl-cha/ue-l204}{dépôt}
@@ -153,7 +152,7 @@ Zoé Van De Moortele}
   \item \textbf{XAMPP} sous Windows ou un stack \textbf{LAMP} sous Linux.
 \end{itemize}
 
-\subsection{Étude préliminaire}
+\section{Étude préliminaire}
 
 \subsection{Scénario}
 
@@ -216,10 +215,10 @@ Avant d’enregistrer quoi que ce soit dans la BDD, tests de sécurité à effec
   \item Pas de caractères dangereux (balise html)
   \item Messages d’erreur si une de ces vérifications est non conforme
 \end{itemize}
+\clearpage
+\part{Avancement du projet}
 
-\section{Avancement du projet}
-
-\subsection{Base de données}
+\section{Base de données}
 
 Nous avons modélisé notre base de données dans \href{https://app.diagrams.net/}{diagrams.net}.
 Nous avons pensé à définir deux utilisateurs pour notre base de données : l'enseignant et l'étudiant.
@@ -238,6 +237,7 @@ Nous aurons enfin des tables de liaison :
   \item une dernière permettant de définir des contraintes sur les inscriptions dans certains cours (entité \texttt{prerequis}).
 \end{itemize}
 
+\subsection{Entités}
 \subsubsection{Entité \texttt{utilisateur}}
 L'entité \texttt{utilisateur} aura les attributs (voir requête \no{\ref{sql:utilisateur}}) :
 \begin{itemize}
@@ -369,7 +369,7 @@ La création d'un cours peut s'effectuer à l'aide de la requête suivante :
   ('INFO-L101', 'Introduction à l''Algorithmique', 6, 'Logique, pseudo-code, variables et boucles', '2025-2026');
 \end{sql}
 
-\subsubsection{Tables de liaison}
+\subsection{Tables de liaison}
 
 À ce stade, nous n'avons généré dans la base qu'une seule table de liaison : celles concernant les prérequis.
 
@@ -411,7 +411,7 @@ si l'ID d'un cours venait à changer alors on ne perdrait pas la relation de pr�
 
 \includepdf[pages={1},angle=90]{UE_L204_mini-Projet_DB.pdf}
 
-\subsection{Connexion à la base de données}
+\section{Connexion à la base de données}
 
 Nous avons mis en place un système de connexion sécurisé permettant d’accéder à l’espace étudiant/enseignant.
 Pour l'instant, on peut s'y connecter et accéder à la page qui permettra aux utilisateurs selon leurs rôles
@@ -419,7 +419,7 @@ d'effectuer diverses actions la recherche ou la modification dans la BDD. Cette 
 seul un bouton de déconnexion est présent, qui renvoie à une page \texttt{deconnexion.php} qui détruit la session
 et puis redirige vers \texttt{index.php}.
 
-\subsubsection{Mise en place de la page de connexion et de déconnexion}
+\subsection{Mise en place de la page de connexion et de déconnexion}
 
 Création et mise en forme d'une page \texttt{index.php} contenant un formulaire de connexion (HTML/CSS) :
 \begin{itemize}
@@ -434,7 +434,7 @@ Création et mise en forme d'une page \texttt{index.php} contenant un formulaire
   \includegraphics[width=\linewidth]{index.png}
 \end{center}
 
-\subsubsection{Gestion sécurisée de la base de données}
+\subsection{Gestion sécurisée de la base de données}
 
 \begin{itemize}
   \item Création d’une connexion PDO dans \texttt{functions.php} (voir Script PHP \no{\ref{php:pdo}})
@@ -483,19 +483,19 @@ Création et mise en forme d'une page \texttt{index.php} contenant un formulaire
 
 \end{itemize}
 
-\subsubsection{Page d’accueil protégée}
-La page pages/accueil.php n’est accessible que si l’utilisateur est connecté, sinon redirection automatique
-
-
+\subsection{Page d’accueil protégée}
+La page \texttt{pages/accueil.php} n’est accessible que si l’utilisateur est connecté, sinon redirection automatique
+\clearpage
+\part{Bilan à mi-parcours}
 \section{Difficultés rencontrées / pas encore résolues}
 
 \begin{itemize}
-  \item Prise en main de la BDD avec PDO : configuration PDO différente selon Windows / Linux, activation des extensions PDO MySQL ou du serveur Apache [\faCheckSquare[regular]\quad Résolue]
+  \item Prise en main de la BDD avec PDO : configuration PDO différente selon Windows / Linux, activation des extensions PDO MySQL ou du serveur Apache.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
 
   \item Problème : les mots de passe fournis dans la BDD ne correspondaient pas au hash réel de "\texttt{123456}". Nous avons fait des tests avec \texttt{password\_hash()} et \texttt{password\_verify()}
-        $\longrightarrow$ découverte que le hash était invalide $\longrightarrow$ remplacement des mots de passe hachés directement en BDD. [\faCheckSquare[regular]\quad Résolue]
+        $\longrightarrow$ découverte que le hash était invalide $\longrightarrow$ remplacement des mots de passe hachés directement en BDD.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
 
-  \item Gestion des chemins relatifs entre les pages (\texttt{index.php}, \texttt{pages/accueil.php}, \texttt{pages/deconnexion.php}) : erreurs 404 ou redirections incorrectes à cause de chemins mal construits - [\faCheckSquare[regular]\quad Résolue]
+  \item Gestion des chemins relatifs entre les pages (\texttt{index.php}, \texttt{pages/accueil.php}, \texttt{pages/deconnexion.php}) : erreurs 404 ou redirections incorrectes à cause de chemins mal construits\\ \faCheckSquare[regular]\quad \textbf{Résolue}
 
   \item Manque de temps personnel pour cette semaine pour la plupart d'entre nous à causes de raisons personnelles. À adapter en deuxième semaine.
 \end{itemize}
