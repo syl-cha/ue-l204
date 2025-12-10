@@ -1,5 +1,7 @@
 <?php
-require('../ue_l204_projet/config.php');
+require_once __DIR__ . '/../config.php';
+define('ERROR_LOG_PATH', dirname(__FILE__) . '/database-errors.log');
+
 class DataBase
 {
   private $host = DB_HOST;
@@ -17,7 +19,8 @@ class DataBase
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
       ]);
     } catch (PDOException $error) {
-      error_log('[' . date(DATE_RFC2822) . '] Database connection error : ' . $error->getMessage(), 3, 'database-errors.log' . PHP_EOL);
+      var_dump(ERROR_LOG_PATH);
+      error_log('[' . date(DATE_RFC2822) . '] Database connection error : ' . $error->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       throw new Exception("Connection to database failed");
     }
     return $pdo;

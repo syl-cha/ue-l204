@@ -1,5 +1,6 @@
 <?php
-
+// ini_set("display_errors", "Off");
+ini_set("database-errors", "On");
 // On appelle le fichier des fonctions une seule fois et s'il n'existe pas, le script s'arrête (grâce à require_once)
 require_once 'functions.php';
 startSession();
