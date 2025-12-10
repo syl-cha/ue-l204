@@ -1,4 +1,4 @@
--- requêtes nécessaires au remplissage des tables de la base de donnée universite
+-- requêtes nécessaires au remplissage des tables de la base de donnée universite1
 -- v 0.1
 -- 2025-12-03
 

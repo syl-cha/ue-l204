@@ -1,4 +1,4 @@
--- requêtes nécessaires à la création de la base de donnée universite
+-- requêtes nécessaires à la création de la base de donnée universite1
 -- v 0.2
 -- 2025-12-03
 
