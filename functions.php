@@ -7,53 +7,6 @@ function startSession(): void {
     }
 }
 
-// BDD (PDO)
-
-function getPDO(): PDO {
-    $host = 'localhost';
-    $dbname = 'universite1';
-    $user = 'root';
-    $pass = '';
-
-    $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
-
-    return new PDO($dsn, $user, $pass, [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-}
-
-// Connexion
-
-/* Récupère un utilisateur par son login (table `utilisateur`) */
-function getUserByLogin(PDO $pdo, string $login): ?array {
-    $sql = "SELECT id, login, mot_de_passe, role
-            FROM utilisateur 
-            WHERE login = :login";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':login' => $login]);
-    $user = $stmt->fetch();
-
-    return $user ?: null;
-}
-
-/* Connecte un utilisateur si le login et le mot de passe sont corrects */
-function loginUser(PDO $pdo, string $login, string $password): bool {
-    $user = getUserByLogin($pdo, $login);
-    // utilisateur introuvable
-    if (!$user) {
-        return false;
-    }
-    // mot de passe incorrect
-    if (!password_verify($password, $user['mot_de_passe'])) {
-        return false;
-    }
-    // Si ok, on enregistre la session
-    setConnecte($user);
-    return true;
-}
-
 /* Enregistre les données de l'utilisateur dans la session */
 function setConnecte(array $user): void {
     startSession();
