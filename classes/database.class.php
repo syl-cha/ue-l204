@@ -35,8 +35,8 @@ class DataBase
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
       ]);
-    } catch (PDOException $error) {
-      error_log('[' . date(DATE_RFC2822) . '] Database connection error : ' . $error->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+    } catch (PDOException $exception) {
+      error_log('[' . date(DATE_RFC2822) . '] Database connection error : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       throw new Exception("Connection to database failed");
     }
     return $this->pdo;
