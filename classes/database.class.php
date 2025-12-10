@@ -27,7 +27,7 @@ class DataBase
       // la connection à la base de données est déjà établie
       return $this->pdo;
     }
-    
+
     $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname . ';charset=utf8';
     
     try {
@@ -36,7 +36,6 @@ class DataBase
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
       ]);
     } catch (PDOException $error) {
-      var_dump(ERROR_LOG_PATH);
       error_log('[' . date(DATE_RFC2822) . '] Database connection error : ' . $error->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       throw new Exception("Connection to database failed");
     }
