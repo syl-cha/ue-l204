@@ -485,6 +485,7 @@ Création et mise en forme d'une page \texttt{index.php} contenant un formulaire
 
 \subsection{Page d’accueil protégée}
 La page \texttt{pages/accueil.php} n’est accessible que si l’utilisateur est connecté, sinon redirection automatique
+
 \clearpage
 \part{Bilan à mi-parcours}
 \section{Difficultés rencontrées / pas encore résolues}
@@ -496,9 +497,13 @@ La page \texttt{pages/accueil.php} n’est accessible que si l’utilisateur est
         $\longrightarrow$ découverte que le hash était invalide $\longrightarrow$ remplacement des mots de passe hachés directement en BDD.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
 
   \item Gestion des chemins relatifs entre les pages (\texttt{index.php}, \texttt{pages/accueil.php}, \texttt{pages/deconnexion.php}) : erreurs 404 ou redirections incorrectes à cause de chemins mal construits\\ \faCheckSquare[regular]\quad \textbf{Résolue}
+  \item Hashages réalisés par l'IA pour les utilisateurs fictifs se sont avérés faux. NOus avons dû les refaire à l'aide de commande PHP.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
+  
 
   \item Manque de temps personnel pour cette semaine pour la plupart d'entre nous à causes de raisons personnelles. À adapter en deuxième semaine.
 \end{itemize}
+
+
 \section{Projections pour la 2\ieme{} semaine}
 
 \subsection{Les tâches restantes}
