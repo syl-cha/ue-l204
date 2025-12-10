@@ -3,8 +3,11 @@
 // On appelle le fichier des fonctions une seule fois et s'il n'existe pas, le script s'arrête (grâce à require_once)
 require_once 'functions.php';
 startSession();
+require('./classes/universite-db.class.php');
 
-$pdo = getPDO();
+$db = new UniversiteDB();
+
+$pdo = $db->getPDO();
 
 // Si l'utilisateur est déjà connecté, il est directement redirigé vers l'accueil
 if (isConnecte()) {
