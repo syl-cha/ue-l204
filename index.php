@@ -8,6 +8,10 @@ require('./classes/universite-db.class.php');
 
 $db = new UniversiteDB();
 
+$addTest = $db->addCourse('INFO-L113', 'Introduction Rust', 3, "Initiation au langage Rust", '2025-2026', 40);
+$addTest2 = $db->addCourse('INFO-L213', 'Rust Avancé', 3, "Approfondissement du langage Rust", '2025-2026', 20,['INFO-L113','INFO-L101','INFO-L106']);
+
+
 // Si l'utilisateur est déjà connecté, il est directement redirigé vers l'accueil
 if (isConnecte()) {
   header('Location: pages/accueil.php');
@@ -53,6 +57,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <h1>Université de Limoges</h1>
       <p>Bienvenue sur la plateforme interne de l’Université de Limoges. Veuillez vous connecter pour accéder à votre espace personnel.
       </p>
+      <p><strong><?php if ($addTest) {
+                    echo 'Course 1 added successfully<br>';
+                  } else {
+                    echo 'Course 1 addition failed<br>';
+                  } ?></strong></p>
+      <p><strong><?php if ($addTest2) {
+                    echo 'Course 2 added successfully<br>';
+                  } else {
+                    echo 'Course 2 addition failed<br>';
+                  } ?></strong></p>
     </div>
     <div class="section-connexion">
       <h2>Connexion</h2>
