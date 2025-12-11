@@ -73,6 +73,7 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                   <th>Capacité Max</th>
                   <th>Année</th>
                   <th>Actif</th>
+                            <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -86,6 +87,11 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                     <td><?= htmlspecialchars($c['capacite_max']); ?></td>
                     <td><?= htmlspecialchars($c['annee_universitaire']); ?></td>
                     <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
+                    <td>
+                      <div class="actions">
+                        <a href="teacher.php?action=liste_perequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
+                      </div>
+                    </td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>
