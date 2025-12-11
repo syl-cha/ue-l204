@@ -13,4 +13,12 @@
 - Admin :
   - il peut créer/supprimer des utilisateurs de type prof et de type élèves (/!\ penser que la création se fait en deux temps : la création de l'utilisateur générique -> puis avec l'ID on spécialise cet utilisateur) ;
   - tout lister ;
-  - si on a le temps : il peut valider les inscriptions (des élèves) et les créations de cours (des enseignants).
+
+## Futur
+
+- Mécanisme de feedback à améliorer : actuellement pas de retour précis sur les erreurs
+- Mécanisme de gestion de durée de connexion
+- Vérification sur les champs des formulaires
+- Mots de passe provisoire
+- Les demandes d'inscription (des élèves) et de création de cours (des enseignants) doivent rester en attente de validation de l'admin.
+- Gestion des notes
