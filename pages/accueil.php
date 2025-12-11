@@ -43,7 +43,7 @@ $role  = $_SESSION['role']  ?? '';
                 <!-- Lien Gestion visible uniquement pour l'admin -->
                 <?php if (isAdmin()): ?>
                     <li>
-                        <a href="admin.php" title="Espace administration">Gestion</a>
+                        <a href="views/admin.php" title="Espace administration">Gestion</a>
                     </li>
                 <?php endif; ?>
 
