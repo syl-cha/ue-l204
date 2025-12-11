@@ -29,6 +29,13 @@ function isAdmin(): bool {
 }
 
 
+/* On vérifie si l'utilisateur connecté est enseignant */
+function isTeacher(): bool {
+    startSession();
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'enseignant';
+}
+
+
 /*** Déconnexion et redirection vers la page de connexion ***/
 function logout(): void {
     startSession();

@@ -24,13 +24,13 @@ require_once __DIR__ . '/../logic/admin.logic.php';
             </div>
 
             <li>
-                <a href="accueil.php" title="Mes cours">Mes cours</a>
+                <a href="../accueil.php" title="Retour">Retour</a>
             </li>
 
             <!-- On reste sur admin.php pour la gestion -->
-            <li>
+            <!-- <li>
                 <a href="admin.php" title="Espace administration">Gestion</a>
-            </li>
+            </li> -->
 
             <li id="deconnexion">
                 <a href="../../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>

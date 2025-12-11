@@ -36,14 +36,21 @@ $role  = $_SESSION['role']  ?? '';
                 </div>
 
                 <!-- Lien "Mes cours" -->
-                <li>
+                <!-- <li>
                     <a href="#" title="Mes cours">Mes cours</a>
-                </li>
+                </li> -->
 
                 <!-- Lien Gestion visible uniquement pour l'admin -->
                 <?php if (isAdmin()): ?>
                     <li>
                         <a href="views/admin.php" title="Espace administration">Gestion</a>
+                    </li>
+                <?php endif; ?>
+
+                <!-- Lien Gestion visible uniquement pour l'admin -->
+                <?php if (isTeacher()): ?>
+                    <li>
+                        <a href="views/teacher.php" title="Espace enseignant">Gestion</a>
                     </li>
                 <?php endif; ?>
 
@@ -71,8 +78,9 @@ $role  = $_SESSION['role']  ?? '';
         <?php elseif ($role === 'enseignant'): ?>
             <h2>Accueil enseignant</h2>
             <p>
-                Vous êtes connecté en tant qu’enseignant.
-                Ici, vous pourrez plus tard consulter vos cours, vos groupes, etc.
+                Vous êtes connecté en tant qu’enseignant.<br>
+                Utilisez le menu <strong>Gestion</strong> pour accéder aux fonctionnalités
+                de gestion de vos cours et de vos étudiants.
             </p>
 
         <?php elseif ($role === 'etudiant'): ?>

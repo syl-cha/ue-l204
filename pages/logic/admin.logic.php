@@ -12,7 +12,7 @@ if (!isConnecte()) {
 
 // Sécurité : seuls les admins peuvent accéder à cette page
 if (!isAdmin()) {
-    header('Location: accueil.php');
+    header('Location: ../accueil.php');
     exit;
 }
 

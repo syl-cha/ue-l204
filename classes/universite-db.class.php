@@ -275,10 +275,38 @@ class UniversiteDB extends DataBase
     return $stmt->fetchAll(PDO::FETCH_COLUMN);
   }
 
-     /************************* LISTE ADMIN ******************************/
+  /*
+  *                       LISTER
+  */
+
+
+
+  public function getAllCourses(): array|bool {
+    $sql = 'SELECT 
+    c.id, 
+    c.code,
+    c.nom,
+    c.credits,
+    c.description,
+    c.capacite_max,
+    c.annee_universitaire,
+    c.actif
+    FROM cours c
+    ORDER BY c.code
+    ';
+    try {
+      $stmt = $this->connect()->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $exception) {
+      error_log('[' . date(DATE_RFC2822) . '] Erreur addAllCourses : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return false;
+    }
+  }
+
+  /************************* LISTE MÉTHODES SPÉCIFIQUES ADMIN ******************************/
 
   /**
-   * Supprime un utilisateur (cascade sur enseignant/etudiant via les FK).
+   * Supprime un utilisateur (cascade sur enseignant/étudiant via les FK).
    */
   public function deleteUserById(int $idUtilisateur): bool
   {
