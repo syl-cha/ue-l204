@@ -210,30 +210,30 @@ class UniversiteDB extends DataBase
     if (!empty($missing)) {
       $missingCodes = implode(', ', $missing);
       throw new Exception('Inscription impossible : manquent la validation de ' . $missingCodes);
-
-      $sql = "INSERT INTO inscription (etudiant_id, cours_id) VALUES (:etudiant_id, :cours_id)";
-      $stmt = $this->connect()->prepare($sql);
-      try {
-        $stmt->execute([
-          ':etudiant_id' => $etudiantId,
-          ':cours_id' => $coursId
-        ]);
-        return true;
-      } catch (PDOException $exception) {
-        if ($exception->getCode() == '23000') {
-          $mysqlCode = $exception->errorInfo[1] ?? null; // Récupération du code d'erreur MySQL
-          if ($mysqlCode == 1062) { // L'étudiant est déjà inscrit au cours (UNIQUE KEY non respecté)
-            return false;
-          }
-          if ($mysqlCode == 1452) { // C'est une clé étrangère non respectée
-            throw new Exception("Erreur : L'étudiant (ID $etudiantId) ou le cours (ID $coursId) n'existe pas.");
-          }
-          throw $exception;
+    }
+    $sql = "INSERT INTO inscription (etudiant_id, cours_id) VALUES (:etudiant_id, :cours_id)";
+    $stmt = $this->connect()->prepare($sql);
+    try {
+      $stmt->execute([
+        ':etudiant_id' => $etudiantId,
+        ':cours_id' => $coursId
+      ]);
+      return true;
+    } catch (PDOException $exception) {
+      if ($exception->getCode() == '23000') {
+        $mysqlCode = $exception->errorInfo[1] ?? null; // Récupération du code d'erreur MySQL
+        if ($mysqlCode == 1062) { // L'étudiant est déjà inscrit au cours (UNIQUE KEY non respecté)
+          return false;
         }
-        return false;
+        if ($mysqlCode == 1452) { // C'est une clé étrangère non respectée
+          throw new Exception("Erreur : L'étudiant (ID $etudiantId) ou le cours (ID $coursId) n'existe pas.");
+        }
+        throw $exception;
       }
+      return false;
     }
   }
+
 
   /**
    *        MÉTHODES AUXILIAIRES
