@@ -52,7 +52,7 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
     <hr>
 
     <?php if ($action === 'liste_cours'): ?>
-      <?php if (!$cours): ?>
+      <?php if ($cours === false): ?>
         <p class="warning">Problème avec la récupération des cours.</p>
       <?php else: ?>
       <?php if (empty($cours)): ?>
@@ -89,9 +89,57 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                     <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                     <td>
                       <div class="actions">
-                        <a href="teacher.php?action=liste_perequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
+                        <?php if ($c['nb_prerequis'] > 0) : ?>
+                        <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
+                        
+                        <?php endif; ?>
                       </div>
                     </td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <?php endif; ?>
+      <?php endif; ?>
+    <?php endif; ?>
+
+    <?php if ($action === 'liste_prerequis'): ?>
+      <?php if ($prerequis === false): ?>
+        <p class="warning">Problème avec la récupération des prérequis.</p>
+      <?php else: ?>
+      <?php if (empty($prerequis)): ?>
+        <p>Le cours <?= $db->getCourseCodeById($coursId) ?> n'a pas de prérequis</p>
+      <?php else: ?>
+        <div class="table-container">
+          <h2>Liste des prérequis pour le cours <?= $db->getCourseCodeById($coursId) ?></h2>
+          <p class="subtitle">Visualisation du catalogue des cours prérequis</p>
+          <div class="table-wrapper">
+            <table class="table-admin">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Code</th>
+                  <th>Nom</th>
+                  <th>Credits</th>
+                  <th>Description</th>
+                  <th>Capacité Max</th>
+                  <th>Année</th>
+                  <th>Actif</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($prerequis as $p): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($p['id']); ?></td>
+                    <td><?= htmlspecialchars($p['code']); ?></td>
+                    <td><?= htmlspecialchars($p['nom']); ?></td>
+                    <td><?= htmlspecialchars($p['credits']); ?></td>
+                    <td><?= htmlspecialchars($p['description']); ?></td>
+                    <td><?= htmlspecialchars($p['capacite_max']); ?></td>
+                    <td><?= htmlspecialchars($p['annee_universitaire']); ?></td>
+                    <td><span class="badge badge-soft"><?= htmlspecialchars($p['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>

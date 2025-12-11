@@ -6,14 +6,14 @@ require_once __DIR__ . '/../../classes/universite-db.class.php';
 startSession();
 
 if (!isConnecte()) {
-    header('Location: ../index.php');
-    exit;
+  header('Location: ../index.php');
+  exit;
 }
 
 // Sécurité : seuls les enseignants peuvent accéder à cette page
 if (!isTeacher()) {
-    header('Location: ../accueil.php');
-    exit;
+  header('Location: ../accueil.php');
+  exit;
 }
 
 // On instancie notre classe d'accès BDD
@@ -26,10 +26,15 @@ $role  = $_SESSION['role']  ?? '';
 // TRAITEMENT DES ACTIONS GET 
 
 $action = $_GET['action'] ?? null;
+$coursId = $_GET['cours_id'] ?? null;
 
 $cours = [];
+$prerequis = [];
 
 if ($action === 'liste_cours') {
-   $cours = $db->getAllCourses();
+  $cours = $db->getAllCourses();
 }
 
+if ($action === 'liste_prerequis') {
+  $prerequis = $db->getCoursePrerequisites((int)$coursId);
+}

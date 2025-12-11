@@ -280,7 +280,10 @@ class UniversiteDB extends DataBase
   */
 
 
-
+  /**
+   * Récupère tous les cours de l'université
+   * @return array|bool Le tableau de tous les cours ou false si la requête  SQL ne passe pas
+   */
   public function getAllCourses(): array|bool {
     $sql = 'SELECT 
     c.id, 
@@ -290,7 +293,8 @@ class UniversiteDB extends DataBase
     c.description,
     c.capacite_max,
     c.annee_universitaire,
-    c.actif
+    c.actif,
+    (SELECT COUNT(*) FROM prerequis p WHERE p.cours_id = c.id) as nb_prerequis
     FROM cours c
     ORDER BY c.code
     ';
@@ -300,6 +304,53 @@ class UniversiteDB extends DataBase
     } catch (PDOException $exception) {
       error_log('[' . date(DATE_RFC2822) . '] Erreur addAllCourses : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return false;
+    }
+  }
+
+  /**
+   * Récupère la liste des cours prérequis pour un cours donné
+   * @param int $courseId L'ID du cours dont on veut les prérequis
+   * @return array|bool Un tableau associatif des cours prérequis ou false en cas d'erreur
+   */
+  public function getCoursePrerequisites(int|null $courseId): array|bool {
+    if ($courseId === null) {return false;}
+    $sql = 'SELECT 
+      c.id, 
+      c.code,
+      c.nom,
+      c.credits,c.description, 
+      c.capacite_max,
+      c.annee_universitaire,
+      c.actif
+    FROM cours c
+    INNER JOIN prerequis p ON c.id = p.prerequis_cours_id
+    WHERE p.cours_id = :course_id
+    ORDER BY c.code';
+
+    try {
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute([':course_id' => $courseId]);
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $exception) {
+      error_log('[' . date(DATE_RFC2822) . '] Erreur getCoursePrerequisites : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return false;
+    }
+  }
+  /**
+   * Retourne le code d'un cours par son id
+   * @param int $courseId L'identifiant du cours cherché
+   * @return ?string Le code du cours ou null si le cours n'est pas trouvé (ou si POB BDD)
+   */
+  public function getCourseCodeById(int $courseId) : ?string {
+    $sql = 'SELECT code FROM cours WHERE id = :course_id';
+    try {
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute([':course_id' => $courseId]);
+      $code = $stmt->fetchColumn();
+      return $code ?: null;
+    } catch (PDOException $exception) {
+      error_log('[' . date(DATE_RFC2822) . '] Erreur getCourseCodeById : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return null;
     }
   }
 
