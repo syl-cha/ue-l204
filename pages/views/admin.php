@@ -33,7 +33,7 @@ require_once __DIR__ . '/../logic/admin.logic.php';
             </li>
 
             <li id="deconnexion">
-                <a href="../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>
+                <a href="../../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>
             </li>
         </ul>
     </nav>
