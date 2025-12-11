@@ -9,20 +9,17 @@
     --white: #ffffff;
 }
 
-*, 
+/* Reset & base */
+*,
 *:after,
 *:before {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Structure générale */
-
-.row {
-    display: flex;
-    height: 100vh;
-    width: 100%;
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -31,22 +28,25 @@ body {
     padding: 0;
 }
 
-html{
-    scroll-behavior: smooth;
-}
-
-/* Propriétés globales */
-ul{
+ul {
     list-style: none;
     margin: 0;
 }
 
-a{
+a {
     text-decoration: none;
     color: black;
 }
 
-/* Les 2 colonnes prennent 50% */
+/* Page de connexion */
+
+.row {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Colonnes */
 .img-connexion,
 .section-connexion {
     flex: 1;
@@ -56,8 +56,7 @@ a{
     box-sizing: border-box;
 }
 
-/* Section Université */
-
+/* Colonne Université */
 .img-connexion {
     align-items: flex-start;
     background: var(--background-light);
@@ -83,8 +82,7 @@ a{
     color: var(--text-medium);
 }
 
-/* Section de connexion */
-
+/* Colonne Connexion */
 .section-connexion {
     align-items: center;
     background: var(--white);
@@ -98,7 +96,6 @@ a{
 }
 
 /* Formulaire de connexion */
-
 .login-form {
     width: 100%;
     max-width: 350px;
@@ -107,15 +104,12 @@ a{
     gap: 20px;
 }
 
-/* Labels */
-
 .login-form label {
     font-weight: 600;
     margin-bottom: -10px;
 }
 
 /* Inputs avec icône */
-
 .input-icon {
     position: relative;
     width: 100%;
@@ -141,7 +135,6 @@ a{
 }
 
 /* Bouton de connexion */
-
 .btn-form {
     padding: 12px;
     background-color: var(--primary);
@@ -158,9 +151,7 @@ a{
     background-color: var(--primary-dark);
 }
 
-
-/* Erreurs */
-
+/* Message d'erreur */
 .erreur {
     color: var(--primary-dark);
     padding: 10px;
@@ -168,47 +159,329 @@ a{
     margin-top: 15px;
 }
 
-/* ------ Page accueil ------ 
------------------------------- */
+/* Header / Navigation (accueil) */
 
-#header-nav{
+#header-nav {
     background-color: var(--primary);
 }
 
-.logo-menu{
+.logo-menu {
     height: 50px;
     display: flex;
-    background-color: rgba(255, 255, 255, 0.9) ;
+    background-color: rgba(255, 255, 255, 0.9);
 }
-.logo-menu-img{
+
+.logo-menu-img {
     height: 100%;
     width: auto;
     object-fit: contain;
 }
 
-#header-nav ul{
+#header-nav ul {
     display: flex;
     margin-right: 1rem;
 }
 
-#header-nav a{
+#header-nav a {
     color: white;
 }
 
-#header-nav li{
+#header-nav li {
     padding: 1rem;
     transition: all 0.2s ease-in-out;
 }
 
-#header-nav li:hover{
+#header-nav li:hover {
     background-color: var(--primary-dark);
     transform: scale(1.05);
 }
 
-#deconnexion{
+#deconnexion {
     margin-left: auto;
 }
 
-#header h1{
+#header h1 {
     margin: 1rem 0 0 2rem;
+}
+
+/* Actions admin (boutons en haut) */
+
+.admin-actions {
+    margin: 1.5rem 2rem 1rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Tableau (listes admin) */
+
+.table-container {
+    margin: 2rem;
+    padding: 1.5rem;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f0f0f0;
+}
+
+.table-container h2,
+.table-container h3 {
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.table-container .subtitle {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    margin-bottom: 1rem;
+}
+
+/* Wrapper scroll horizontal */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+}
+
+/* Tableau principal */
+.table-admin {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px; /* évite que tout soit tassé */
+    background-color: var(--white);
+    font-size: 0.9rem;
+}
+
+.table-admin thead {
+    background: linear-gradient(to right, #ffe4e1, #fff5f4);
+}
+
+.table-admin th,
+.table-admin td {
+    padding: 0.7rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+}
+
+.table-admin th {
+    font-weight: 600;
+    color: var(--text-dark);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table-admin tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.table-admin tbody tr:hover {
+    background-color: #fff0f1;
+}
+
+/* Badges (statut, niveau...) */
+.badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background-color: #f1f1f1;
+    color: var(--text-medium);
+}
+
+.badge-primary {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.badge-soft {
+    background-color: var(--background-light);
+    color: var(--primary-dark);
+}
+
+/* Zone d’actions (Modifier / Supprimer) */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+/* Boutons génériques */
+
+.btn {
+    display: inline-block;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.2s ease;
+    background-color: var(--primary);
+    color: var(--white);
+    font-family: "Poppins", sans-serif;
+}
+
+.btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #6b7280;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+}
+
+/* Version petite pour les actions dans le tableau */
+.btn-xs {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+}
+
+/* Formulaires "classiques" (ajout / édition hors tableau) */
+
+.edit-form {
+    padding: 1.5rem;
+    background-color: var(--white);
+    border-radius: 10px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    max-width: 600px;
+}
+
+.edit-form h3 {
+    margin-bottom: 0.8rem;
+}
+
+.edit-form p {
+    margin: 0.4rem 0 1rem;
+}
+
+.edit-form label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    margin-bottom: 0.25rem;
+}
+
+.edit-form input,
+.edit-form select {
+    width: 100%;
+    max-width: 360px;
+    padding: 0.45rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    font-size: 0.9rem;
+}
+
+.edit-form button {
+    margin-top: 0.8rem;
+}
+
+/* Zone des boutons dans les formulaires */
+.edit-form-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+/* Formulaires d’édition INLINE (sous une ligne du tableau) */
+
+.inline-edit-row {
+    background-color: var(--background-light);
+}
+
+.inline-edit-cell {
+    padding: 1.2rem 1.5rem;
+    border-top: 2px solid var(--primary);
+}
+
+/* Mise en page en 2 lignes */
+.inline-edit-cell .edit-form,
+.inline-edit-cell .edit-form-modif {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem 1rem;
+    align-items: flex-end;
+    max-width: none;
+    width: 100%;
+}
+
+/* Chaque champ dans la grille */
+.inline-edit-cell .edit-form > div,
+.inline-edit-cell .edit-form-modif > div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.inline-edit-cell label {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    margin-bottom: 0.25rem;
+}
+
+/* Inputs dans les formulaires inline */
+.inline-edit-cell input,
+.inline-edit-cell select {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    font-size: 0.85rem;
+    background-color: var(--white);
+}
+
+.inline-edit-cell input:focus,
+.inline-edit-cell select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Edit-form-modif (déclarée pour cohérence)
+   utilisée pour les enseignants inline  */
+
+.edit-form-modif {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+/* Conteneur des boutons — occupe toute la ligne du grid */
+.inline-edit-cell .edit-form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    margin-top: 1rem;
+}
+
+
+/* Boutons uniformisés */
+.inline-edit-cell .btn,
+.inline-edit-cell .btn-secondary {
+    width: 130px;
+    padding: 0.45rem 0;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
