@@ -1,5 +1,5 @@
 <?php
-require('./classes/database.class.php');
+require('database.class.php');
 
 /**
  * Extension de la classe Database gérant la logique spécifique
