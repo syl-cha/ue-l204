@@ -12,6 +12,8 @@ if (!isConnecte()) {
 // On récupère le login et le rôle
 $login = $_SESSION['login'] ?? '';
 $role  = $_SESSION['role']  ?? '';
+
+redirectByRole();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -72,7 +74,6 @@ $role  = $_SESSION['role']  ?? '';
     </header>
 
     <main style="margin: 2rem;">
-        <p>Connecté en tant que : <strong><?php echo htmlspecialchars($login, ENT_QUOTES, 'UTF-8'); ?></strong></p>
 
         <?php if ($role === 'admin'): ?>
             <h2>Accueil administrateur</h2>

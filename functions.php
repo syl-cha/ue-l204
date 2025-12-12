@@ -15,6 +15,36 @@ function setConnecte(array $user): void {
     $_SESSION['role']    = $user['role'];
 }
 
+/* Redirige l'utilisateur sur sa page d'accueil en fonction de son rôle*/
+function redirectByRole(): void {
+    startSession();
+
+    //Si pas de rôle, redirigé vers la page de connexion
+    if (!isset($_SESSION['role'])) {
+        header('Location: ../index.php');
+        exit;
+    }
+
+    switch($_SESSION['role']) {
+        case 'admin':
+            header('Location: views/admin.php');
+            break;
+        
+        case 'enseignant':
+            header('Location: views/teacher.php');
+            break;
+
+        case 'etudiant':
+            header('Location: views/student.php');
+            break;
+        
+        //Si rôle inconnue -> déconnexion
+        default:
+            header('Location: deconnexion.php');
+            exit;
+    }
+}
+
 
 /*** On vérifie si l'utilisateur est déjà connecté (retourne vrai ou faux) ***/
 function isConnecte(): bool {
