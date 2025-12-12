@@ -48,7 +48,7 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
       <a class="btn btn-secondary" href="teacher.php?action=creer_cours" title="Créer un cours">Créer un cours</a>
 
       <?php if (hasFeedbackInSession()): ?>
-        <span class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
+        <span class=<?= $_SESSION['feedback']['success'] ? 'success' : 'warning'?> ><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
         <?php unset($_SESSION['feedback']); ?>
       <?php endif; ?>
     </div>
