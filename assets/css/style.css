@@ -312,7 +312,6 @@ a {
 }
 
 /* Boutons génériques */
-
 .btn, .btn-secondary {
     display: inline-block;
     padding: 0.45rem 0.9rem;
@@ -355,7 +354,6 @@ a {
 }
 
 /* Formulaires "classiques" (ajout / édition hors tableau) */
-
 .edit-form, .edit-form-modif {
     background-color: var(--background-light);
     padding: 2rem;
@@ -405,7 +403,6 @@ a {
 
 
 /* Formulaires d’édition INLINE (sous une ligne du tableau) */
-
 .inline-edit-row {
     background-color: var(--background-light);
 }
@@ -459,7 +456,6 @@ a {
 
 /* Edit-form-modif (déclarée pour cohérence)
    utilisée pour les enseignants inline  */
-
 .edit-form-modif {
     padding: 0;
     border: none;
@@ -489,4 +485,5 @@ a {
     white-space: nowrap;
     box-sizing: border-box;
 }
+
 
