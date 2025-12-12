@@ -10,11 +10,13 @@
 }
 
 /* Reset & base */
-*,
-*:after,
-*:before {
+* {
     margin: 0;
-    padding: 0;
+    box-sizing: border-box;
+}
+
+*:before,
+*:after {
     box-sizing: border-box;
 }
 
@@ -157,6 +159,7 @@ a {
     padding: 10px;
     border-radius: 5px;
     margin-top: 15px;
+    text-align: center;
 }
 
 /* Header / Navigation (accueil) */
@@ -309,8 +312,7 @@ a {
 }
 
 /* Boutons génériques */
-
-.btn {
+.btn, .btn-secondary {
     display: inline-block;
     padding: 0.45rem 0.9rem;
     font-size: 0.85rem;
@@ -352,56 +354,55 @@ a {
 }
 
 /* Formulaires "classiques" (ajout / édition hors tableau) */
-
-.edit-form {
-    padding: 1.5rem;
-    background-color: var(--white);
-    border-radius: 10px;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+.edit-form, .edit-form-modif {
+    background-color: var(--background-light);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    display: grid;
+    gap: 1rem;
     max-width: 600px;
-}
-
-.edit-form h3 {
-    margin-bottom: 0.8rem;
-}
-
-.edit-form p {
-    margin: 0.4rem 0 1rem;
+    margin-bottom: 2rem;
 }
 
 .edit-form label {
     display: block;
-    font-size: 0.9rem;
-    color: var(--text-medium);
-    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 0.3rem;
 }
 
 .edit-form input,
-.edit-form select {
+.edit-form select,
+.edit-form textarea {
     width: 100%;
-    max-width: 360px;
-    padding: 0.45rem 0.6rem;
-    border-radius: 6px;
-    border: 1px solid var(--input-border);
-    font-size: 0.9rem;
+    padding: 0.65rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: 0.3s ease;
+    background-color: #fff;
 }
 
-.edit-form button {
-    margin-top: 0.8rem;
+.edit-form input:focus,
+.edit-form select:focus,
+.edit-form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 5px rgba(184, 8, 30, 0.3);
 }
 
 /* Zone des boutons dans les formulaires */
 .edit-form-actions {
     display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    margin-left: auto;
-    white-space: nowrap;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
 }
 
-/* Formulaires d’édition INLINE (sous une ligne du tableau) */
 
+/* Formulaires d’édition INLINE (sous une ligne du tableau) */
 .inline-edit-row {
     background-color: var(--background-light);
 }
@@ -455,7 +456,6 @@ a {
 
 /* Edit-form-modif (déclarée pour cohérence)
    utilisée pour les enseignants inline  */
-
 .edit-form-modif {
     padding: 0;
     border: none;
@@ -485,3 +485,5 @@ a {
     white-space: nowrap;
     box-sizing: border-box;
 }
+
+

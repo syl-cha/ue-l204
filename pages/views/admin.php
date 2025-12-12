@@ -11,6 +11,19 @@ require_once __DIR__ . '/../logic/admin.logic.php';
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+    /* Corrige le bouton Annuler (ne fonctionne pas dans le CSS) */
+    .btn, .btn-secondary {
+        padding: 0.45rem 0.9rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 999px !important;
+        box-sizing: border-box !important;
+        line-height: 1 !important;
+        margin-top: 5px !important;
+    }
+    </style>
 </head>
 
 <body>
