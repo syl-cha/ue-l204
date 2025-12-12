@@ -180,7 +180,7 @@ class UniversiteDB extends DataBase
         ':enseignant_id' => $enseignantId,
         ':cours_id' => $coursId,
         ':annee' => $annee,
-        ':responsable' => $responsable ? true : false
+        ':responsable' => $responsable ? 1 : 0
       ]);
       return true;
     } catch (\PDOException $exception) {
@@ -194,6 +194,8 @@ class UniversiteDB extends DataBase
         }
         throw $exception;
       }
+        error_log('[' . date(DATE_RFC2822) . '] Erreur addTeaching : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+        return false;
     }
   }
 
@@ -248,7 +250,7 @@ class UniversiteDB extends DataBase
   private function isYearFormatValid(string $year): bool
   {
     $regexp = '/^(\d{4})-(\d{4})$/';
-    if (!preg_match($regexp, $year, $matches)) {
+    if (!preg_match($regexp, trim($year), $matches)) {
       return false;
     }
     $firstYear = (int)$matches[1];
@@ -284,7 +286,8 @@ class UniversiteDB extends DataBase
    * Récupère tous les cours de l'université
    * @return array|bool Le tableau de tous les cours ou false si la requête  SQL ne passe pas
    */
-  public function getAllCourses(): array|bool {
+  public function getAllCourses(): array|bool
+  {
     $sql = 'SELECT 
     c.id, 
     c.code,
@@ -300,7 +303,7 @@ class UniversiteDB extends DataBase
     ';
     try {
       $stmt = $this->connect()->query($sql);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $exception) {
       error_log('[' . date(DATE_RFC2822) . '] Erreur getAllCourses : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return false;
@@ -312,8 +315,11 @@ class UniversiteDB extends DataBase
    * @param int $courseId L'ID du cours dont on veut les prérequis
    * @return array|bool Un tableau associatif des cours prérequis ou false en cas d'erreur
    */
-  public function getCoursePrerequisites(int|null $courseId): array|bool {
-    if ($courseId === null) {return false;}
+  public function getCoursePrerequisites(int|null $courseId): array|bool
+  {
+    if ($courseId === null) {
+      return false;
+    }
     $sql = 'SELECT 
       c.id, 
       c.code,
@@ -336,12 +342,19 @@ class UniversiteDB extends DataBase
       return false;
     }
   }
+
+
+  /*
+  *                       RÉCUPÉRER UNE DONNÉE UNIQUE
+  */
+
   /**
    * Retourne le code d'un cours par son id
    * @param int $courseId L'identifiant du cours cherché
    * @return ?string Le code du cours ou null si le cours n'est pas trouvé (ou si POB BDD)
    */
-  public function getCourseCodeById(int $courseId) : ?string {
+  public function getCourseCodeById(int $courseId): ?string
+  {
     $sql = 'SELECT code FROM cours WHERE id = :course_id';
     try {
       $stmt = $this->connect()->prepare($sql);
@@ -350,6 +363,48 @@ class UniversiteDB extends DataBase
       return $code ?: null;
     } catch (PDOException $exception) {
       error_log('[' . date(DATE_RFC2822) . '] Erreur getCourseCodeById : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return null;
+    }
+  }
+
+  /**
+   * Récupère les caractéristiques d'un enseignant sur la base de son login
+   * @param string $login Le login de l'enseignant
+   * @return ?array Les informations de l'enseignant ou null si l'enseignant n'existe pas
+   */
+  public function getTeacherByLogin(string $login): ?array
+  {
+    $sql = 'SELECT e.* FROM enseignant e
+    INNER JOIN utilisateur u ON e.utilisateur_id = u.id 
+    WHERE u.login = :login';
+    try {
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute([':login' => $login]);
+      $res = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      return $res ?: null;
+    } catch (PDOException $exception) {
+      error_log('[' . date(DATE_RFC2822) . '] Erreur getTeacherByLogin : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return null;
+    }
+  }
+
+  /**
+   * Récupère un cours sur la base de son ID
+   * @param int $idCours L'ID du cours
+   * @return ?array Les informations du cours ou null si le cours n'existe pas
+   */
+  public function getCourseById(int $idCours): ?array
+  {
+    $sql = 'SELECT c.* FROM cours c WHERE c.id = :idCours';
+    try {
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute([':idCours' => $idCours]);
+      $course = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      return $course ?: null;
+    } catch (PDOException $exception) {
+      error_log('[' . date(DATE_RFC2822) . '] Erreur getCourseById : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return null;
     }
   }
@@ -550,7 +605,7 @@ class UniversiteDB extends DataBase
   }
 
 
-    /**
+  /**
    * Ajoute un nouvel enseignant (utilisateur + enseignant).
    */
   public function addEnseignant(
@@ -608,7 +663,6 @@ class UniversiteDB extends DataBase
 
       $pdo->commit();
       return true;
-
     } catch (\PDOException $e) {
       if ($pdo->inTransaction()) {
         $pdo->rollBack();
@@ -672,7 +726,6 @@ class UniversiteDB extends DataBase
 
       $pdo->commit();
       return true;
-
     } catch (\PDOException $e) {
       if ($pdo->inTransaction()) {
         $pdo->rollBack();

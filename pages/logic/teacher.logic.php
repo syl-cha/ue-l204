@@ -39,6 +39,31 @@ if ($action === 'liste_prerequis') {
   $prerequis = $db->getCoursePrerequisites((int)$coursId);
 }
 
+if ($action === 'enseigner_cours' && $coursId) {
+  $enseignant = $db->getTeacherByLogin($login);
+  if ($enseignant) {
+    $infosCours = $db->getCourseById($coursId);
+    if ($infosCours) {
+      $succes = $db->addTeaching(
+        (int)$enseignant['id'],
+        (int)$infosCours['id'],
+        $infosCours['annee_universitaire']
+      );
+      if ($succes) {
+        $_SESSION['feedback'] = ['message' => 'Vous enseignez à présent en '. $infosCours['code'] . " : " . $infosCours['nom']. '.', 'success' => true];
+      } else {
+        $_SESSION['feedback'] = ['message' => 'Impossible de s\'inscrire. Enseignez-vous déjà en '. $infosCours['code'] . " : " . $infosCours['nom'] . ' ?', 'success' => false];
+      }
+    } else {
+        $_SESSION['feedback'] = ['message' => 'Le cours auquel vous tenter de vous inscrire est introuvable.', 'success' => false];
+    }
+  } else {
+        $_SESSION['feedback'] = ['message' => 'Enseignant introuvable.', 'success' => false];
+  }
+  header('Location: ../views/teacher.php?action=liste_cours');
+    exit;
+}
+
 // TRAITEMENT DES ACTIONS POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $actionPost = $_POST['action'] ?? '';
