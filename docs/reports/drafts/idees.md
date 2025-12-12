@@ -22,3 +22,4 @@
 - Mots de passe provisoire
 - Les demandes d'inscription (des élèves) et de création de cours (des enseignants) doivent rester en attente de validation de l'admin.
 - Gestion des notes
+- Possibilité pour les utilisateurs de changer des données personnelles.
