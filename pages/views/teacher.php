@@ -44,6 +44,7 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
     <!-- Boutons d'action (teacher) -->
     <div class="admin-actions">
       <a class="btn" href="teacher.php?action=liste_cours" title="Lister les cours">Lister les cours</a>
+      <a class="btn" href="teacher.php?action=liste_enseignements" title="Lister mes enseignements">Lister mes enseignements</a>
       <a class="btn btn-secondary" href="teacher.php?action=creer_cours" title="Créer un cours">Créer un cours</a>
 
       <?php if (hasFeedbackInSession()): ?>
@@ -92,11 +93,11 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                       <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                       <td>
                         <div class="actions">
+                            <a href="teacher.php?action=enseigner_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Enseigner</a>
+                            <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Supprimer</a>
                           <?php if ($c['nb_prerequis'] > 0) : ?>
                             <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
-
-                          <?php endif; ?>
-                        </div>
+                          <?php endif; ?></div>
                       </td>
                     </tr>
                   <?php endforeach; ?>
