@@ -36,6 +36,13 @@ function isTeacher(): bool {
 }
 
 
+/* On vérifie si l'utilisateur connecté est enseignant */
+function isStudent(): bool {
+    startSession();
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'etudiant';
+}
+
+
 /*** Déconnexion et redirection vers la page de connexion ***/
 function logout(): void {
     startSession();
