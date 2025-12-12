@@ -54,6 +54,13 @@ $role  = $_SESSION['role']  ?? '';
                     </li>
                 <?php endif; ?>
 
+                <!-- Lien Gestion visible uniquement pour l'étudiant -->
+                <?php if (isStudent()): ?>
+                    <li>
+                        <a href="views/student.php" title="Espace étudiant">Gestion</a>
+                    </li>
+                <?php endif; ?>
+
                 <!-- Déconnexion -->
                 <li id="deconnexion">
                     <a href="../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>

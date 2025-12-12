@@ -28,6 +28,7 @@ $role  = $_SESSION['role']  ?? '';
 $action = $_GET['action'] ?? null;
 
 $cours = [];
+$coursDejaSuivis = [];
 
 if ($action === 'liste_cours') {
   $cours = $db->getAllCourses();

@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/../logic/teacher.logic.php';
+require_once __DIR__ . '/../logic/student.logic.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-  <title>Mini-projet | Groupe 5 - UE 204 / Enseignant</title>
+  <title>Mini-projet | Groupe 5 - UE 204 / Étudiant</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="assets/logo.png" />
@@ -33,19 +33,18 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
         </li>
       </ul>
     </nav>
-    <h1>Espace Enseignant</h1>
+    <h1>Espace Étudiant</h1>
   </header>
 
   <main style="margin: 2rem;">
     <p>Connecté en tant que : <strong><?= htmlspecialchars($login, ENT_QUOTES, 'UTF-8') ?></strong></p>
 
-    <h2>Administration des cours et élèves</h2>
+    <h2>Gestion de vos cours</h2>
 
-    <!-- Boutons d'action (teacher) -->
+    <!-- Boutons d'action (student) -->
     <div class="admin-actions">
-      <a class="btn" href="teacher.php?action=liste_cours" title="Lister les cours">Lister les cours</a>
-      <a class="btn" href="teacher.php?action=liste_enseignements" title="Lister mes enseignements">Lister vos enseignements</a>
-      <a class="btn btn-secondary" href="teacher.php?action=creer_cours" title="Créer un cours">Créer un cours</a>
+      <a class="btn" href="student.php?action=liste_cours" title="Lister tous les cours">Lister tous les cours</a>
+      <a class="btn" href="student.php?action=liste_enseignements" title="Lister mes enseignements">Lister mes cours</a>
 
       <?php if (hasFeedbackInSession()): ?>
         <span class=<?= $_SESSION['feedback']['success'] ? 'success' : 'warning'?> ><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
@@ -93,14 +92,10 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                       <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                       <td>
                         <div class="actions">
-                          <?php if (in_array($c['id'], $coursDejaEnseignes)): ?>
-                            <span class="badge badge-soft">Membre</span>
+                          <?php if (in_array($c['id'], $coursDejaSuivis)): ?>
+                            <span class="badge badge-soft">Inscrit</span>
                           <?php else: ?>
-                            <a href="teacher.php?action=enseigner_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Enseigner</a>
-                          <?php endif; ?>
-                          <!-- <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Supprimer</a> -->
-                          <?php if ($c['nb_prerequis'] > 0) : ?>
-                            <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
+                            <a href="student.php?action=inscription_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">S'inscrire</a>
                           <?php endif; ?>
                         </div>
                       </td>
@@ -114,50 +109,7 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
       <?php endif; ?>
     <?php endif; ?>
 
-    <?php if ($action === 'liste_prerequis'): ?>
-      <?php if ($prerequis === false): ?>
-        <p class="warning">Problème avec la récupération des prérequis.</p>
-      <?php else: ?>
-        <?php if (empty($prerequis)): ?>
-          <p>Le cours <?= $db->getCourseCodeById($coursId) ?> n'a pas de prérequis</p>
-        <?php else: ?>
-          <div class="table-container">
-            <h2>Liste des prérequis pour le cours <?= $db->getCourseCodeById($coursId) ?></h2>
-            <p class="subtitle">Visualisation du catalogue des cours prérequis</p>
-            <div class="table-wrapper">
-              <table class="table-admin">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Code</th>
-                    <th>Nom</th>
-                    <th>Credits</th>
-                    <th>Description</th>
-                    <th>Capacité Max</th>
-                    <th>Année</th>
-                    <th>Actif</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($prerequis as $p): ?>
-                    <tr>
-                      <td><?= htmlspecialchars($p['id']); ?></td>
-                      <td><?= htmlspecialchars($p['code']); ?></td>
-                      <td><?= htmlspecialchars($p['nom']); ?></td>
-                      <td><?= htmlspecialchars($p['credits']); ?></td>
-                      <td><?= htmlspecialchars($p['description']); ?></td>
-                      <td><?= htmlspecialchars($p['capacite_max']); ?></td>
-                      <td><?= htmlspecialchars($p['annee_universitaire']); ?></td>
-                      <td><span class="badge badge-soft"><?= htmlspecialchars($p['actif'] ? 'Actif' : 'Inactif') ?></span></td>
-                    </tr>
-                  <?php endforeach; ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        <?php endif; ?>
-      <?php endif; ?>
-    <?php endif; ?>
+  
 
     <?php if ($action === 'liste_enseignements'): ?>
       <h2>Liste de vos enseignements</h2>
