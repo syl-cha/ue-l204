@@ -44,3 +44,15 @@ function logout(): void {
     header('Location: ../index.php');
     exit;
 }
+
+	function hasFeedbackInSession(){
+		if($_SESSION 
+			&& count($_SESSION) 
+				&& array_key_exists('feedback', $_SESSION)
+					&& gettype($_SESSION['feedback']) === 'array'
+						&& count($_SESSION['feedback'])){
+			return true;
+		}else{
+			return false;
+		}
+	}

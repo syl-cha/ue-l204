@@ -38,3 +38,51 @@ if ($action === 'liste_cours') {
 if ($action === 'liste_prerequis') {
   $prerequis = $db->getCoursePrerequisites((int)$coursId);
 }
+
+// TRAITEMENT DES ACTIONS POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $actionPost = $_POST['action'] ?? '';
+
+  if ($actionPost === 'add_course') {
+    $courseCode = $_POST['course-code'] ?? null;
+    $courseName = $_POST['course-name'] ?? null;
+    $courseCredits = (int)($_POST['course-credits'] ?? 0);
+    $courseDescription = $_POST['course-description'] ?? null;
+    $courseYear = $_POST['course-year'] ?? null;
+    $courseCapacity = (int)($_POST['course-capacity'] ?? 0);
+    $courseYear = $_POST['course-year'] ?? null;
+    $coursePrerequisites = $_POST['course-prerequisites'] ?? null;
+    // traitement de la saisie des prérequis
+    if (trim($coursePrerequisites) === '') {
+      // ques des espaces dans le champ des prérequis
+      $preCodesClean = [];
+    } else {
+      $preCodesRaw = explode(',', $coursePrerequisites);
+      $preCodesTrimmed = array_map('trim', $preCodesRaw);
+      $preCodesClean = array_values(array_filter(array_map('strtoupper', $preCodesTrimmed)));
+    }
+    if ($db->addCourse(
+      $courseCode,
+      $courseName,
+      $courseCredits,
+      $courseDescription,
+      $courseYear,
+      $courseCapacity,
+      $preCodesClean
+    )) {
+      $_SESSION['feedback'] = [
+        'message' => 'Le cours a été ajouté',
+        'success' => true,
+      ];
+      header('Location: ../views/teacher.php');
+      exit;
+    } else {
+      $_SESSION['feedback'] = [
+        'message' => 'Erreur lors de l\'ajout du cours. Vérifier les champs',
+        'success' => false
+      ];
+      header('Location: ../views/teacher.php?action=creer_cours');
+      exit;
+    }
+  }
+}

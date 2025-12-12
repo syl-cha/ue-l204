@@ -302,7 +302,7 @@ class UniversiteDB extends DataBase
       $stmt = $this->connect()->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $exception) {
-      error_log('[' . date(DATE_RFC2822) . '] Erreur addAllCourses : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      error_log('[' . date(DATE_RFC2822) . '] Erreur getAllCourses : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return false;
     }
   }

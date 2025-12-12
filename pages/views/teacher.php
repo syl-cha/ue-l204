@@ -44,9 +44,12 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
     <!-- Boutons d'action (teacher) -->
     <div class="admin-actions">
       <a class="btn" href="teacher.php?action=liste_cours" title="Lister les cours">Lister les cours</a>
-      <!-- <a class="btn" href="teacher.php?action=liste_etudiants">Lister les étudiants</a>
-        <a class="btn btn-secondary" href="teacher.php?action=add_enseignant">Ajouter un enseignant</a>
-        <a class="btn btn-secondary" href="teacher.php?action=add_etudiant">Ajouter un étudiant</a> -->
+      <a class="btn btn-secondary" href="teacher.php?action=creer_cours" title="Créer un cours">Créer un cours</a>
+
+      <?php if (hasFeedbackInSession()): ?>
+        <span class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
+        <?php unset($_SESSION['feedback']); ?>
+      <?php endif; ?>
     </div>
 
     <hr>
@@ -55,53 +58,53 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
       <?php if ($cours === false): ?>
         <p class="warning">Problème avec la récupération des cours.</p>
       <?php else: ?>
-      <?php if (empty($cours)): ?>
-        <p>Aucun cours trouvé</p>
-      <?php else: ?>
-        <div class="table-container">
-          <h2>Liste des cours</h2>
-          <p class="subtitle">Visualisation du catalogue des cours</p>
-          <div class="table-wrapper">
-            <table class="table-admin">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Code</th>
-                  <th>Nom</th>
-                  <th>Credits</th>
-                  <th>Description</th>
-                  <th>Capacité Max</th>
-                  <th>Année</th>
-                  <th>Actif</th>
-                            <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach ($cours as $c): ?>
+        <?php if (empty($cours)): ?>
+          <p>Aucun cours trouvé</p>
+        <?php else: ?>
+          <div class="table-container">
+            <h2>Liste des cours</h2>
+            <p class="subtitle">Visualisation du catalogue des cours</p>
+            <div class="table-wrapper">
+              <table class="table-admin">
+                <thead>
                   <tr>
-                    <td><?= htmlspecialchars($c['id']); ?></td>
-                    <td><?= htmlspecialchars($c['code']); ?></td>
-                    <td><?= htmlspecialchars($c['nom']); ?></td>
-                    <td><?= htmlspecialchars($c['credits']); ?></td>
-                    <td><?= htmlspecialchars($c['description']); ?></td>
-                    <td><?= htmlspecialchars($c['capacite_max']); ?></td>
-                    <td><?= htmlspecialchars($c['annee_universitaire']); ?></td>
-                    <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
-                    <td>
-                      <div class="actions">
-                        <?php if ($c['nb_prerequis'] > 0) : ?>
-                        <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
-                        
-                        <?php endif; ?>
-                      </div>
-                    </td>
+                    <th>ID</th>
+                    <th>Code</th>
+                    <th>Nom</th>
+                    <th>Credits</th>
+                    <th>Description</th>
+                    <th>Capacité Max</th>
+                    <th>Année</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
                   </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <?php foreach ($cours as $c): ?>
+                    <tr>
+                      <td><?= htmlspecialchars($c['id']); ?></td>
+                      <td><?= htmlspecialchars($c['code']); ?></td>
+                      <td><?= htmlspecialchars($c['nom']); ?></td>
+                      <td><?= htmlspecialchars($c['credits']); ?></td>
+                      <td><?= htmlspecialchars($c['description']); ?></td>
+                      <td><?= htmlspecialchars($c['capacite_max']); ?></td>
+                      <td><?= htmlspecialchars($c['annee_universitaire']); ?></td>
+                      <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
+                      <td>
+                        <div class="actions">
+                          <?php if ($c['nb_prerequis'] > 0) : ?>
+                            <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
+
+                          <?php endif; ?>
+                        </div>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      <?php endif; ?>
+        <?php endif; ?>
       <?php endif; ?>
     <?php endif; ?>
 
@@ -109,45 +112,85 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
       <?php if ($prerequis === false): ?>
         <p class="warning">Problème avec la récupération des prérequis.</p>
       <?php else: ?>
-      <?php if (empty($prerequis)): ?>
-        <p>Le cours <?= $db->getCourseCodeById($coursId) ?> n'a pas de prérequis</p>
-      <?php else: ?>
-        <div class="table-container">
-          <h2>Liste des prérequis pour le cours <?= $db->getCourseCodeById($coursId) ?></h2>
-          <p class="subtitle">Visualisation du catalogue des cours prérequis</p>
-          <div class="table-wrapper">
-            <table class="table-admin">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Code</th>
-                  <th>Nom</th>
-                  <th>Credits</th>
-                  <th>Description</th>
-                  <th>Capacité Max</th>
-                  <th>Année</th>
-                  <th>Actif</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach ($prerequis as $p): ?>
+        <?php if (empty($prerequis)): ?>
+          <p>Le cours <?= $db->getCourseCodeById($coursId) ?> n'a pas de prérequis</p>
+        <?php else: ?>
+          <div class="table-container">
+            <h2>Liste des prérequis pour le cours <?= $db->getCourseCodeById($coursId) ?></h2>
+            <p class="subtitle">Visualisation du catalogue des cours prérequis</p>
+            <div class="table-wrapper">
+              <table class="table-admin">
+                <thead>
                   <tr>
-                    <td><?= htmlspecialchars($p['id']); ?></td>
-                    <td><?= htmlspecialchars($p['code']); ?></td>
-                    <td><?= htmlspecialchars($p['nom']); ?></td>
-                    <td><?= htmlspecialchars($p['credits']); ?></td>
-                    <td><?= htmlspecialchars($p['description']); ?></td>
-                    <td><?= htmlspecialchars($p['capacite_max']); ?></td>
-                    <td><?= htmlspecialchars($p['annee_universitaire']); ?></td>
-                    <td><span class="badge badge-soft"><?= htmlspecialchars($p['actif'] ? 'Actif' : 'Inactif') ?></span></td>
+                    <th>ID</th>
+                    <th>Code</th>
+                    <th>Nom</th>
+                    <th>Credits</th>
+                    <th>Description</th>
+                    <th>Capacité Max</th>
+                    <th>Année</th>
+                    <th>Actif</th>
                   </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <?php foreach ($prerequis as $p): ?>
+                    <tr>
+                      <td><?= htmlspecialchars($p['id']); ?></td>
+                      <td><?= htmlspecialchars($p['code']); ?></td>
+                      <td><?= htmlspecialchars($p['nom']); ?></td>
+                      <td><?= htmlspecialchars($p['credits']); ?></td>
+                      <td><?= htmlspecialchars($p['description']); ?></td>
+                      <td><?= htmlspecialchars($p['capacite_max']); ?></td>
+                      <td><?= htmlspecialchars($p['annee_universitaire']); ?></td>
+                      <td><span class="badge badge-soft"><?= htmlspecialchars($p['actif'] ? 'Actif' : 'Inactif') ?></span></td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
           </div>
+        <?php endif; ?>
+      <?php endif; ?>
+    <?php endif; ?>
+
+    <?php if ($action === 'creer_cours'): ?>
+      <h3>Créer un cours</h3>
+      <form class="edit-form" method="post">
+        <input type="hidden" name="action" value="add_course">
+        <div>
+          <label for="course-code">Code : </label>
+          <input type="text" name="course-code" id="course-code" required>
         </div>
-      <?php endif; ?>
-      <?php endif; ?>
+        <div>
+          <label for="course-name">Nom : </label>
+          <input type="text" name="course-name" id="course-name" required>
+        </div>
+        <div>
+          <label for="course-credits">Credits : </label>
+          <input type="number" min=1 max=12 name="course-credits" id="course-credits" required>
+        </div>
+        <div>
+          <label for="course-description">Description : </label>
+          <input type="text" name="course-description" id="course-description" required>
+        </div>
+        <div>
+          <label for="course-year">Année : </label>
+          <input type="text" name="course-year" id="course-year" required>
+        </div>
+        <div>
+          <label for="course-capacity">Capacité max : </label>
+          <input type="number" min=1 max=100 name="course-capacity" id="course-capacity" required>
+        </div>
+        <div>
+          <label for="course-prerequisites">Prérequis (codes séparés par virgule) : </label>
+          <input type="text" name="course-prerequisites" id="course-prerequisites">
+        </div>
+
+        <div class="edit-form-actions">
+          <button type="submit" class="btn">Créer</button>
+          <a href="teacher.php?action=liste_cours" class="btn btn-secondary">Annuler</a>
+        </div>
+      </form>
     <?php endif; ?>
   </main>
 
