@@ -31,7 +31,7 @@ require_once __DIR__ . '/../logic/admin.logic.php';
     <nav id="header-nav">
         <ul>
             <div class="logo-menu">
-                <a href="accueil.php">
+                <a href="../accueil.php">
                     <img src="../../assets/images/logo.png" alt="Logo université" class="logo-menu-img">
                 </a>
             </div>
@@ -80,11 +80,6 @@ require_once __DIR__ . '/../logic/admin.logic.php';
             </div>
 
             <div>
-                <label>Mot de passe</label>
-                <input type="password" name="mot_de_passe" required>
-            </div>
-
-            <div>
                 <label>Nom</label>
                 <input type="text" name="nom" required>
             </div>
@@ -127,6 +122,10 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                 <button type="submit" class="btn">Créer</button>
                 <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
             </div>
+            <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                    <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                    <?php unset($_SESSION['feedback']); ?>
+                <?php endif; ?>
         </form>
 
         <hr>
@@ -141,11 +140,6 @@ require_once __DIR__ . '/../logic/admin.logic.php';
             <div>
                 <label>Login</label>
                 <input type="text" name="login" required>
-            </div>
-
-            <div>
-                <label>Mot de passe</label>
-                <input type="password" name="mot_de_passe" required>
             </div>
 
             <div>
@@ -181,6 +175,10 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                 <button type="submit" class="btn">Créer</button>
                 <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
             </div>
+            <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                    <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                    <?php unset($_SESSION['feedback']); ?>
+            <?php endif; ?>
         </form>
 
         <hr>
@@ -188,6 +186,11 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
     <!-- Liste + édition enseignants -->
     <?php if ($action === 'liste_enseignants' || $action === 'edit_enseignant'): ?>
+
+        <?php if (hasFeedbackInSession() && !empty($_SESSION['feedback']['success'])): ?>
+            <p class="success"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+            <?php unset($_SESSION['feedback']); ?>
+        <?php endif; ?>
 
         <?php if (empty($enseignants)): ?>
             <p>Aucun enseignant trouvé.</p>
@@ -296,7 +299,12 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                             <div>
                                                 <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
                                             </div>
+                                           
                                         </form>
+                                         <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                                                <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                                                <?php unset($_SESSION['feedback']); ?>
+                                            <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -312,6 +320,11 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
     <!-- Liste + édition étudiants -->
     <?php if ($action === 'liste_etudiants' || $action === 'edit_etudiant'): ?>
+        
+        <?php if (hasFeedbackInSession() && !empty($_SESSION['feedback']['success'])): ?>
+            <p class="success"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+            <?php unset($_SESSION['feedback']); ?>
+        <?php endif; ?>
 
         <?php if (empty($etudiants)): ?>
             <p>Aucun étudiant trouvé.</p>
@@ -409,7 +422,12 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                                 <button type="submit" class="btn">Enregistrer</button>
                                                 <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
                                             </div>
+                                            
                                         </form>
+                                        <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                                                <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                                                <?php unset($_SESSION['feedback']); ?>
+                                            <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -426,3 +444,4 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
 </body>
 </html>
+
