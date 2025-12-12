@@ -549,7 +549,7 @@ class UniversiteDB extends DataBase
    * Retourne un étudiant par son id (table etudiant.id).
    * @return array|null
    */
-  public function getEtudiantById(int $idEtudiant): ?array
+  public function getEtudiantByUtilisateurId(int $utilisateurId): ?array
   {
     $sql = "
       SELECT 
@@ -564,13 +564,31 @@ class UniversiteDB extends DataBase
         e.date_inscription
       FROM etudiant e
       JOIN utilisateur u ON e.utilisateur_id = u.id
-      WHERE e.id = :id
+      WHERE u.id = :id
     ";
     $stmt = $this->connect()->prepare($sql);
-    $stmt->execute([':id' => $idEtudiant]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute([':id' => $utilisateurId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+  }
 
-    return $row ?: null;
+/**
+ * Récupère les IDs des cours auxquels un étudiant est inscrit
+ * @param int $etudiantId
+ * @return array Liste des cours_id
+ */
+  public function getCoursInscritByStudent(int $etudiantId): array
+  {
+    $sql = "
+      SELECT cours_id 
+      FROM inscription 
+      WHERE etudiant_id = :etudiant_id
+    ";
+    
+    $stmt = $this->connect()->prepare($sql);
+    
+    $stmt->execute([':etudiant_id' => $etudiantId]);
+    
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
   }
 
   /**

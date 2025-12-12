@@ -1,5 +1,4 @@
 <?php
-// Session
 
 function startSession(): void {
     if (session_status() === PHP_SESSION_NONE) {
@@ -13,6 +12,43 @@ function setConnecte(array $user): void {
     $_SESSION['user_id'] = (int) $user['id'];
     $_SESSION['login']   = $user['login'];
     $_SESSION['role']    = $user['role'];
+
+    if ($user['role'] === 'etudiant') {
+        require_once __DIR__ . '/classes/universite-db.class.php';
+        $db       = new UniversiteDB();
+        $etudiant = $db->getEtudiantByUtilisateurId($user['id']);
+
+        if ($etudiant) {
+            $_SESSION['etudiant_id'] = (int) $etudiant['id_etudiant'];
+            $_SESSION['numero_etudiant'] = $etudiant['numero_etudiant'];
+        }
+    }
+}
+
+/*** On vérifie si l'utilisateur est déjà connecté (retourne vrai ou faux) ***/
+function isConnecte(): bool {
+    startSession();
+    return isset($_SESSION['user_id']);
+}
+
+/* On vérifie si l'utilisateur connecté est admin */
+function isAdmin(): bool {
+    startSession();
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+}
+
+
+/* On vérifie si l'utilisateur connecté est enseignant */
+function isTeacher(): bool {
+    startSession();
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'enseignant';
+}
+
+
+/* On vérifie si l'utilisateur connecté est enseignant */
+function isStudent(): bool {
+    startSession();
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'etudiant';
 }
 
 /* Redirige l'utilisateur sur sa page d'accueil en fonction de son rôle*/
@@ -45,34 +81,6 @@ function redirectByRole(): void {
     }
 }
 
-
-/*** On vérifie si l'utilisateur est déjà connecté (retourne vrai ou faux) ***/
-function isConnecte(): bool {
-    startSession();
-    return isset($_SESSION['user_id']);
-}
-
-/* On vérifie si l'utilisateur connecté est admin */
-function isAdmin(): bool {
-    startSession();
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
-}
-
-
-/* On vérifie si l'utilisateur connecté est enseignant */
-function isTeacher(): bool {
-    startSession();
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'enseignant';
-}
-
-
-/* On vérifie si l'utilisateur connecté est enseignant */
-function isStudent(): bool {
-    startSession();
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'etudiant';
-}
-
-
 /*** Déconnexion et redirection vers la page de connexion ***/
 function logout(): void {
     startSession();
@@ -82,14 +90,14 @@ function logout(): void {
     exit;
 }
 
-	function hasFeedbackInSession(){
-		if($_SESSION 
-			&& count($_SESSION) 
-				&& array_key_exists('feedback', $_SESSION)
-					&& gettype($_SESSION['feedback']) === 'array'
-						&& count($_SESSION['feedback'])){
-			return true;
-		}else{
-			return false;
-		}
+/*function hasFeedbackInSession(){
+	if($_SESSION 
+		&& count($_SESSION) 
+			&& array_key_exists('feedback', $_SESSION)
+				&& gettype($_SESSION['feedback']) === 'array'
+					&& count($_SESSION['feedback'])){
+		return true;
+	}else{
+		return false;
 	}
+}*/

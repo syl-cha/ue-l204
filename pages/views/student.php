@@ -113,7 +113,7 @@ require_once __DIR__ . '/../logic/student.logic.php';
 
     <?php if ($action === 'liste_enseignements'): ?>
       <h2>Liste de vos enseignements</h2>
-      <?php if (empty($coursDejaEnseignes)): ?>
+      <?php if (empty($coursDejaSuivis)): ?>
         <p>Vous ne participez actuellement à aucun cours.</p>
       <?php else: ?>
         <div class="table-container">
@@ -131,26 +131,21 @@ require_once __DIR__ . '/../logic/student.logic.php';
                   <th>Année</th>
                   <th>Actif</th>
                   <th>Actions</th>
+                  <th>Note</th>
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($coursDejaEnseignes as $cId):
-                  $cours = $db->getCourseById($cId);
-                ?>
+                <?php foreach ($coursDejaSuivis as $c): ?>
                   <tr>
-                    <td><?= htmlspecialchars($cours['id']); ?></td>
-                    <td><?= htmlspecialchars($cours['code']); ?></td>
-                    <td><?= htmlspecialchars($cours['nom']); ?></td>
-                    <td><?= htmlspecialchars($cours['credits']); ?></td>
-                    <td><?= htmlspecialchars($cours['description']); ?></td>
-                    <td><?= htmlspecialchars($cours['capacite_max']); ?></td>
-                    <td><?= htmlspecialchars($cours['annee_universitaire']); ?></td>
+                    <td><?= htmlspecialchars($c['id']); ?></td>
+                    <td><?= htmlspecialchars($c['code']); ?></td>
+                    <td><?= htmlspecialchars($c['nom']); ?></td>
+                    <td><?= htmlspecialchars($c['credits']); ?></td>
+                    <td><?= htmlspecialchars($c['description']); ?></td>
+                    <td><?= htmlspecialchars($c['capacite_max']); ?></td>
+                    <td><?= htmlspecialchars($c['annee_universitaire']); ?></td>
                     <td><span class="badge badge-soft"><?= htmlspecialchars($cours['actif'] ? 'Actif' : 'Inactif') ?></span></td>
-                    <td>
-                      <div class="actions">
-                        <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$cours['id'] ?>" class="btn btn-xs">Étudiants</a>
-                      </div>
-                    </td>
+                    <td><span class="badge <?= $c['valide'] ? 'badge-soft' : '' ?>"><?= $c['valide'] ? 'Validé' : 'En cours' ?>
                   </tr>
                 <?php endforeach; ?>
               </tbody>

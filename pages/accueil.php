@@ -15,6 +15,9 @@ $role  = $_SESSION['role']  ?? '';
 
 redirectByRole();
 ?>
+
+<!-- ---------- -->
+<!-- A ENLEVER ??-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
