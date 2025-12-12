@@ -613,7 +613,6 @@ class UniversiteDB extends DataBase
    */
   public function addEnseignant(
     string $login,
-    string $motDePasse,
     string $nom,
     string $prenom,
     string $email,
@@ -680,7 +679,6 @@ class UniversiteDB extends DataBase
    */
   public function addEtudiant(
     string $login,
-    string $motDePasse,
     string $nom,
     string $prenom,
     string $email,
