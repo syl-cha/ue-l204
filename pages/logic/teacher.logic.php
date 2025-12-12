@@ -29,10 +29,16 @@ $action = $_GET['action'] ?? null;
 $coursId = $_GET['cours_id'] ?? null;
 
 $cours = [];
+$coursDejaEnseignes = [];
 $prerequis = [];
 
-if ($action === 'liste_cours') {
+if ($action === 'liste_cours' || $action === 'liste_enseignements') {
   $cours = $db->getAllCourses();
+  // récupération des enseignement de l'enseignant
+  $enseignantConnecte = $db->getTeacherByLogin($login);
+  if ($enseignantConnecte) {
+    $coursDejaEnseignes = $db->getTeachedCoursesId($enseignantConnecte['id']);
+  }
 }
 
 if ($action === 'liste_prerequis') {

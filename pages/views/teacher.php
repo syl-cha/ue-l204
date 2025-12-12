@@ -93,11 +93,16 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                       <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                       <td>
                         <div class="actions">
+                          <?php if (in_array($c['id'], $coursDejaEnseignes)): ?>
+                            <span class="badge badge-soft">Membre</span>
+                          <?php else: ?>
                             <a href="teacher.php?action=enseigner_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Enseigner</a>
-                            <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Supprimer</a>
+                          <?php endif; ?>
+                          <!-- <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Supprimer</a> -->
                           <?php if ($c['nb_prerequis'] > 0) : ?>
                             <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
-                          <?php endif; ?></div>
+                          <?php endif; ?>
+                        </div>
                       </td>
                     </tr>
                   <?php endforeach; ?>
@@ -151,6 +156,55 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
             </div>
           </div>
         <?php endif; ?>
+      <?php endif; ?>
+    <?php endif; ?>
+
+    <?php if ($action === 'liste_enseignements'): ?>
+      <h2>Liste de vos enseignements</h2>
+      <?php if (empty($coursDejaEnseignes)): ?>
+        <p>Vous ne participez actuellement à aucun cours.</p>
+      <?php else: ?>
+        <div class="table-container">
+          <p class="subtitle">Visualisation du catalogue des cours auxquels vous participez</p>
+          <div class="table-wrapper">
+            <table class="table-admin">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Code</th>
+                  <th>Nom</th>
+                  <th>Credits</th>
+                  <th>Description</th>
+                  <th>Capacité Max</th>
+                  <th>Année</th>
+                  <th>Actif</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($coursDejaEnseignes as $cId):
+                  $cours = $db->getCourseById($cId);
+                ?>
+                  <tr>
+                    <td><?= htmlspecialchars($cours['id']); ?></td>
+                    <td><?= htmlspecialchars($cours['code']); ?></td>
+                    <td><?= htmlspecialchars($cours['nom']); ?></td>
+                    <td><?= htmlspecialchars($cours['credits']); ?></td>
+                    <td><?= htmlspecialchars($cours['description']); ?></td>
+                    <td><?= htmlspecialchars($cours['capacite_max']); ?></td>
+                    <td><?= htmlspecialchars($cours['annee_universitaire']); ?></td>
+                    <td><span class="badge badge-soft"><?= htmlspecialchars($cours['actif'] ? 'Actif' : 'Inactif') ?></span></td>
+                    <td>
+                      <div class="actions">
+                        <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$cours['id'] ?>" class="btn btn-xs">Étudiants</a>
+                      </div>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
       <?php endif; ?>
     <?php endif; ?>
 

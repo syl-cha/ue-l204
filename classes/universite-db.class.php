@@ -194,8 +194,8 @@ class UniversiteDB extends DataBase
         }
         throw $exception;
       }
-        error_log('[' . date(DATE_RFC2822) . '] Erreur addTeaching : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
-        return false;
+      error_log('[' . date(DATE_RFC2822) . '] Erreur addTeaching : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return false;
     }
   }
 
@@ -237,50 +237,9 @@ class UniversiteDB extends DataBase
   }
 
 
-  /**
-   *        MÉTHODES AUXILIAIRES
-   */
-
-  /**
-   * Vérifie si le format d'année scolaire est correct 
-   * (par exemple '2024-2025')
-   * @param string $year L'année scolaire à vérifier
-   * @return bool true si le format est correct, False sinon
-   */
-  private function isYearFormatValid(string $year): bool
-  {
-    $regexp = '/^(\d{4})-(\d{4})$/';
-    if (!preg_match($regexp, trim($year), $matches)) {
-      return false;
-    }
-    $firstYear = (int)$matches[1];
-    $secondYear = (int)$matches[2];
-    return $secondYear - $firstYear === 1;
-  }
-
-  private function getMissingPrerequisites(int $etudiantId, int $coursId): array
-  {
-    $sql = 'SELECT c.code
-            FROM prerequis p
-            INNER JOIN cours c ON p.prerequis_cours_id = c.id
-            LEFT JOIN inscription i ON i.cours_id = p.prerequis_cours_id 
-                 AND i.etudiant_id = :etudiant_id 
-                 AND i.valide = 1
-            WHERE p.cours_id = :cours_id
-            AND i.id IS NULL';
-
-    $stmt = $this->connect()->prepare($sql);
-    $stmt->execute([
-      ':etudiant_id' => $etudiantId,
-      ':cours_id' => $coursId
-    ]);
-    return $stmt->fetchAll(PDO::FETCH_COLUMN);
-  }
-
   /*
   *                       LISTER
   */
-
 
   /**
    * Récupère tous les cours de l'université
@@ -341,6 +300,33 @@ class UniversiteDB extends DataBase
       error_log('[' . date(DATE_RFC2822) . '] Erreur getCoursePrerequisites : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return false;
     }
+  }
+
+
+
+  /**
+   * Récupérer la liste des prérequis non validés pour un étudiant
+   * @param int $etudiantId L'identifiant de l'étudiant
+   * @param int $coursId L'identifiant du cours
+   * @return array La liste des codes de cours non validés
+   */
+  private function getMissingPrerequisites(int $etudiantId, int $coursId): array
+  {
+    $sql = 'SELECT c.code
+            FROM prerequis p
+            INNER JOIN cours c ON p.prerequis_cours_id = c.id
+            LEFT JOIN inscription i ON i.cours_id = p.prerequis_cours_id 
+                 AND i.etudiant_id = :etudiant_id 
+                 AND i.valide = 1
+            WHERE p.cours_id = :cours_id
+            AND i.id IS NULL';
+
+    $stmt = $this->connect()->prepare($sql);
+    $stmt->execute([
+      ':etudiant_id' => $etudiantId,
+      ':cours_id' => $coursId
+    ]);
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
   }
 
 
@@ -406,6 +392,23 @@ class UniversiteDB extends DataBase
     } catch (PDOException $exception) {
       error_log('[' . date(DATE_RFC2822) . '] Erreur getCourseById : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return null;
+    }
+  }
+
+  /**
+   * Récupère toutes les IDs des cours enseignés par un enseignant
+   * @param int $enseignantId L'ID de l'enseignant
+   * @return array Liste des enseignants
+   */
+  public function getTeachedCoursesId (int $enseignantId) : array {
+    $sql = 'SELECT DISTINCT cours_id FROM enseigne WHERE enseignant_id = :enseignant_id';
+    try {
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute(['enseignant_id' => $enseignantId]);
+      return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    } catch(PDOException $exception) {
+      error_log('[' . date(DATE_RFC2822) . '] Erreur getTeachedCoursesId : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return [];
     }
   }
 
@@ -733,5 +736,29 @@ class UniversiteDB extends DataBase
       error_log('[' . date(DATE_RFC2822) . '] Erreur addEtudiant : ' . $e->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return false;
     }
+  }
+
+
+
+
+  /**
+   *        MÉTHODES AUXILIAIRES
+   */
+
+  /**
+   * Vérifie si le format d'année scolaire est correct 
+   * (par exemple '2024-2025')
+   * @param string $year L'année scolaire à vérifier
+   * @return bool true si le format est correct, False sinon
+   */
+  private function isYearFormatValid(string $year): bool
+  {
+    $regexp = '/^(\d{4})-(\d{4})$/';
+    if (!preg_match($regexp, trim($year), $matches)) {
+      return false;
+    }
+    $firstYear = (int)$matches[1];
+    $secondYear = (int)$matches[2];
+    return $secondYear - $firstYear === 1;
   }
 }
