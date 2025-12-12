@@ -10,11 +10,13 @@
 }
 
 /* Reset & base */
-*,
-*:after,
-*:before {
+* {
     margin: 0;
-    padding: 0;
+    box-sizing: border-box;
+}
+
+*:before,
+*:after {
     box-sizing: border-box;
 }
 
@@ -157,6 +159,7 @@ a {
     padding: 10px;
     border-radius: 5px;
     margin-top: 15px;
+    text-align: center;
 }
 
 /* Header / Navigation (accueil) */
@@ -310,7 +313,7 @@ a {
 
 /* Boutons génériques */
 
-.btn {
+.btn, .btn-secondary {
     display: inline-block;
     padding: 0.45rem 0.9rem;
     font-size: 0.85rem;
@@ -485,3 +488,4 @@ a {
     white-space: nowrap;
     box-sizing: border-box;
 }
+
