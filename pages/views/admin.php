@@ -11,19 +11,6 @@ require_once __DIR__ . '/../logic/admin.logic.php';
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <style>
-    /* Corrige le bouton Annuler (ne fonctionne pas dans le CSS) */
-    .btn, .btn-secondary {
-        padding: 0.45rem 0.9rem !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 999px !important;
-        box-sizing: border-box !important;
-        line-height: 1 !important;
-        margin-top: 5px !important;
-    }
-    </style>
 </head>
 
 <body>
@@ -31,7 +18,7 @@ require_once __DIR__ . '/../logic/admin.logic.php';
     <nav id="header-nav">
         <ul>
             <div class="logo-menu">
-                <a href="accueil.php">
+                <a href="../accueil.php">
                     <img src="../../assets/images/logo.png" alt="Logo université" class="logo-menu-img">
                 </a>
             </div>
@@ -80,11 +67,6 @@ require_once __DIR__ . '/../logic/admin.logic.php';
             </div>
 
             <div>
-                <label>Mot de passe</label>
-                <input type="password" name="mot_de_passe" required>
-            </div>
-
-            <div>
                 <label>Nom</label>
                 <input type="text" name="nom" required>
             </div>
@@ -127,6 +109,10 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                 <button type="submit" class="btn">Créer</button>
                 <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
             </div>
+            <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                    <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                    <?php unset($_SESSION['feedback']); ?>
+                <?php endif; ?>
         </form>
 
         <hr>
@@ -141,11 +127,6 @@ require_once __DIR__ . '/../logic/admin.logic.php';
             <div>
                 <label>Login</label>
                 <input type="text" name="login" required>
-            </div>
-
-            <div>
-                <label>Mot de passe</label>
-                <input type="password" name="mot_de_passe" required>
             </div>
 
             <div>
@@ -181,6 +162,10 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                 <button type="submit" class="btn">Créer</button>
                 <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
             </div>
+            <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                    <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                    <?php unset($_SESSION['feedback']); ?>
+            <?php endif; ?>
         </form>
 
         <hr>
@@ -188,6 +173,11 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
     <!-- Liste + édition enseignants -->
     <?php if ($action === 'liste_enseignants' || $action === 'edit_enseignant'): ?>
+
+        <?php if (hasFeedbackInSession() && !empty($_SESSION['feedback']['success'])): ?>
+            <p class="success"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+            <?php unset($_SESSION['feedback']); ?>
+        <?php endif; ?>
 
         <?php if (empty($enseignants)): ?>
             <p>Aucun enseignant trouvé.</p>
@@ -296,7 +286,12 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                             <div>
                                                 <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
                                             </div>
+                                           
                                         </form>
+                                         <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                                                <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                                                <?php unset($_SESSION['feedback']); ?>
+                                            <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -312,6 +307,11 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
     <!-- Liste + édition étudiants -->
     <?php if ($action === 'liste_etudiants' || $action === 'edit_etudiant'): ?>
+        
+        <?php if (hasFeedbackInSession() && !empty($_SESSION['feedback']['success'])): ?>
+            <p class="success"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+            <?php unset($_SESSION['feedback']); ?>
+        <?php endif; ?>
 
         <?php if (empty($etudiants)): ?>
             <p>Aucun étudiant trouvé.</p>
@@ -409,7 +409,12 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                                 <button type="submit" class="btn">Enregistrer</button>
                                                 <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
                                             </div>
+                                            
                                         </form>
+                                        <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                                                <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                                                <?php unset($_SESSION['feedback']); ?>
+                                            <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
