@@ -62,7 +62,7 @@ $coursDejaSuivis = [];
 
 if ($action === 'liste_cours') {
   $cours = $db->getAllCourses();
-  $coursDejaSuivis = $db -> getCoursInscritByStudent($etudiantId);
+  $coursDejaSuivis = $db -> getIdCoursInscritByStudent($etudiantId);
 }
 
 if ($action === 'liste_enseignements') {
@@ -72,4 +72,33 @@ if ($action === 'liste_enseignements') {
 // Fonction pour vérifier le feedback
 function hasFeedbackInSession(): bool {
     return isset($_SESSION['feedback']);
+}
+
+//On gère la désinscription
+if ($action === 'desinscription_cours') {
+  $coursId = filter_input(INPUT_GET, 'cours_id', FILTER_VALIDATE_INT);
+
+  if ($coursId) {
+    try {
+      if ($db->removeEnrollment($etudiantId, $coursId)) {
+        $_SESSION['feedback'] = [
+          'success' => true,
+          'message' => 'Désinscription réussie !'
+        ];
+      } else {
+        $_SESSION['feedback'] = [
+          'success' => false,
+          'message' => 'Erreur lors de la désinscription'
+        ];
+      }
+    } catch (Exception $e) {
+      $_SESSION['feedback'] = [
+        'success' => false, 
+        'message' => $e->getMessage()
+      ];
+    }
+  }
+
+  header('Location: student.php?action=liste_enseignements');
+  exit;
 }

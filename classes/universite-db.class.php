@@ -237,6 +237,32 @@ class UniversiteDB extends DataBase
   }
 
 
+  /**
+   * Désnscrit un étudiant d'un cours
+   * @param int $etudiantId L'ID de l'étudiant à inscrire
+   * @param int $coursId L'ID du cours où l'inscrire
+   * @return bool Retourne true si lla désinscription a réussi
+   */
+  public function removeEnrollment(int $etudiantId, int $coursId): bool
+  {
+    $sql = "
+      DELETE FROM inscription
+      WHERE etudiant_id = :etudiant_id
+      AND cours_id = :cours_id";
+    
+    try {
+      $stmt = $this->connect()->prepare($sql);
+      return $stmt->execute([
+        ':etudiant_id' => $etudiantId,
+        ':cours_id' => $coursId
+      ]);
+    } catch (PDOException $e) { 
+      error_log('Erreur removeEnrollment : ' . $e->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return false;
+    }
+  }
+
+
   /*
   *                       LISTER
   */
@@ -576,12 +602,14 @@ class UniversiteDB extends DataBase
  * @param int $etudiantId
  * @return array Liste des cours_id
  */
-  public function getCoursInscritByStudent(int $etudiantId): array
+  public function getIdCoursInscritByStudent(int $etudiantId): array
   {
     $sql = "
-      SELECT cours_id 
-      FROM inscription 
-      WHERE etudiant_id = :etudiant_id
+      SELECT c.id, c.code, c.nom, c.credits, c.description, c.annee_universitaire, i.note, i.date_inscription 
+      FROM inscription i
+      JOIN cours c ON i.cours_id = c.id
+      WHERE i.etudiant_id = :etudiant_id
+      ORDER BY i.date_inscription DESC
     ";
     
     $stmt = $this->connect()->prepare($sql);
@@ -589,6 +617,28 @@ class UniversiteDB extends DataBase
     $stmt->execute([':etudiant_id' => $etudiantId]);
     
     return $stmt->fetchAll(PDO::FETCH_COLUMN);
+  }
+
+/**
+ * Récupère les IDs des cours auxquels un étudiant est inscrit
+ * @param int $etudiantId
+ * @return array Liste des cours_id
+ */
+  public function getCoursInscritByStudent(int $etudiantId): array
+  {
+    $sql = "
+      SELECT c.id, c.code, c.nom, c.credits, c.description, c.annee_universitaire, i.note, i.date_inscription 
+      FROM inscription i
+      JOIN cours c ON i.cours_id = c.id
+      WHERE i.etudiant_id = :etudiant_id
+      ORDER BY i.date_inscription DESC
+    ";
+    
+    $stmt = $this->connect()->prepare($sql);
+    
+    $stmt->execute([':etudiant_id' => $etudiantId]);
+    
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   /**

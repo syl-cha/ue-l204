@@ -109,7 +109,6 @@ require_once __DIR__ . '/../logic/student.logic.php';
       <?php endif; ?>
     <?php endif; ?>
 
-  
 
     <?php if ($action === 'liste_enseignements'): ?>
       <h2>Liste de vos enseignements</h2>
@@ -127,11 +126,9 @@ require_once __DIR__ . '/../logic/student.logic.php';
                   <th>Nom</th>
                   <th>Credits</th>
                   <th>Description</th>
-                  <th>Capacité Max</th>
                   <th>Année</th>
-                  <th>Actif</th>
-                  <th>Actions</th>
                   <th>Note</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -142,10 +139,17 @@ require_once __DIR__ . '/../logic/student.logic.php';
                     <td><?= htmlspecialchars($c['nom']); ?></td>
                     <td><?= htmlspecialchars($c['credits']); ?></td>
                     <td><?= htmlspecialchars($c['description']); ?></td>
-                    <td><?= htmlspecialchars($c['capacite_max']); ?></td>
                     <td><?= htmlspecialchars($c['annee_universitaire']); ?></td>
-                    <td><span class="badge badge-soft"><?= htmlspecialchars($cours['actif'] ? 'Actif' : 'Inactif') ?></span></td>
-                    <td><span class="badge <?= $c['valide'] ? 'badge-soft' : '' ?>"><?= $c['valide'] ? 'Validé' : 'En cours' ?>
+                    <td><?= htmlspecialchars($c['note']?? '...'); ?></td>
+                    <td>
+                        <div class="actions">
+                            <a href="student.php?action=desinscription_cours&cours_id=<?= (int)$c['id'] ?>" 
+                            class="btn btn-xs btn-danger"
+                            onclick="return confirm('Êtes-vous sûr de vouloir vous désinscrire de ce cours ?')">
+                            Se désinscrire
+                          </a>
+                        </div>
+                      </td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>
