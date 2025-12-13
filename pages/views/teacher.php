@@ -24,10 +24,6 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
           </a>
         </div>
 
-        <li>
-          <a href="../accueil.php" title="Retour">Retour</a>
-        </li>
-
         <li id="deconnexion">
           <a href="../../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>
         </li>

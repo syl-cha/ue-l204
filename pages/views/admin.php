@@ -36,10 +36,6 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                 </a>
             </div>
 
-            <li>
-                <a href="../accueil.php" title="Retour">Retour</a>
-            </li>
-
             <!-- On reste sur admin.php pour la gestion -->
             <!-- <li>
                 <a href="admin.php" title="Espace administration">Gestion</a>

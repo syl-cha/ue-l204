@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <h1>Université de Limoges</h1>
       <p>Bienvenue sur la plateforme interne de l’Université de Limoges. Veuillez vous connecter pour accéder à votre espace personnel.
       </p>
+      <!--
       <p><strong><?php if ($addTest) {
                     echo 'Course 1 added successfully<br>';
                   } else {
@@ -66,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo 'Course 2 added successfully<br>';
                   } else {
                     echo 'Course 2 addition failed<br>';
-                  } ?></strong></p>
+                  } ?></strong></p>-->
     </div>
     <div class="section-connexion">
       <h2>Connexion</h2>
