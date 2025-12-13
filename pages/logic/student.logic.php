@@ -63,15 +63,20 @@ $coursDejaSuivis = [];
 if ($action === 'liste_cours') {
   $cours = $db->getAllCourses();
   $coursDejaSuivis = $db -> getIdCoursInscritByStudent($etudiantId);
+
+  $prerequisManquants = [];
+  foreach ($cours as $c) {
+    if (!in_array($c['id'], $coursDejaSuivis)) {
+      $missingPrereq = $db->getMissingPrerequisites($etudiantId, $c['id']);
+      if (!empty($missingPrereq)) {
+        $prerequisManquants[$c['id']] = $missingPrereq;
+      }
+    }
+  } 
 }
 
 if ($action === 'liste_enseignements') {
   $coursDejaSuivis = $db -> getCoursInscritByStudent($etudiantId);
-}
-
-// Fonction pour vérifier le feedback
-function hasFeedbackInSession(): bool {
-    return isset($_SESSION['feedback']);
 }
 
 //On gère la désinscription

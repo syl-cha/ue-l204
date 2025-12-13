@@ -24,10 +24,6 @@ require_once __DIR__ . '/../logic/student.logic.php';
           </a>
         </div>
 
-        <li>
-          <a href="../accueil.php" title="Retour">Retour</a>
-        </li>
-
         <li id="deconnexion">
           <a href="../../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>
         </li>
@@ -45,14 +41,17 @@ require_once __DIR__ . '/../logic/student.logic.php';
     <div class="admin-actions">
       <a class="btn" href="student.php?action=liste_cours" title="Lister tous les cours">Lister tous les cours</a>
       <a class="btn" href="student.php?action=liste_enseignements" title="Lister mes enseignements">Lister mes cours</a>
-
-      <?php if (hasFeedbackInSession()): ?>
-        <span class=<?= $_SESSION['feedback']['success'] ? 'success' : 'warning'?> ><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
-        <?php unset($_SESSION['feedback']); ?>
-      <?php endif; ?>
     </div>
 
     <hr>
+
+    <!-- Affichage du message d'inscription -->
+    <?php if (hasFeedbackInSession()): ?>
+      <div class="alert alert-<?= $_SESSION['feedback']['success'] ? 'success' : 'danger' ?>">
+        <?= htmlspecialchars($_SESSION['feedback']['message'], ENT_QUOTES, 'UTF-8') ?>
+      </div>
+      <?php unset($_SESSION['feedback']); ?>
+    <?php endif; ?>
 
     <?php if ($action === 'liste_cours'): ?>
       <?php if ($cours === false): ?>
@@ -92,8 +91,24 @@ require_once __DIR__ . '/../logic/student.logic.php';
                       <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                       <td>
                         <div class="actions">
+                          <!-- Si déjà inscrit -->
                           <?php if (in_array($c['id'], $coursDejaSuivis)): ?>
                             <span class="badge badge-soft">Inscrit</span>
+                          
+                          <!-- Si prérequis manquants -->
+                           <?php elseif (isset($prerequisManquants[$c['id']])): ?>
+                            
+                            <div class="prerequis-info">
+                              <p class="btn btn-secondary btn-xs">S'inscrire</p> <br>
+                              <span class="prerequis-missing">
+                                <strong>Prérequis manquants :</strong><br>
+                                <?php foreach ($prerequisManquants[$c['id']] as $prereq): ?>
+                                  • <?= htmlspecialchars($prereq['code']) ?> - <?= htmlspecialchars($prereq['nom']) ?><br>
+                                <?php endforeach; ?>
+                              </span>
+                            </div>
+
+                          <!-- Si pas inscrit, peut s'inscrire -->
                           <?php else: ?>
                             <a href="student.php?action=inscription_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">S'inscrire</a>
                           <?php endif; ?>

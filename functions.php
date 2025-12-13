@@ -90,7 +90,7 @@ function logout(): void {
     exit;
 }
 
-/*function hasFeedbackInSession(){
+function hasFeedbackInSession(){
 	if($_SESSION 
 		&& count($_SESSION) 
 			&& array_key_exists('feedback', $_SESSION)
@@ -100,4 +100,4 @@ function logout(): void {
 	}else{
 		return false;
 	}
-}*/
+}

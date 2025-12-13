@@ -210,7 +210,9 @@ class UniversiteDB extends DataBase
     // vérification des prérequis
     $missing = $this->getMissingPrerequisites($etudiantId, $coursId);
     if (!empty($missing)) {
-      $missingCodes = implode(', ', $missing);
+      $missingCodes = array_column($missing, 'code');
+      $missingCodesStr = implode(', ', $missingCodes);
+
       throw new Exception('Inscription impossible : manquent la validation de ' . $missingCodes);
     }
     $sql = "INSERT INTO inscription (etudiant_id, cours_id) VALUES (:etudiant_id, :cours_id)";
@@ -329,16 +331,15 @@ class UniversiteDB extends DataBase
   }
 
 
-
   /**
    * Récupérer la liste des prérequis non validés pour un étudiant
    * @param int $etudiantId L'identifiant de l'étudiant
    * @param int $coursId L'identifiant du cours
    * @return array La liste des codes de cours non validés
    */
-  private function getMissingPrerequisites(int $etudiantId, int $coursId): array
+  public function getMissingPrerequisites(int $etudiantId, int $coursId): array
   {
-    $sql = 'SELECT c.code
+    $sql = 'SELECT c.code, c.nom
             FROM prerequis p
             INNER JOIN cours c ON p.prerequis_cours_id = c.id
             LEFT JOIN inscription i ON i.cours_id = p.prerequis_cours_id 
@@ -352,9 +353,9 @@ class UniversiteDB extends DataBase
       ':etudiant_id' => $etudiantId,
       ':cours_id' => $coursId
     ]);
-    return $stmt->fetchAll(PDO::FETCH_COLUMN);
-  }
 
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 
   /*
   *                       RÉCUPÉRER UNE DONNÉE UNIQUE
