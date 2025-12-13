@@ -210,7 +210,9 @@ class UniversiteDB extends DataBase
     // vérification des prérequis
     $missing = $this->getMissingPrerequisites($etudiantId, $coursId);
     if (!empty($missing)) {
-      $missingCodes = implode(', ', $missing);
+      $missingCodes = array_column($missing, 'code');
+      $missingCodesStr = implode(', ', $missingCodes);
+
       throw new Exception('Inscription impossible : manquent la validation de ' . $missingCodes);
     }
     $sql = "INSERT INTO inscription (etudiant_id, cours_id) VALUES (:etudiant_id, :cours_id)";
@@ -232,6 +234,32 @@ class UniversiteDB extends DataBase
         }
         throw $exception;
       }
+      return false;
+    }
+  }
+
+
+  /**
+   * Désnscrit un étudiant d'un cours
+   * @param int $etudiantId L'ID de l'étudiant à inscrire
+   * @param int $coursId L'ID du cours où l'inscrire
+   * @return bool Retourne true si lla désinscription a réussi
+   */
+  public function removeEnrollment(int $etudiantId, int $coursId): bool
+  {
+    $sql = "
+      DELETE FROM inscription
+      WHERE etudiant_id = :etudiant_id
+      AND cours_id = :cours_id";
+    
+    try {
+      $stmt = $this->connect()->prepare($sql);
+      return $stmt->execute([
+        ':etudiant_id' => $etudiantId,
+        ':cours_id' => $coursId
+      ]);
+    } catch (PDOException $e) { 
+      error_log('Erreur removeEnrollment : ' . $e->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return false;
     }
   }
@@ -303,16 +331,15 @@ class UniversiteDB extends DataBase
   }
 
 
-
   /**
    * Récupérer la liste des prérequis non validés pour un étudiant
    * @param int $etudiantId L'identifiant de l'étudiant
    * @param int $coursId L'identifiant du cours
    * @return array La liste des codes de cours non validés
    */
-  private function getMissingPrerequisites(int $etudiantId, int $coursId): array
+  public function getMissingPrerequisites(int $etudiantId, int $coursId): array
   {
-    $sql = 'SELECT c.code
+    $sql = 'SELECT c.code, c.nom
             FROM prerequis p
             INNER JOIN cours c ON p.prerequis_cours_id = c.id
             LEFT JOIN inscription i ON i.cours_id = p.prerequis_cours_id 
@@ -326,9 +353,9 @@ class UniversiteDB extends DataBase
       ':etudiant_id' => $etudiantId,
       ':cours_id' => $coursId
     ]);
-    return $stmt->fetchAll(PDO::FETCH_COLUMN);
-  }
 
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 
   /*
   *                       RÉCUPÉRER UNE DONNÉE UNIQUE
@@ -549,7 +576,7 @@ class UniversiteDB extends DataBase
    * Retourne un étudiant par son id (table etudiant.id).
    * @return array|null
    */
-  public function getEtudiantById(int $idEtudiant): ?array
+  public function getEtudiantByUtilisateurId(int $utilisateurId): ?array
   {
     $sql = "
       SELECT 
@@ -564,13 +591,55 @@ class UniversiteDB extends DataBase
         e.date_inscription
       FROM etudiant e
       JOIN utilisateur u ON e.utilisateur_id = u.id
-      WHERE e.id = :id
+      WHERE u.id = :id
     ";
     $stmt = $this->connect()->prepare($sql);
-    $stmt->execute([':id' => $idEtudiant]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute([':id' => $utilisateurId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+  }
 
-    return $row ?: null;
+/**
+ * Récupère les IDs des cours auxquels un étudiant est inscrit
+ * @param int $etudiantId
+ * @return array Liste des cours_id
+ */
+  public function getIdCoursInscritByStudent(int $etudiantId): array
+  {
+    $sql = "
+      SELECT c.id, c.code, c.nom, c.credits, c.description, c.annee_universitaire, i.note, i.date_inscription 
+      FROM inscription i
+      JOIN cours c ON i.cours_id = c.id
+      WHERE i.etudiant_id = :etudiant_id
+      ORDER BY i.date_inscription DESC
+    ";
+    
+    $stmt = $this->connect()->prepare($sql);
+    
+    $stmt->execute([':etudiant_id' => $etudiantId]);
+    
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+  }
+
+/**
+ * Récupère les IDs des cours auxquels un étudiant est inscrit
+ * @param int $etudiantId
+ * @return array Liste des cours_id
+ */
+  public function getCoursInscritByStudent(int $etudiantId): array
+  {
+    $sql = "
+      SELECT c.id, c.code, c.nom, c.credits, c.description, c.annee_universitaire, i.note, i.date_inscription 
+      FROM inscription i
+      JOIN cours c ON i.cours_id = c.id
+      WHERE i.etudiant_id = :etudiant_id
+      ORDER BY i.date_inscription DESC
+    ";
+    
+    $stmt = $this->connect()->prepare($sql);
+    
+    $stmt->execute([':etudiant_id' => $etudiantId]);
+    
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   /**
@@ -613,7 +682,6 @@ class UniversiteDB extends DataBase
    */
   public function addEnseignant(
     string $login,
-    string $motDePasse,
     string $nom,
     string $prenom,
     string $email,
@@ -680,7 +748,6 @@ class UniversiteDB extends DataBase
    */
   public function addEtudiant(
     string $login,
-    string $motDePasse,
     string $nom,
     string $prenom,
     string $email,

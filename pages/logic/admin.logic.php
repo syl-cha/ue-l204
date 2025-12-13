@@ -50,113 +50,184 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Sauvegarde d'un enseignant modifié
+    // Sauvegarde d'un enseignant modifié (avec validations)
     if ($actionPost === 'save_enseignant') {
-        $idEns   = (int)($_POST['id_enseignant'] ?? 0);
-        $nom     = $_POST['nom']        ?? '';
-        $prenom  = $_POST['prenom']     ?? '';
-        $email   = $_POST['email']      ?? '';
-        $bureau  = $_POST['bureau']     ?? '';
-        $tel     = $_POST['telephone']  ?? '';
-        $spec    = $_POST['specialite'] ?? '';
-        $statut  = $_POST['statut']     ?? 'titulaire';
 
-        if ($idEns > 0) {
-            $db->updateEnseignant(
-                $idEns,
-                $nom,
-                $prenom,
-                $email,
-                $bureau,
-                $tel,
-                $spec,
-                $statut
-            );
+        $errors = [];
+
+        $idEns = (int)($_POST['id_enseignant'] ?? 0);
+        if ($idEns <= 0) {
+            $errors[] = "ID enseignant invalide.";
+        }
+
+        $nom    = validate_required_text($errors, 'nom', 'Nom', 3, 32);
+        $prenom = validate_required_text($errors, 'prenom', 'Prénom', 3, 32);
+        $email  = validate_email_required($errors, 'email', 'Email');
+        $bureau = validate_bureau_required($errors, 'bureau', 'Bureau');
+        $tel    = validate_phone_fr_required($errors, 'telephone', 'Téléphone');
+        $spec   = validate_required_text($errors, 'specialite', 'Spécialité', 3, 64);
+        $statut = validate_enum_required($errors, 'statut', 'Statut', [
+            'titulaire', 'vacataire', 'contractuel'
+        ]);
+
+        if (!empty($errors)) {
+            $_SESSION['feedback'] = [
+                'message' => implode(' ', $errors),
+                'success' => false
+            ];
+            header('Location: admin.php?action=edit_enseignant&id=' . $idEns);
+            exit;
+        }
+
+        // updateEnseignant doit idéalement retourner bool.
+        $ok = $db->updateEnseignant($idEns, $nom, $prenom, $email, $bureau, $tel, $spec, $statut);
+
+        if ($ok) {
+            $_SESSION['feedback'] = [
+                'message' => "Les informations de l’enseignant ont été mises à jour.",
+                'success' => true
+            ];
+        } else {
+            $_SESSION['feedback'] = [
+                'message' => "Erreur : mise à jour de l’enseignant impossible.",
+                'success' => false
+            ];
         }
 
         header('Location: admin.php?action=liste_enseignants');
         exit;
     }
 
-    // Sauvegarde d'un étudiant modifié
+    // Sauvegarde d'un étudiant modifié (avec validations)
     if ($actionPost === 'save_etudiant') {
-        $idEtu   = (int)($_POST['id_etudiant'] ?? 0);
-        $nom     = $_POST['nom']              ?? '';
-        $prenom  = $_POST['prenom']           ?? '';
-        $email   = $_POST['email']            ?? '';
-        $numEtu  = $_POST['numero_etudiant']  ?? '';
-        $niveau  = $_POST['niveau']           ?? 'L1';
 
-        if ($idEtu > 0) {
-            $db->updateEtudiant(
-                $idEtu,
-                $nom,
-                $prenom,
-                $email,
-                $numEtu,
-                $niveau
-            );
+        $errors = [];
+
+        $idEtu = (int)($_POST['id_etudiant'] ?? 0);
+        if ($idEtu <= 0) {
+            $errors[] = "ID étudiant invalide.";
+        }
+
+        
+        $numEtu = validate_numero_etudiant_required($errors, 'numero_etudiant', 'Numéro étudiant');
+        $nom    = validate_required_text($errors, 'nom', 'Nom', 3, 32);
+        $prenom = validate_required_text($errors, 'prenom', 'Prénom', 3, 32);
+        $email  = validate_email_required($errors, 'email', 'Email');
+        $niveau = validate_enum_required($errors, 'niveau', 'Niveau', [
+            'L1','L2','L3','M1','M2'
+        ]);
+
+        if (!empty($errors)) {
+            $_SESSION['feedback'] = [
+                'message' => implode(' ', $errors),
+                'success' => false
+            ];
+            header('Location: admin.php?action=edit_etudiant&id=' . $idEtu);
+            exit;
+        }
+
+        $ok = $db->updateEtudiant($idEtu, $nom, $prenom, $email, $numEtu, $niveau);
+
+        if ($ok) {
+            $_SESSION['feedback'] = [
+                'message' => "Les informations de l’étudiant ont été mises à jour.",
+                'success' => true
+            ];
+        } else {
+            $_SESSION['feedback'] = [
+                'message' => "Erreur : mise à jour de l’étudiant impossible.",
+                'success' => false
+            ];
         }
 
         header('Location: admin.php?action=liste_etudiants');
         exit;
     }
 
-    // Création d'un nouvel enseignant
+    // Création d'un nouvel enseignant avec vérifications du remplissage des champs
     if ($actionPost === 'create_enseignant') {
-        $loginEns  = $_POST['login']        ?? '';
-        $pwdEns    = $_POST['mot_de_passe'] ?? '';
-        $nom       = $_POST['nom']          ?? '';
-        $prenom    = $_POST['prenom']       ?? '';
-        $email     = $_POST['email']        ?? '';
-        $bureau    = $_POST['bureau']       ?? '';
-        $tel       = $_POST['telephone']    ?? '';
-        $spec      = $_POST['specialite']   ?? '';
-        $statut    = $_POST['statut']       ?? 'titulaire';
 
-        if ($loginEns !== '' && $pwdEns !== '' && $nom !== '' && $prenom !== '') {
-            $db->addEnseignant(
-                $loginEns,
-                $pwdEns,
-                $nom,
-                $prenom,
-                $email,
-                $bureau,
-                $tel,
-                $spec,
-                $statut
-            );
+        $errors = [];
+
+        $loginEns = validate_login_required($errors, 'login', 'Login');
+        $nom      = validate_required_text($errors, 'nom', 'Nom', 3, 32);
+        $prenom   = validate_required_text($errors, 'prenom', 'Prénom', 3, 32);
+        $email    = validate_email_required($errors, 'email', 'Email');
+        $bureau   = validate_bureau_required($errors, 'bureau', 'Bureau');
+        $tel      = validate_phone_fr_required($errors, 'telephone', 'Téléphone');
+        $spec     = post_str('specialite');
+        $statut   = validate_enum_required($errors, 'statut', 'Statut', ['titulaire', 'vacataire', 'contractuel']);
+
+        if (!empty($errors)) {
+            $_SESSION['feedback'] = [
+                'message' => implode(' ', array_values($errors)),
+                'success' => false
+            ];
+            header('Location: admin.php?action=add_enseignant');
+            exit;
         }
 
-        header('Location: admin.php?action=liste_enseignants');
+        // Exemple : nettoyage optionnel des champs libres
+        $bureau = ($bureau !== null) ? clean_text($bureau) : null;
+        $spec   = ($spec !== null) ? clean_text($spec) : null;
+
+        // Appel BDD (à adapter à ta signature réelle)
+        $ok = $db->addEnseignant($loginEns, $nom, $prenom, $email, $bureau, $tel, $spec, $statut);
+
+        if ($ok) {
+            $_SESSION['feedback'] = ['message' => "L’enseignant \"$loginEns\" a bien été ajouté.", 'success' => true];
+            header('Location: admin.php?action=liste_enseignants');
+            exit;
+        }
+
+        $_SESSION['feedback'] = ['message' => "Erreur : l’enseignant n’a pas été ajouté (login déjà existant ?).", 'success' => false];
+        header('Location: admin.php?action=add_enseignant');
         exit;
     }
 
     // Création d'un nouvel étudiant
     if ($actionPost === 'create_etudiant') {
-        $loginEtu = $_POST['login']           ?? '';
-        $pwdEtu   = $_POST['mot_de_passe']    ?? '';
-        $nom      = $_POST['nom']             ?? '';
-        $prenom   = $_POST['prenom']          ?? '';
-        $email    = $_POST['email']           ?? '';
-        $numEtu   = $_POST['numero_etudiant'] ?? '';
-        $niveau   = $_POST['niveau']          ?? 'L1';
 
-        if ($loginEtu !== '' && $pwdEtu !== '' && $nom !== '' && $prenom !== '' && $numEtu !== '') {
-            $db->addEtudiant(
-                $loginEtu,
-                $pwdEtu,
-                $nom,
-                $prenom,
-                $email,
-                $numEtu,
-                $niveau
-            );
+        $errors = [];
+
+        $loginEtu = validate_login_required($errors, 'login', 'Login');
+        $numEtu   = validate_numero_etudiant_required($errors, 'numero_etudiant', 'Numéro étudiant');
+        $nom      = validate_required_text($errors, 'nom', 'Nom', 3, 32);
+        $prenom   = validate_required_text($errors, 'prenom', 'Prénom', 3, 32);
+        $email    = validate_email_required($errors, 'email', 'Email');
+        $niveau   = validate_enum_required($errors,'niveau','Niveau', ['L1', 'L2', 'L3', 'M1', 'M2']);
+
+        // S'il y a des erreurs → feedback + retour formulaire
+        if (!empty($errors)) {
+            $_SESSION['feedback'] = [
+                'message' => implode(' ', array_values($errors)),
+                'success' => false
+            ];
+            header('Location: admin.php?action=add_etudiant');
+            exit;
         }
 
-        header('Location: admin.php?action=liste_etudiants');
+        // Appel BDD
+        $ok = $db->addEtudiant($loginEtu, $nom, $prenom, $email, $numEtu, $niveau);
+
+        if ($ok) {
+            $_SESSION['feedback'] = [
+                'message' => "L’étudiant \"$loginEtu\" a bien été ajouté.",
+                'success' => true
+            ];
+            header('Location: admin.php?action=liste_etudiants');
+            exit;
+        }
+
+        // Erreur BDD (clé unique, contrainte, etc.)
+        $_SESSION['feedback'] = [
+            'message' => "Erreur : l’étudiant n’a pas été ajouté (login ou numéro étudiant déjà existant ?).",
+            'success' => false
+        ];
+        header('Location: admin.php?action=add_etudiant');
         exit;
     }
+
 }
 
 // TRAITEMENT DES ACTIONS GET (listes / édition / ajout)
