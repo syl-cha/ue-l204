@@ -31,6 +31,7 @@ $coursId = $_GET['cours_id'] ?? null;
 $cours = [];
 $coursDejaEnseignes = [];
 $prerequis = [];
+$etudiant = [];
 
 if ($action === 'liste_cours' || $action === 'liste_enseignements') {
   $cours = $db->getAllCourses();
@@ -43,6 +44,10 @@ if ($action === 'liste_cours' || $action === 'liste_enseignements') {
 
 if ($action === 'liste_prerequis') {
   $prerequis = $db->getCoursePrerequisites((int)$coursId);
+}
+
+if ($action === 'liste_etudiant') {
+  $etudiant = $db->getStudentsByCourse((int)$coursId);
 }
 
 if ($action === 'enseigner_cours' && $coursId) {
