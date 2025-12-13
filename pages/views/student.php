@@ -12,6 +12,16 @@ require_once __DIR__ . '/../logic/student.logic.php';
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* Centrage des colonnes numériques */
+    .table-admin th:nth-child(4),
+    .table-admin td:nth-child(4),   /* Pour les crédits */
+
+    .table-admin th:nth-child(6),
+    .table-admin td:nth-child(6) { /* Pour capacité max */
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
@@ -23,10 +33,6 @@ require_once __DIR__ . '/../logic/student.logic.php';
             <img src="../../assets/images/logo.png" alt="Logo université" class="logo-menu-img">
           </a>
         </div>
-
-        <li>
-          <a href="../accueil.php" title="Retour">Retour</a>
-        </li>
 
         <li id="deconnexion">
           <a href="../../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>
@@ -45,14 +51,17 @@ require_once __DIR__ . '/../logic/student.logic.php';
     <div class="admin-actions">
       <a class="btn" href="student.php?action=liste_cours" title="Lister tous les cours">Lister tous les cours</a>
       <a class="btn" href="student.php?action=liste_enseignements" title="Lister mes enseignements">Lister mes cours</a>
-
-      <?php if (hasFeedbackInSession()): ?>
-        <span class=<?= $_SESSION['feedback']['success'] ? 'success' : 'warning'?> ><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
-        <?php unset($_SESSION['feedback']); ?>
-      <?php endif; ?>
     </div>
 
     <hr>
+
+    <!-- Affichage du message d'inscription -->
+    <?php if (hasFeedbackInSession()): ?>
+      <div class="alert alert-<?= $_SESSION['feedback']['success'] ? 'success' : 'danger' ?>">
+        <?= htmlspecialchars($_SESSION['feedback']['message'], ENT_QUOTES, 'UTF-8') ?>
+      </div>
+      <?php unset($_SESSION['feedback']); ?>
+    <?php endif; ?>
 
     <?php if ($action === 'liste_cours'): ?>
       <?php if ($cours === false): ?>
@@ -71,7 +80,7 @@ require_once __DIR__ . '/../logic/student.logic.php';
                     <th>ID</th>
                     <th>Code</th>
                     <th>Nom</th>
-                    <th>Credits</th>
+                    <th>Crédits</th>
                     <th>Description</th>
                     <th>Capacité Max</th>
                     <th>Année</th>
@@ -92,8 +101,24 @@ require_once __DIR__ . '/../logic/student.logic.php';
                       <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                       <td>
                         <div class="actions">
+                          <!-- Si déjà inscrit -->
                           <?php if (in_array($c['id'], $coursDejaSuivis)): ?>
                             <span class="badge badge-soft">Inscrit</span>
+                          
+                          <!-- Si prérequis manquants -->
+                           <?php elseif (isset($prerequisManquants[$c['id']])): ?>
+                            
+                            <div class="prerequis-info">
+                              <p class="btn btn-secondary btn-xs">S'inscrire</p> <br>
+                              <span class="prerequis-missing">
+                                <strong>Prérequis manquants :</strong><br>
+                                <?php foreach ($prerequisManquants[$c['id']] as $prereq): ?>
+                                  • <?= htmlspecialchars($prereq['code']) ?> - <?= htmlspecialchars($prereq['nom']) ?><br>
+                                <?php endforeach; ?>
+                              </span>
+                            </div>
+
+                          <!-- Si pas inscrit, peut s'inscrire -->
                           <?php else: ?>
                             <a href="student.php?action=inscription_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">S'inscrire</a>
                           <?php endif; ?>
@@ -109,11 +134,10 @@ require_once __DIR__ . '/../logic/student.logic.php';
       <?php endif; ?>
     <?php endif; ?>
 
-  
 
     <?php if ($action === 'liste_enseignements'): ?>
       <h2>Liste de vos enseignements</h2>
-      <?php if (empty($coursDejaEnseignes)): ?>
+      <?php if (empty($coursDejaSuivis)): ?>
         <p>Vous ne participez actuellement à aucun cours.</p>
       <?php else: ?>
         <div class="table-container">
@@ -127,30 +151,30 @@ require_once __DIR__ . '/../logic/student.logic.php';
                   <th>Nom</th>
                   <th>Credits</th>
                   <th>Description</th>
-                  <th>Capacité Max</th>
                   <th>Année</th>
-                  <th>Actif</th>
-                  <th>Actions</th>
+                  <th>Note</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($coursDejaEnseignes as $cId):
-                  $cours = $db->getCourseById($cId);
-                ?>
+                <?php foreach ($coursDejaSuivis as $c): ?>
                   <tr>
-                    <td><?= htmlspecialchars($cours['id']); ?></td>
-                    <td><?= htmlspecialchars($cours['code']); ?></td>
-                    <td><?= htmlspecialchars($cours['nom']); ?></td>
-                    <td><?= htmlspecialchars($cours['credits']); ?></td>
-                    <td><?= htmlspecialchars($cours['description']); ?></td>
-                    <td><?= htmlspecialchars($cours['capacite_max']); ?></td>
-                    <td><?= htmlspecialchars($cours['annee_universitaire']); ?></td>
-                    <td><span class="badge badge-soft"><?= htmlspecialchars($cours['actif'] ? 'Actif' : 'Inactif') ?></span></td>
+                    <td><?= htmlspecialchars($c['id']); ?></td>
+                    <td><?= htmlspecialchars($c['code']); ?></td>
+                    <td><?= htmlspecialchars($c['nom']); ?></td>
+                    <td><?= htmlspecialchars($c['credits']); ?></td>
+                    <td><?= htmlspecialchars($c['description']); ?></td>
+                    <td><?= htmlspecialchars($c['annee_universitaire']); ?></td>
+                    <td><?= htmlspecialchars($c['note']?? '...'); ?></td>
                     <td>
-                      <div class="actions">
-                        <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$cours['id'] ?>" class="btn btn-xs">Étudiants</a>
-                      </div>
-                    </td>
+                        <div class="actions">
+                            <a href="student.php?action=desinscription_cours&cours_id=<?= (int)$c['id'] ?>" 
+                            class="btn btn-xs btn-danger"
+                            onclick="return confirm('Êtes-vous sûr de vouloir vous désinscrire de ce cours ?')">
+                            Se désinscrire
+                          </a>
+                        </div>
+                      </td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>
