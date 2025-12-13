@@ -12,6 +12,74 @@ require_once __DIR__ . '/../logic/student.logic.php';
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* Centrage des colonnes numériques */
+    .table-admin th:nth-child(4),
+    .table-admin td:nth-child(4),   /* Pour les crédits */
+
+    .table-admin th:nth-child(6),
+    .table-admin td:nth-child(6) { /* Pour capacité max */
+      text-align: center;
+    }
+
+    /* Conteneur des prérequis - horizontal */
+    .prerequis-info {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+     gap: 0.5rem;
+     flex-wrap: wrap;
+    }
+
+    /* Bouton S'inscrire désactivé */
+    .prerequis-info .btn {
+      display: inline-flex;
+      width: auto;
+     padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      background-color: #d1d5db;
+      color: #6b7280;
+      cursor: not-allowed;
+      pointer-events: none;
+      margin: 0;
+    }
+
+    /* Texte des prérequis */
+  .prerequis-missing {
+      display: inline-block;
+      background-color: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      padding: 0.45rem 1rem;
+      font-size: 0.75rem;
+      color: #92400e;
+      line-height: 1.3;
+      max-width: 100%;
+      word-wrap: break-word;
+      margin-top: 0;
+    }
+
+    /* Titre "Prérequis manquants" */
+    .prerequis-missing strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.75rem;
+    }
+
+    h2 {
+     margin-top: 2rem;
+     margin-bottom: 1rem;
+    }
+
+    h2 + p {
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 + .table-container {
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
 
 <body>
@@ -70,7 +138,7 @@ require_once __DIR__ . '/../logic/student.logic.php';
                     <th>ID</th>
                     <th>Code</th>
                     <th>Nom</th>
-                    <th>Credits</th>
+                    <th>Crédits</th>
                     <th>Description</th>
                     <th>Capacité Max</th>
                     <th>Année</th>
@@ -99,14 +167,16 @@ require_once __DIR__ . '/../logic/student.logic.php';
                            <?php elseif (isset($prerequisManquants[$c['id']])): ?>
                             
                             <div class="prerequis-info">
-                              <p class="btn btn-secondary btn-xs">S'inscrire</p> <br>
-                              <span class="prerequis-missing">
+                              <span class="btn btn-secondary btn-xs">S'inscrire</span> <br>
+                              <div class="prerequis-missing">
                                 <strong>Prérequis manquants :</strong><br>
+                                <ul>
                                 <?php foreach ($prerequisManquants[$c['id']] as $prereq): ?>
                                   • <?= htmlspecialchars($prereq['code']) ?> - <?= htmlspecialchars($prereq['nom']) ?><br>
                                 <?php endforeach; ?>
-                              </span>
-                            </div>
+                                </ul>
+                                </div>
+                                </div>
 
                           <!-- Si pas inscrit, peut s'inscrire -->
                           <?php else: ?>

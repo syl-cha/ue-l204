@@ -23,6 +23,48 @@ require_once __DIR__ . '/../logic/admin.logic.php';
         line-height: 1 !important;
         margin-top: 5px !important;
     }
+
+    /* Wrapper titre + formulaire */
+    .form-wrapper {
+    max-width: 600px;
+    margin: 2rem auto;
+    }
+
+    /* Titre centré et aligné avec le formulaire */
+    .form-wrapper h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    }
+
+    /* Centrer le texte dans la colonne Niveau */
+    .table-admin td .badge-soft {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    }
+
+    .table-admin td:nth-child(1),  /* Numéro étudiant */
+    .table-admin td:nth-child(5),  /* Niveau */
+    .table-admin td:nth-child(6) {  /* Date d’inscription */ 
+    text-align: center;
+    }
+
+    h2 {
+     margin-top: 2rem;
+     margin-bottom: 1rem;
+    }
+
+    h2 + p {
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 + .table-container {
+      margin-top: 0.5rem;
+    }
     </style>
 </head>
 
@@ -66,116 +108,119 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
     <!-- Formulaire d'ajout d'enseignant -->
     <?php if ($action === 'add_enseignant'): ?>
-        <h3>Ajouter un enseignant</h3>
-        <form method="post" class="edit-form">
-            <input type="hidden" name="action" value="create_enseignant">
+        <div class="form-wrapper">
+            <h3>Ajouter un enseignant</h3>
+            <form method="post" class="edit-form">
+                <input type="hidden" name="action" value="create_enseignant">
 
-            <div>
-                <label>Login</label>
-                <input type="text" name="login" required>
-            </div>
+                <div>
+                    <label>Login</label>
+                    <input type="text" name="login" required>
+                </div>
 
-            <div>
-                <label>Nom</label>
-                <input type="text" name="nom" required>
-            </div>
+                <div>
+                    <label>Nom</label>
+                    <input type="text" name="nom" required>
+                </div>
 
-            <div>
-                <label>Prénom</label>
-                <input type="text" name="prenom" required>
-            </div>
+                <div>
+                 <label>Prénom</label>
+                 <input type="text" name="prenom" required>
+                </div>
 
-            <div>
-                <label>Email</label>
-                <input type="email" name="email">
-            </div>
+             <div>
+                    <label>Email</label>
+                    <input type="email" name="email">
+                </div>
 
-            <div>
-                <label>Bureau</label>
-                <input type="text" name="bureau">
-            </div>
+                <div>
+                    <label>Bureau</label>
+                    <input type="text" name="bureau">
+                </div>
 
-            <div>
-                <label>Téléphone</label>
-                <input type="text" name="telephone">
-            </div>
+                <div>
+                    <label>Téléphone</label>
+                    <input type="text" name="telephone">
+                </div>
 
-            <div>
-                <label>Spécialité</label>
-                <input type="text" name="specialite">
-            </div>
+                <div>
+                    <label>Spécialité</label>
+                   <input type="text" name="specialite">
+                </div>
 
-            <div>
-                <label>Statut</label>
-                <select name="statut">
-                    <?php foreach (['titulaire','vacataire','contractuel'] as $s): ?>
-                        <option value="<?= $s ?>"><?= ucfirst($s) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+                <div>
+                   <label>Statut</label>
+                  <select name="statut">
+                      <?php foreach (['titulaire','vacataire','contractuel'] as $s): ?>
+                            <option value="<?= $s ?>"><?= ucfirst($s) ?></option>
+                     <?php endforeach; ?>
+                    </select>
+               </div>
 
-            <div class="edit-form-actions">
-                <button type="submit" class="btn">Créer</button>
-                <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
-            </div>
-            <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
-                    <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
-                    <?php unset($_SESSION['feedback']); ?>
-                <?php endif; ?>
-        </form>
-
+                <div class="edit-form-actions">
+                    <button type="submit" class="btn">Créer</button>
+                    <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
+                </div>
+                <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                        <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                        <?php unset($_SESSION['feedback']); ?>
+                    <?php endif; ?>
+            </form>
+        </div>
         <hr>
     <?php endif; ?>
 
     <!-- Formulaire d'ajout d'étudiant -->
     <?php if ($action === 'add_etudiant'): ?>
-        <h3>Ajouter un étudiant</h3>
-        <form method="post" class="edit-form">
-            <input type="hidden" name="action" value="create_etudiant">
+        <div class="form-wrapper">
+            <h3>Ajouter un étudiant</h3>
+            <form method="post" class="edit-form">
+                <input type="hidden" name="action" value="create_etudiant">
 
-            <div>
-                <label>Login</label>
-                <input type="text" name="login" required>
-            </div>
+                <div>
+                    <label>Login</label>
+                    <input type="text" name="login" required>
+                </div>
 
-            <div>
-                <label>Numéro étudiant</label>
-                <input type="text" name="numero_etudiant" required>
-            </div>
+                <div>
+                    <label>Numéro étudiant</label>
+                    <input type="text" name="numero_etudiant" required>
+                </div>
 
-            <div>
-                <label>Nom</label>
-                <input type="text" name="nom" required>
-            </div>
+                <div>
+                    <label>Nom</label>
+                    <input type="text" name="nom" required>
+                </div>
 
-            <div>
-                <label>Prénom</label>
-                <input type="text" name="prenom" required>
-            </div>
+                <div>
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" required>
+                </div>
 
-            <div>
-                <label>Email</label>
-                <input type="email" name="email">
-            </div>
+                <div>
+                    <label>Email</label>
+                    <input type="email" name="email">
+                </div>
 
-            <div>
-                <label>Niveau</label>
-                <select name="niveau">
-                    <?php foreach (['L1','L2','L3','M1','M2'] as $n): ?>
-                        <option value="<?= $n ?>"><?= $n ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+                <div>
+                    <label>Niveau</label>
+                    <select name="niveau">
+                        <?php foreach (['L1','L2','L3','M1','M2'] as $n): ?>
+                            <option value="<?= $n ?>"><?= $n ?></option>
+                     <?php endforeach; ?>
+                    </select>
+                </div>
 
-            <div class="edit-form-actions">
-                <button type="submit" class="btn">Créer</button>
-                <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
-            </div>
-            <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
-                    <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
-                    <?php unset($_SESSION['feedback']); ?>
-            <?php endif; ?>
-        </form>
+                <div class="edit-form-actions">
+                    <button type="submit" class="btn">Créer</button>
+                    <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
+                </div>
+                <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                        <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                        <?php unset($_SESSION['feedback']); ?>
+                <?php endif; ?>
+            </form>
+        </div>
 
         <hr>
     <?php endif; ?>
