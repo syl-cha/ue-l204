@@ -6,5 +6,5 @@
 */
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'universite1');
-define('DB_USER', 'root');
-define('DB_PWD', '');
+define('DB_USER', 'user204');
+define('DB_PWD', 'UE-L204');
