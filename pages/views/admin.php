@@ -51,6 +51,20 @@ require_once __DIR__ . '/../logic/admin.logic.php';
     .table-admin td:nth-child(6) {  /* Date d’inscription */ 
     text-align: center;
     }
+
+    h2 {
+     margin-top: 2rem;
+     margin-bottom: 1rem;
+    }
+
+    h2 + p {
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 + .table-container {
+      margin-top: 0.5rem;
+    }
     </style>
 </head>
 
