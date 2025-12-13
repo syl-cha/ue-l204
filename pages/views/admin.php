@@ -38,6 +38,19 @@ require_once __DIR__ . '/../logic/admin.logic.php';
     font-weight: 600;
     color: var(--text-dark);
     }
+
+    /* Centrer le texte dans la colonne Niveau */
+    .table-admin td .badge-soft {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    }
+
+    .table-admin td:nth-child(1),  /* Numéro étudiant */
+    .table-admin td:nth-child(5),  /* Niveau */
+    .table-admin td:nth-child(6) {  /* Date d’inscription */ 
+    text-align: center;
+    }
     </style>
 </head>
 
@@ -194,7 +207,7 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                 <?php endif; ?>
             </form>
         </div>
-        
+
         <hr>
     <?php endif; ?>
 
