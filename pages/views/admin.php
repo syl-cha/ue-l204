@@ -149,11 +149,12 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                 </div>
 
                 <div>
-                   <label>Statut</label>
-                  <select name="statut">
-                      <?php foreach (['titulaire','vacataire','contractuel'] as $s): ?>
+                    <label>Statut</label>                   
+                    <select name="statut">
+                        <?php foreach (['titulaire','vacataire','contractuel'] as $s): ?>
+                            <!-- ucfirst() veut dire “uppercase first character” : dans le select, on met la première lettre des statuts en majuscule -->
                             <option value="<?= $s ?>"><?= ucfirst($s) ?></option>
-                     <?php endforeach; ?>
+                        <?php endforeach; ?>
                     </select>
                </div>
 
@@ -271,8 +272,7 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                            href="admin.php?action=edit_enseignant&id=<?= (int)$e['id_enseignant'] ?>">
                                             Modifier
                                         </a>
-                                        <form method="post"
-                                              onsubmit="return confirm('Supprimer cet enseignant ?');">
+                                        <form method="post" onsubmit="return confirm('Supprimer cet enseignant ?');">
                                             <input type="hidden" name="action" value="delete_enseignant">
                                             <input type="hidden" name="id_utilisateur" value="<?= (int)$e['id_utilisateur'] ?>">
                                             <button type="submit" class="btn btn-xs btn-danger">Supprimer</button>
@@ -281,11 +281,7 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                 </td>
                             </tr>
 
-                            <?php if (
-                                $action === 'edit_enseignant'
-                                && $enseignantCourant
-                                && $enseignantCourant['id_enseignant'] == $e['id_enseignant']
-                            ): ?>
+                            <?php if ($action === 'edit_enseignant' && $enseignantCourant && $enseignantCourant['id_enseignant'] == $e['id_enseignant']): ?>
                                 <tr class="inline-edit-row">
                                     <td colspan="9" class="inline-edit-cell">
                                         <form method="post" class="edit-form-modif">
@@ -482,7 +478,5 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
     <?php endif; ?>
 </main>
-
 </body>
 </html>
-
