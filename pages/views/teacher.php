@@ -12,6 +12,22 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* Wrapper titre + formulaire */
+    .form-wrapper {
+    max-width: 600px;
+    margin: 2rem auto;
+    }
+
+    /* Titre centré et aligné avec le formulaire */
+    .form-wrapper h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    }
+  </style>
 </head>
 
 <body>
@@ -19,14 +35,10 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
     <nav id="header-nav">
       <ul>
         <div class="logo-menu">
-          <a href="accueil.php">
+          <a href="../accueil.php">
             <img src="../../assets/images/logo.png" alt="Logo université" class="logo-menu-img">
           </a>
         </div>
-
-        <li>
-          <a href="../accueil.php" title="Retour">Retour</a>
-        </li>
 
         <li id="deconnexion">
           <a href="../../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>
@@ -209,46 +221,49 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
     <?php endif; ?>
 
     <?php if ($action === 'creer_cours'): ?>
-      <h3>Créer un cours</h3>
-      <form class="edit-form" method="post">
-        <input type="hidden" name="action" value="add_course">
-        <div>
-          <label for="course-code">Code : </label>
-          <input type="text" name="course-code" id="course-code" required>
-        </div>
-        <div>
-          <label for="course-name">Nom : </label>
-          <input type="text" name="course-name" id="course-name" required>
-        </div>
-        <div>
-          <label for="course-credits">Credits : </label>
-          <input type="number" min=1 max=12 name="course-credits" id="course-credits" required>
-        </div>
-        <div>
-          <label for="course-description">Description : </label>
-          <input type="text" name="course-description" id="course-description" required>
-        </div>
-        <div>
-          <label for="course-year">Année : </label>
-          <input type="text" name="course-year" id="course-year" required>
-        </div>
-        <div>
-          <label for="course-capacity">Capacité max : </label>
-          <input type="number" min=1 max=100 name="course-capacity" id="course-capacity" required>
-        </div>
-        <div>
-          <label for="course-prerequisites">Prérequis (codes séparés par virgule) : </label>
-          <input type="text" name="course-prerequisites" id="course-prerequisites">
-        </div>
+      <div class="form-wrapper">
+        <h3>Créer un cours</h3>
+        <form class="edit-form" method="post">
+          <input type="hidden" name="action" value="add_course">
+          <div>
+            <label for="course-code">Code : </label>
+            <input type="text" name="course-code" id="course-code" required>
+          </div>
+          <div>
+            <label for="course-name">Nom : </label>
+            <input type="text" name="course-name" id="course-name" required>
+         </div>
+         <div>
+            <label for="course-credits">Credits : </label>
+            <input type="number" min=1 max=12 name="course-credits" id="course-credits" required>
+          </div>
+          <div>
+            <label for="course-description">Description : </label>
+            <input type="text" name="course-description" id="course-description" required>
+          </div>
+          <div>
+            <label for="course-year">Année : </label>
+            <input type="text" name="course-year" id="course-year" required>
+         </div>
+          <div>
+            <label for="course-capacity">Capacité max : </label>
+            <input type="number" min=1 max=100 name="course-capacity" id="course-capacity" required>
+          </div>
+          <div>
+            <label for="course-prerequisites">Prérequis (codes séparés par virgule) : </label>
+            <input type="text" name="course-prerequisites" id="course-prerequisites">
+          </div>
 
-        <div class="edit-form-actions">
-          <button type="submit" class="btn">Créer</button>
-          <a href="teacher.php?action=liste_cours" class="btn btn-secondary">Annuler</a>
-        </div>
-      </form>
+          <div class="edit-form-actions">
+            <button type="submit" class="btn">Créer</button>
+            <a href="teacher.php?action=liste_cours" class="btn btn-secondary">Annuler</a>
+          </div>
+        </form>
+      </div>
     <?php endif; ?>
   </main>
 
 </body>
+
 
 </html>
