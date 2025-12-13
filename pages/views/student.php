@@ -65,6 +65,20 @@ require_once __DIR__ . '/../logic/student.logic.php';
       margin-bottom: 0.25rem;
       font-size: 0.75rem;
     }
+
+    h2 {
+     margin-top: 2rem;
+     margin-bottom: 1rem;
+    }
+
+    h2 + p {
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 + .table-container {
+      margin-top: 0.5rem;
+    }
   </style>
 </head>
 
