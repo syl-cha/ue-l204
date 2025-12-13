@@ -27,6 +27,20 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
     font-weight: 600;
     color: var(--text-dark);
     }
+
+    h2 {
+     margin-top: 2rem;
+     margin-bottom: 1rem;
+    }
+
+    h2 + p {
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 + .table-container {
+      margin-top: 0.5rem;
+    }
   </style>
 </head>
 
@@ -172,11 +186,11 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
     <?php endif; ?>
 
     <?php if ($action === 'liste_enseignements'): ?>
-      <h2>Liste de vos enseignements</h2>
       <?php if (empty($coursDejaEnseignes)): ?>
         <p>Vous ne participez actuellement à aucun cours.</p>
       <?php else: ?>
         <div class="table-container">
+          <h2>Liste de vos enseignements</h2>
           <p class="subtitle">Visualisation du catalogue des cours auxquels vous participez</p>
           <div class="table-wrapper">
             <table class="table-admin">
