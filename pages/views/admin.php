@@ -23,6 +23,21 @@ require_once __DIR__ . '/../logic/admin.logic.php';
         line-height: 1 !important;
         margin-top: 5px !important;
     }
+
+    /* Wrapper titre + formulaire */
+    .form-wrapper {
+    max-width: 600px;
+    margin: 2rem auto;
+    }
+
+    /* Titre centré et aligné avec le formulaire */
+    .form-wrapper h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    }
     </style>
 </head>
 
@@ -31,14 +46,10 @@ require_once __DIR__ . '/../logic/admin.logic.php';
     <nav id="header-nav">
         <ul>
             <div class="logo-menu">
-                <a href="accueil.php">
+                <a href="../accueil.php">
                     <img src="../../assets/images/logo.png" alt="Logo université" class="logo-menu-img">
                 </a>
             </div>
-
-            <li>
-                <a href="../accueil.php" title="Retour">Retour</a>
-            </li>
 
             <!-- On reste sur admin.php pour la gestion -->
             <!-- <li>
@@ -70,124 +81,130 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
     <!-- Formulaire d'ajout d'enseignant -->
     <?php if ($action === 'add_enseignant'): ?>
-        <h3>Ajouter un enseignant</h3>
-        <form method="post" class="edit-form">
-            <input type="hidden" name="action" value="create_enseignant">
+        <div class="form-wrapper">
+            <h3>Ajouter un enseignant</h3>
+            <form method="post" class="edit-form">
+                <input type="hidden" name="action" value="create_enseignant">
 
-            <div>
-                <label>Login</label>
-                <input type="text" name="login" required>
-            </div>
+                <div>
+                    <label>Login</label>
+                    <input type="text" name="login" required>
+                </div>
 
-            <div>
-                <label>Mot de passe</label>
-                <input type="password" name="mot_de_passe" required>
-            </div>
+                <div>
+                    <label>Nom</label>
+                    <input type="text" name="nom" required>
+                </div>
 
-            <div>
-                <label>Nom</label>
-                <input type="text" name="nom" required>
-            </div>
+                <div>
+                 <label>Prénom</label>
+                 <input type="text" name="prenom" required>
+                </div>
 
-            <div>
-                <label>Prénom</label>
-                <input type="text" name="prenom" required>
-            </div>
+             <div>
+                    <label>Email</label>
+                    <input type="email" name="email">
+                </div>
 
-            <div>
-                <label>Email</label>
-                <input type="email" name="email">
-            </div>
+                <div>
+                    <label>Bureau</label>
+                    <input type="text" name="bureau">
+                </div>
 
-            <div>
-                <label>Bureau</label>
-                <input type="text" name="bureau">
-            </div>
+                <div>
+                    <label>Téléphone</label>
+                    <input type="text" name="telephone">
+                </div>
 
-            <div>
-                <label>Téléphone</label>
-                <input type="text" name="telephone">
-            </div>
+                <div>
+                    <label>Spécialité</label>
+                   <input type="text" name="specialite">
+                </div>
 
-            <div>
-                <label>Spécialité</label>
-                <input type="text" name="specialite">
-            </div>
+                <div>
+                   <label>Statut</label>
+                  <select name="statut">
+                      <?php foreach (['titulaire','vacataire','contractuel'] as $s): ?>
+                            <option value="<?= $s ?>"><?= ucfirst($s) ?></option>
+                     <?php endforeach; ?>
+                    </select>
+               </div>
 
-            <div>
-                <label>Statut</label>
-                <select name="statut">
-                    <?php foreach (['titulaire','vacataire','contractuel'] as $s): ?>
-                        <option value="<?= $s ?>"><?= ucfirst($s) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="edit-form-actions">
-                <button type="submit" class="btn">Créer</button>
-                <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
-            </div>
-        </form>
-
+                <div class="edit-form-actions">
+                    <button type="submit" class="btn">Créer</button>
+                    <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
+                </div>
+                <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                        <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                        <?php unset($_SESSION['feedback']); ?>
+                    <?php endif; ?>
+            </form>
+        </div>
         <hr>
     <?php endif; ?>
 
     <!-- Formulaire d'ajout d'étudiant -->
     <?php if ($action === 'add_etudiant'): ?>
-        <h3>Ajouter un étudiant</h3>
-        <form method="post" class="edit-form">
-            <input type="hidden" name="action" value="create_etudiant">
+        <div class="form-wrapper">
+            <h3>Ajouter un étudiant</h3>
+            <form method="post" class="edit-form">
+                <input type="hidden" name="action" value="create_etudiant">
 
-            <div>
-                <label>Login</label>
-                <input type="text" name="login" required>
-            </div>
+                <div>
+                    <label>Login</label>
+                    <input type="text" name="login" required>
+                </div>
 
-            <div>
-                <label>Mot de passe</label>
-                <input type="password" name="mot_de_passe" required>
-            </div>
+                <div>
+                    <label>Numéro étudiant</label>
+                    <input type="text" name="numero_etudiant" required>
+                </div>
 
-            <div>
-                <label>Numéro étudiant</label>
-                <input type="text" name="numero_etudiant" required>
-            </div>
+                <div>
+                    <label>Nom</label>
+                    <input type="text" name="nom" required>
+                </div>
 
-            <div>
-                <label>Nom</label>
-                <input type="text" name="nom" required>
-            </div>
+                <div>
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" required>
+                </div>
 
-            <div>
-                <label>Prénom</label>
-                <input type="text" name="prenom" required>
-            </div>
+                <div>
+                    <label>Email</label>
+                    <input type="email" name="email">
+                </div>
 
-            <div>
-                <label>Email</label>
-                <input type="email" name="email">
-            </div>
+                <div>
+                    <label>Niveau</label>
+                    <select name="niveau">
+                        <?php foreach (['L1','L2','L3','M1','M2'] as $n): ?>
+                            <option value="<?= $n ?>"><?= $n ?></option>
+                     <?php endforeach; ?>
+                    </select>
+                </div>
 
-            <div>
-                <label>Niveau</label>
-                <select name="niveau">
-                    <?php foreach (['L1','L2','L3','M1','M2'] as $n): ?>
-                        <option value="<?= $n ?>"><?= $n ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="edit-form-actions">
-                <button type="submit" class="btn">Créer</button>
-                <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
-            </div>
-        </form>
-
+                <div class="edit-form-actions">
+                    <button type="submit" class="btn">Créer</button>
+                    <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
+                </div>
+                <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                        <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                        <?php unset($_SESSION['feedback']); ?>
+                <?php endif; ?>
+            </form>
+        </div>
+        
         <hr>
     <?php endif; ?>
 
     <!-- Liste + édition enseignants -->
     <?php if ($action === 'liste_enseignants' || $action === 'edit_enseignant'): ?>
+
+        <?php if (hasFeedbackInSession() && !empty($_SESSION['feedback']['success'])): ?>
+            <p class="success"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+            <?php unset($_SESSION['feedback']); ?>
+        <?php endif; ?>
 
         <?php if (empty($enseignants)): ?>
             <p>Aucun enseignant trouvé.</p>
@@ -296,7 +313,12 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                             <div>
                                                 <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
                                             </div>
+                                           
                                         </form>
+                                         <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                                                <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                                                <?php unset($_SESSION['feedback']); ?>
+                                            <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -312,6 +334,11 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
     <!-- Liste + édition étudiants -->
     <?php if ($action === 'liste_etudiants' || $action === 'edit_etudiant'): ?>
+        
+        <?php if (hasFeedbackInSession() && !empty($_SESSION['feedback']['success'])): ?>
+            <p class="success"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+            <?php unset($_SESSION['feedback']); ?>
+        <?php endif; ?>
 
         <?php if (empty($etudiants)): ?>
             <p>Aucun étudiant trouvé.</p>
@@ -409,7 +436,12 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                                 <button type="submit" class="btn">Enregistrer</button>
                                                 <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
                                             </div>
+                                            
                                         </form>
+                                        <?php if (hasFeedbackInSession() && empty($_SESSION['feedback']['success'])): ?>
+                                                <p class="warning"><?= htmlspecialchars($_SESSION['feedback']['message']) ?></p>
+                                                <?php unset($_SESSION['feedback']); ?>
+                                            <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -426,3 +458,4 @@ require_once __DIR__ . '/../logic/admin.logic.php';
 
 </body>
 </html>
+
