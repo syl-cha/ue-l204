@@ -76,7 +76,7 @@ if ($action === 'liste_cours') {
   else{
     $cours = $db->getAllCourses();
   }
-  
+
   $coursDejaSuivis = $db -> getIdCoursInscritByStudent($etudiantId);
 
   $prerequisManquants = [];

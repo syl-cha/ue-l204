@@ -33,8 +33,19 @@ $coursDejaEnseignes = [];
 $prerequis = [];
 $etudiants = [];
 
+// Formulaire de recherche des cours
+$recherche_cours = '';
+if(isset($_GET['search_cours']) AND !empty(trim($_GET['search_cours']))){
+  $recherche_cours = htmlspecialchars(trim($_GET['search_cours']));
+}
+
 if ($action === 'liste_cours' || $action === 'liste_enseignements') {
-  $cours = $db->getAllCourses();
+  // Cas du formulaire de recherche
+  if (!empty($recherche_cours)){
+    $cours = $db->searchCourses($recherche_cours);
+  } else {
+    $cours = $db->getAllCourses();
+  }
   // récupération des enseignement de l'enseignant
   $enseignantConnecte = $db->getTeacherByLogin($login);
   if ($enseignantConnecte) {

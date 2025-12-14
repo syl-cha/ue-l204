@@ -35,7 +35,7 @@ require_once __DIR__ . '/../logic/student.logic.php';
     .prerequis-info .btn {
       display: inline-flex;
       width: auto;
-     padding: 0.25rem 0.6rem;
+      padding: 0.25rem 0.6rem;
       font-size: 0.75rem;
       background-color: #d1d5db;
       color: #6b7280;

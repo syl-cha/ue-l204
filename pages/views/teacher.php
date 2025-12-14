@@ -73,6 +73,14 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
       <a class="btn" href="teacher.php?action=liste_enseignements" title="Lister mes enseignements">Lister vos enseignements</a>
       <a class="btn btn-secondary" href="teacher.php?action=creer_cours" title="Créer un cours">Créer un cours</a>
 
+      <div class="search-form">
+        <form method="GET" action="teacher.php">
+          <input type="hidden" name="action" value="liste_cours">
+          <input type="search" name="search_cours" placeholder="Rechercher un cours" class="search">
+          <button type="submit" name="submit_search" class="btn">Rechercher</button>
+        </form>
+      </div>
+
       <?php if (hasFeedbackInSession()): ?>
         <span class=<?= $_SESSION['feedback']['success'] ? 'success' : 'warning'?> ><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
         <?php unset($_SESSION['feedback']); ?>
@@ -125,7 +133,7 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                             <a href="teacher.php?action=enseigner_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Enseigner</a>
                           <?php endif; ?>
                           <!-- <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Supprimer</a> -->
-                          <?php if ($c['nb_prerequis'] > 0) : ?>
+                          <?php if ($c['nb_prerequis'] ?? 0) : ?>
                             <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
                           <?php endif; ?>
                         </div>
