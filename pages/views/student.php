@@ -32,7 +32,7 @@
         <h2>Liste des cours</h2>
         <p class="subtitle">Visualisation du catalogue des cours</p>
         <div class="table-wrapper">
-          <table class="table-admin">
+          <table class="table-cours">
             <thead>
               <tr>
                 <th>ID</th>
@@ -58,7 +58,7 @@
                   <td><?= htmlspecialchars($c['annee_universitaire']); ?></td>
                   <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                   <td>
-                    <div class="actions">
+                    <div class="actions-cours">
                       <!-- Si déjà inscrit -->
                       <?php if (in_array($c['id'], $coursDejaSuivis)): ?>
                         <span class="badge badge-soft">Inscrit</span>
@@ -67,15 +67,15 @@
                       <?php elseif (isset($prerequisManquants[$c['id']])): ?>
 
                         <div class="prerequis-info">
-                          <span class="btn btn-secondary btn-xs">S'inscrire</span> <br>
-                          <div class="prerequis-missing">
-                            <strong>Prérequis manquants :</strong><br>
-                            <ul>
-                              <?php foreach ($prerequisManquants[$c['id']] as $prereq): ?>
-                                • <?= htmlspecialchars($prereq['code']) ?> - <?= htmlspecialchars($prereq['nom']) ?><br>
-                              <?php endforeach; ?>
-                            </ul>
-                          </div>
+                              <span class="btn btn-secondary btn-xs">S'inscrire</span>
+                              <div class="prerequis-missing">
+                                <strong>Prérequis manquants :</strong>
+                                <span>
+                                <?php foreach ($prerequisManquants[$c['id']] as $prereq): ?>
+                                  <?= htmlspecialchars($prereq['code']) ?> - <?= htmlspecialchars($prereq['nom']) ?><br>
+                                <?php endforeach; ?>
+                                </span>
+                              </div>
                         </div>
 
                         <!-- Si pas inscrit, peut s'inscrire -->

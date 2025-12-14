@@ -33,7 +33,7 @@
             <h2>Liste des cours</h2>
             <p class="subtitle">Visualisation du catalogue des cours</p>
             <div class="table-wrapper">
-              <table class="table-admin">
+              <table class="table-cours">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -66,7 +66,7 @@
                             <a href="accueil.php?action=enseigner_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Enseigner</a>
                           <?php endif; ?>
                           <?php if ($c['nb_prerequis'] ?? 0) : ?>
-                            <a href="accueil.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
+                            <a href="accueil.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs orange">Prérequis</a>
                           <?php endif; ?>
                         </div>
                       </td>
