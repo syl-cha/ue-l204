@@ -174,16 +174,16 @@ require_once __DIR__ . '/../logic/student.logic.php';
                            <?php elseif (isset($prerequisManquants[$c['id']])): ?>
                             
                             <div class="prerequis-info">
-                              <span class="btn btn-secondary btn-xs">S'inscrire</span> <br>
+                              <span class="btn btn-secondary btn-xs">S'inscrire</span>
                               <div class="prerequis-missing">
-                                <strong>Prérequis manquants :</strong><br>
-                                <ul>
+                                <strong>Prérequis manquants :</strong>
+                                <span>
                                 <?php foreach ($prerequisManquants[$c['id']] as $prereq): ?>
-                                  • <?= htmlspecialchars($prereq['code']) ?> - <?= htmlspecialchars($prereq['nom']) ?><br>
+                                  <?= htmlspecialchars($prereq['code']) ?> - <?= htmlspecialchars($prereq['nom']) ?><br>
                                 <?php endforeach; ?>
-                                </ul>
-                                </div>
-                                </div>
+                                </span>
+                              </div>
+                            </div>
 
                           <!-- Si pas inscrit, peut s'inscrire -->
                           <?php else: ?>
@@ -295,4 +295,5 @@ require_once __DIR__ . '/../logic/student.logic.php';
 </body>
 
 </html>
+
 
