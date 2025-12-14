@@ -149,7 +149,7 @@
               </thead>
               <tbody>
                 <?php foreach ($enseignants as $e): ?>
-                  <tr>
+                  <tr id="enseignant-<?= $e['id_enseignant'] ?>">
                     <td><?= htmlspecialchars($e['login']) ?></td>
                     <td><?= htmlspecialchars($e['nom']) ?></td>
                     <td><?= htmlspecialchars($e['prenom']) ?></td>
@@ -161,7 +161,7 @@
                     <td>
                       <div class="actions">
                         <a class="btn btn-xs"
-                          href="accueil.php?action=edit_enseignant&id=<?= (int)$e['id_enseignant'] ?>">
+                          href="accueil.php?action=edit_enseignant&id=<?= (int)$e['id_enseignant'] ?>#enseignant-<?= (int)$e['id_enseignant'] ?>">
                           Modifier
                         </a>
                         <form method="post"
@@ -273,7 +273,7 @@
               </thead>
               <tbody>
                 <?php foreach ($etudiants as $e): ?>
-                  <tr>
+                  <tr id="etudiant-<?= $e['id_utilisateur'] ?>">
                     <td><?= htmlspecialchars($e['numero_etudiant']) ?></td>
                     <td><?= htmlspecialchars($e['login']) ?></td>
                     <td><?= htmlspecialchars($e['nom']) ?></td>
@@ -283,11 +283,10 @@
                     <td><?= htmlspecialchars($e['email']) ?></td>
                     <td>
                       <div class="actions">
-                        <form method="get">
-                          <input type="hidden" name="action" value="edit_etudiant">
-                          <input type="hidden" name="id" value="<?= (int)$e['id_utilisateur'] ?>">
-                          <button type="submit" class="btn btn-xs">Modifier</button>
-                        </form>
+                        <a href="?action=edit_etudiant&id=<?= (int)$e['id_utilisateur'] ?>#etudiant-<?= (int)$e['id_utilisateur'] ?>"
+                          class="btn btn-xs">
+                          Modifier
+                        </a>
                         <form method="post"
                           onsubmit="return confirm('Supprimer cet étudiant ?');">
                           <input type="hidden" name="action" value="delete_etudiant">
