@@ -858,8 +858,8 @@ class UniversiteDB extends DataBase
    *        FORMULAIRE DE RECHERCHE
    */
   /**
- * Recherche des cours par code, nom ou description
- * @param string $recherche Le terme de recherche
+ * Recherche des cours par nom
+ * @param string $recherche terme de recherche
  * @return array Liste des cours correspondants
  */
   public function searchCourses(string $recherche): array
@@ -874,6 +874,57 @@ class UniversiteDB extends DataBase
     } catch (PDOException $e) {
       error_log('[' . date(DATE_RFC2822) . '] Erreur searchCourses : ' . $e->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
       return [];
+    }
+  }
+
+  /* 
+  * Formulaire admin - recherche d'un utilisateur (enseignant + étudiant)
+  */
+  /**
+  * @param string $recherche terme de recherche
+  * @return array liste des users 
+  */
+  public function searchAllUsers(string $recherche): array
+  {
+    $search = '%' . $recherche . '%';
+    
+    $sql = "
+        SELECT 
+            u.id AS id_utilisateur,
+            u.login,
+            u.nom,
+            u.prenom,
+            u.email,
+            'etudiant' AS type_utilisateur,
+            e.niveau AS info_supplementaire
+        FROM utilisateur u
+        INNER JOIN etudiant e ON u.id= e.utilisateur_id
+        WHERE u.nom LIKE :search OR u.prenom LIKE :search
+        
+        UNION
+        
+        SELECT 
+            u.id AS id_utilisateur,
+            u.login,
+            u.nom,
+            u.prenom,
+            u.email,
+            'enseignant' AS type_utilisateur,
+            ens.specialite AS info_supplementaire
+        FROM utilisateur u
+        INNER JOIN enseignant ens ON u.id = ens.utilisateur_id
+        WHERE u.nom LIKE :search OR u.prenom LIKE :search
+        
+        ORDER BY nom
+    ";
+    
+    try {
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([':search' => $search]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log('[' . date(DATE_RFC2822) . '] Erreur searchAllUsers : ' . $e->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+        return [];
     }
   }
 }

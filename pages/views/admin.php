@@ -12,17 +12,6 @@ require_once __DIR__ . '/../logic/admin.logic.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
     <style>
-    /* Corrige le bouton Annuler (ne fonctionne pas dans le CSS) */
-    .btn, .btn-secondary {
-        padding: 0.45rem 0.9rem !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 999px !important;
-        box-sizing: border-box !important;
-        line-height: 1 !important;
-        margin-top: 5px !important;
-    }
 
     /* Wrapper titre + formulaire */
     .form-wrapper {
@@ -78,11 +67,6 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                 </a>
             </div>
 
-            <!-- On reste sur admin.php pour la gestion -->
-            <!-- <li>
-                <a href="admin.php" title="Espace administration">Gestion</a>
-            </li> -->
-
             <li id="deconnexion">
                 <a href="../../pages/deconnexion.php" title="Déconnexion">Se déconnecter</a>
             </li>
@@ -102,9 +86,93 @@ require_once __DIR__ . '/../logic/admin.logic.php';
         <a class="btn" href="admin.php?action=liste_etudiants">Lister les étudiants</a>
         <a class="btn btn-secondary" href="admin.php?action=add_enseignant">Ajouter un enseignant</a>
         <a class="btn btn-secondary" href="admin.php?action=add_etudiant">Ajouter un étudiant</a>
+        <!--Formulaire de recherche-->
+        <div class="search-form">
+            <form method="GET" action="admin.php">
+                <input type="hidden" name="action" value="recherche_user">
+                <input type="search" name="search_user" placeholder="Rechercher un utilisateur" class="search">
+                <button type="submit" name="submit_search" class="btn">Rechercher</button>
+            </form>
+        </div>
     </div>
 
     <hr>
+
+    <!--Affichage des résultats de recherche-->
+    <?php if ($action === 'recherche_user'): ?>
+        <?php if (empty($resultat_recherche)): ?>
+            <p>Aucun utilisateur trouvé pour cette recherche.</p>
+        <?php else: ?>
+            <div class="table-container">
+                <h2>Résultat de votre recherche</h2>
+                <div class="table-wrapper">
+                    <table class="table-admin">
+                        <thead>
+                            <tr>
+                                <th>Rôle</th>
+                                <th>Login</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
+                                <th>Autres informations</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($resultat_recherche as $user): ?>
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-soft">
+                                            <?= $user['type_utilisateur'] === 'etudiant' ? 'Étudiant' : 'Enseignant' ?>
+                                        </span>
+                                    </td>
+                                    <td><?= htmlspecialchars($user['login']) ?></td>
+                                    <td><?= htmlspecialchars($user['nom']) ?></td>
+                                    <td><?= htmlspecialchars($user['prenom']) ?></td>
+                                    <td><?= htmlspecialchars($user['email']) ?></td>
+                                    <td>
+                                        <?php if ($user['type_utilisateur'] === 'etudiant'): ?>
+                                           <strong>Niveau </strong>: <?= htmlspecialchars($user['info_supplementaire']) ?>
+                                        <?php else: ?>
+                                            <strong>Spécialité </strong>: <?= htmlspecialchars($user['info_supplementaire']) ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="actions">
+                                            <?php if ($user['type_utilisateur'] === 'etudiant'): ?>
+                                                <form method="get">
+                                                    <input type="hidden" name="action" value="edit_etudiant">
+                                                    <input type="hidden" name="id" value="<?= (int)$e['id_etudiant'] ?>">
+                                                    <button type="submit" class="btn btn-xs">Modifier</button>
+                                                </form>
+                                                <form method="post"
+                                                    onsubmit="return confirm('Supprimer cet étudiant ?');">
+                                                    <input type="hidden" name="action" value="delete_etudiant">
+                                                    <input type="hidden" name="id_utilisateur" value="<?= (int)$e['id_utilisateur'] ?>">
+                                                    <button type="submit" class="btn btn-xs btn-danger">Supprimer</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <form method="get">
+                                                    <input type="hidden" name="action" value="edit_enseignant">
+                                                    <input type="hidden" name="id" value="<?= (int)$e['id_enseignant'] ?>">
+                                                    <button type="submit" class="btn btn-xs">Modifier</button>
+                                                </form>
+                                                <form method="post" onsubmit="return confirm('Supprimer cet enseignant ?');">
+                                                    <input type="hidden" name="action" value="delete_enseignant">
+                                                    <input type="hidden" name="id_utilisateur" value="<?= (int)$e['id_utilisateur'] ?>">
+                                                    <button type="submit" class="btn btn-xs btn-danger">Supprimer</button>
+                                                </form>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
 
     <!-- Formulaire d'ajout d'enseignant -->
     <?php if ($action === 'add_enseignant'): ?>
@@ -402,7 +470,7 @@ require_once __DIR__ . '/../logic/admin.logic.php';
                                             <button type="submit" class="btn btn-xs">Modifier</button>
                                         </form>
                                         <form method="post"
-                                              onsubmit="return confirm('Supprimer cet étudiant ?');">
+                                            onsubmit="return confirm('Supprimer cet étudiant ?');">
                                             <input type="hidden" name="action" value="delete_etudiant">
                                             <input type="hidden" name="id_utilisateur" value="<?= (int)$e['id_utilisateur'] ?>">
                                             <button type="submit" class="btn btn-xs btn-danger">Supprimer</button>
