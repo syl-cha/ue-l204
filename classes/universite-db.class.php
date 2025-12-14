@@ -865,7 +865,7 @@ class UniversiteDB extends DataBase
   public function searchCourses(string $recherche): array
   {
     $sql = "SELECT * FROM cours 
-            WHERE nom LIKE :recherche AND actif = 1
+            WHERE (nom LIKE :recherche OR code LIKE :recherche) AND actif = 1
             ORDER BY nom";
     try {
       $stmt = $this->connect()->prepare($sql);
