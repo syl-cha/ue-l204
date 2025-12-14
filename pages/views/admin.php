@@ -285,7 +285,7 @@
                       <div class="actions">
                         <form method="get">
                           <input type="hidden" name="action" value="edit_etudiant">
-                          <input type="hidden" name="id" value="<?= (int)$e['id_etudiant'] ?>">
+                          <input type="hidden" name="id" value="<?= (int)$e['id_utilisateur'] ?>">
                           <button type="submit" class="btn btn-xs">Modifier</button>
                         </form>
                         <form method="post"

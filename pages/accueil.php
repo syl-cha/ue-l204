@@ -43,9 +43,7 @@ if (file_exists($elements['logic_path'])) {
     <nav id="header-nav">
       <ul>
         <div class="logo-menu">
-          <a href="accueil.php">
             <img src="../assets/images/logo.png" alt="Logo université" class="logo-menu-img">
-          </a>
         </div>
 
         <!-- Déconnexion -->

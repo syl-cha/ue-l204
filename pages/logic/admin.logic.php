@@ -261,9 +261,9 @@ if ($action === 'liste_etudiants' || $action === 'edit_etudiant') {
   $etudiants = $db->getAllEtudiants();
 }
 
-// if ($action === 'edit_etudiant' && isset($_GET['id'])) {
-//     $idEtu = (int)$_GET['id'];
-//     if ($idEtu > 0) {
-//         $etudiantCourant = $db->getEtudiantById($idEtu);
-//     }
-// }
+if ($action === 'edit_etudiant' && isset($_GET['id'])) {
+    $idEtu = (int)$_GET['id'];
+    if ($idEtu > 0) {
+        $etudiantCourant = $db->getEtudiantByUtilisateurId($idEtu);
+    }
+}
