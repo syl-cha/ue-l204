@@ -621,3 +621,37 @@ a {
     h2 + .table-container {
       margin-top: 0.5rem;
     }
+
+/* 
+.table-wrapper {
+    width: 100%;
+    max-height: 65vh;
+    overflow-x: auto;
+    overflow-y: auto;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+}
+    .table-admin {
+    width: 100%;
+    min-width: 1100px;
+    border-collapse: collapse;
+    }
+
+    .table-admin th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: linear-gradient(to top, #ffe4e1, #fff5f4);
+    }
+*/
+
+/* Bouton PRÉREQUIS uniquement */
+.table-admin .actions a[href="liste_prerequis"] {
+    background-color: #92400e;
+    color: #fff;
+}
+
+/* Hover bouton Prérequis */
+.table-admin .actions a[href="liste_prerequis"]:hover {
+    background-color: #78350f;
+}
