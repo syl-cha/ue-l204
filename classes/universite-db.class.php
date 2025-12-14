@@ -439,6 +439,31 @@ class UniversiteDB extends DataBase
     }
   }
 
+  /**
+ * Récupère tous les étudiants inscrits à un cours donné
+ * @param int $coursId L'ID du cours
+ * @return array Liste des étudiants avec leurs infos
+ */
+  public function getStudentsByCourse(int $coursId): array
+  {
+    $sql = "SELECT e.id, e.numero_etudiant, u.nom, u.prenom, u.email, e.niveau, i.date_inscription
+    FROM inscription i
+    INNER JOIN etudiant e ON i.etudiant_id = e.id
+    INNER JOIN utilisateur u ON e.utilisateur_id = u.id
+    WHERE i.cours_id = :cours_id
+    ORDER BY u.nom, u.prenom
+    ";
+
+    try {
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([':cours_id' => $coursId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $exception) {
+        error_log('[' . date(DATE_RFC2822) . '] Erreur getStudentsByCourse : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+        return [];
+    }
+  }
+
   /************************* LISTE MÉTHODES SPÉCIFIQUES ADMIN ******************************/
 
   /**

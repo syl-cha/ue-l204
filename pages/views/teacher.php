@@ -222,7 +222,7 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                     <td><span class="badge badge-soft"><?= htmlspecialchars($cours['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                     <td>
                       <div class="actions">
-                        <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$cours['id'] ?>" class="btn btn-xs">Étudiants</a>
+                        <a href="teacher.php?action=liste_etudiants&cours_id=<?= (int)$cours['id'] ?>" class="btn btn-xs">Étudiants</a>
                       </div>
                     </td>
                   </tr>
@@ -233,6 +233,58 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
         </div>
       <?php endif; ?>
     <?php endif; ?>
+
+    <?php if ($action === 'liste_etudiants'): ?>
+      <h2>Etudiants inscrits dans votre cours</h2>
+      <?php
+        $infosCours = $db->getCourseById((int)$coursId);
+
+        if ($infosCours): ?>
+          <p class="subtitle">
+              <strong><?= htmlspecialchars($infosCours['code']) ?></strong> - 
+              <?= htmlspecialchars($infosCours['nom']) ?>
+          </p>
+
+        <?php if (empty($etudiants)): ?>
+            <p>Aucun étudiant inscrit pour le moment.</p>
+
+        <?php else: ?>
+          <div class="table-container">
+          <p class="subtitle">Total : <?= count($etudiants) ?> étudiant(s)</p>
+            <div class="table-wrapper">
+              <table class="table-admin">
+                <thead>
+                  <tr>
+                    <th>N° Étudiant</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Niveau</th>
+                    <th>Date inscription</th>
+                    <th>Note</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($etudiants as $etu): ?>
+                    <tr>
+                      <td><?= htmlspecialchars($etu['numero_etudiant']) ?></td>
+                      <td><?= htmlspecialchars($etu['nom']) ?></td>
+                      <td><?= htmlspecialchars($etu['prenom']) ?></td>
+                      <td><?= htmlspecialchars($etu['email']) ?></td>
+                      <td><?= htmlspecialchars($etu['niveau']) ?></td>
+                      <td><?= htmlspecialchars(date('d/m/Y', strtotime($etu['date_inscription']))) ?></td>
+                      <td>...</td>
+                      <td><span class="badge badge-soft">Actif</span></td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <?php endif; ?>
+      <?php endif; ?>    
+    <?php endif; ?>               
 
     <?php if ($action === 'creer_cours'): ?>
       <div class="form-wrapper">
@@ -278,6 +330,5 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
   </main>
 
 </body>
-
 
 </html>
