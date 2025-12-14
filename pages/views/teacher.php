@@ -134,7 +134,7 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                           <?php endif; ?>
                           <!-- <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Supprimer</a> -->
                           <?php if ($c['nb_prerequis'] ?? 0) : ?>
-                            <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
+                            <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs orange">Prérequis</a>
                           <?php endif; ?>
                         </div>
                       </td>
@@ -338,5 +338,6 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
   </main>
 
 </body>
+
 
 </html>
