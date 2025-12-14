@@ -19,10 +19,15 @@
 
     
 
+    <!-- Vérifie s'il existe un message de feedback en session
+     La classe CSS dépend du succès ou de l’échec de l’action :
+      - success -> action réussie
+      - danger  -> erreur-->
     <?php if (hasFeedbackInSession()): ?>
       <div class="alert alert-<?= $_SESSION['feedback']['success'] ? 'success' : 'danger' ?>">
         <?= htmlspecialchars($_SESSION['feedback']['message'], ENT_QUOTES, 'UTF-8') ?>
       </div>
+      <!-- Supprime le feedback après affichage pour éviter qu'il ne réaparaisse -->
       <?php unset($_SESSION['feedback']); ?>
     <?php endif; ?>
 
@@ -54,14 +59,18 @@
                                             <?= $user['type_utilisateur'] === 'etudiant' ? 'Étudiant' : 'Enseignant' ?>
                                         </span>
                                     </td>
+                                    <!-- Affichage sécurisé des informations communes -->
                                     <td><?= htmlspecialchars($user['login']) ?></td>
                                     <td><?= htmlspecialchars($user['nom']) ?></td>
                                     <td><?= htmlspecialchars($user['prenom']) ?></td>
                                     <td><?= htmlspecialchars($user['email']) ?></td>
                                     <td>
+                                      <!-- Affichage conditionnel selon le type d'utilisateur -->
                                         <?php if ($user['type_utilisateur'] === 'etudiant'): ?>
+                                           <!-- Pour un étudiant, on affiche le niveau -->
                                            <strong>Niveau </strong>: <?= htmlspecialchars($user['info_supplementaire']) ?>
                                         <?php else: ?>
+                                          <!-- Pour un enseignant, on affiche la spécialité -->
                                             <strong>Spécialité </strong>: <?= htmlspecialchars($user['info_supplementaire']) ?>
                                         <?php endif; ?>
                                     </td>
@@ -69,6 +78,7 @@
                                         <div class="actions">
                                             <?php if ($user['type_utilisateur'] === 'etudiant'): ?>
                                                 <form method="get">
+                                                  <!-- Actions spécifiques aux étudiants -->
                                                     <input type="hidden" name="action" value="edit_etudiant">
                                                     <input type="hidden" name="id" value="<?= (int)$e['id_etudiant'] ?>">
                                                     <button type="submit" class="btn btn-xs">Modifier</button>
@@ -81,6 +91,7 @@
                                                 </form>
                                             <?php else: ?>
                                                 <form method="get">
+                                                  <!-- Actions spécifiques aux enseignants -->
                                                     <input type="hidden" name="action" value="edit_enseignant">
                                                     <input type="hidden" name="id" value="<?= (int)$e['id_enseignant'] ?>">
                                                     <button type="submit" class="btn btn-xs">Modifier</button>
