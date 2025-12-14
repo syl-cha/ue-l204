@@ -139,7 +139,7 @@ require_once __DIR__ . '/../logic/student.logic.php';
             <h2>Liste des cours</h2>
             <p class="subtitle">Visualisation du catalogue des cours</p>
             <div class="table-wrapper">
-              <table class="table-admin">
+              <table class="table-cours">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -165,7 +165,7 @@ require_once __DIR__ . '/../logic/student.logic.php';
                       <td><?= htmlspecialchars($c['annee_universitaire']); ?></td>
                       <td><span class="badge badge-soft"><?= htmlspecialchars($c['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                       <td>
-                        <div class="actions">
+                        <div class="actions-cours">
                           <!-- Si déjà inscrit -->
                           <?php if (in_array($c['id'], $coursDejaSuivis)): ?>
                             <span class="badge badge-soft">Inscrit</span>
@@ -295,3 +295,4 @@ require_once __DIR__ . '/../logic/student.logic.php';
 </body>
 
 </html>
+
