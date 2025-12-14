@@ -244,6 +244,8 @@ require_once __DIR__ . '/../logic/teacher.logic.php';
                       <td><?= htmlspecialchars($etu['email']) ?></td>
                       <td><?= htmlspecialchars($etu['niveau']) ?></td>
                       <td><?= htmlspecialchars(date('d/m/Y', strtotime($etu['date_inscription']))) ?></td>
+                      <td>...</td>
+                      <td><span class="badge badge-soft">Actif</span></td>
                     </tr>
                   <?php endforeach; ?>
                 </tbody>

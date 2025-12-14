@@ -446,7 +446,7 @@ class UniversiteDB extends DataBase
  */
   public function getStudentsByCourse(int $coursId): array
   {
-    $sql = "SELECT e.id, e.numero_etudiant, u.nom, u.prenom, u.email, e.niveau, i?date_inscription, i.note, i.valide
+    $sql = "SELECT e.id, e.numero_etudiant, u.nom, u.prenom, u.email, e.niveau, i.date_inscription
     FROM inscription i
     INNER JOIN etudiant e ON i.etudiant_id = e.id
     INNER JOIN utilisateur u ON e.utilisateur_id = u.id
