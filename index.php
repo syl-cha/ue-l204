@@ -6,10 +6,13 @@ require_once 'functions.php';
 startSession();
 require('./classes/universite-db.class.php');
 
-// Instancie la classe UniversiteDB (dans le fichier "universite-db.class.php)
 $db = new UniversiteDB();
 
-// Appel de la fonction : si l'utilisateur est déjà connecté, il est directement redirigé vers l'accueil
+$addTest = $db->addCourse('INFO-L113', 'Introduction Rust', 3, "Initiation au langage Rust", '2025-2026', 40);
+$addTest2 = $db->addCourse('INFO-L213', 'Rust Avancé', 3, "Approfondissement du langage Rust", '2025-2026', 20,['INFO-L113','INFO-L101','INFO-L106']);
+
+
+// Si l'utilisateur est déjà connecté, il est directement redirigé vers l'accueil
 if (isConnecte()) {
   header('Location: pages/accueil.php');
   exit;
@@ -19,19 +22,15 @@ $erreur = '';
 
 // Vérification de l'identifiant et du mot de passe
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $login = trim($_POST['identifiant']); // trim () supprime les espaces et les caractères invisibles
+  $login = trim($_POST['identifiant']);
   $mdp   = trim($_POST['mdp']);
 
-  // Gestion de la connexion de l’utilisateur :
-  // - sinon -> erreur d’authentification
-  if ($login === '' || $mdp === '') { // - champs vides → erreur
+  if ($login === '' || $mdp === '') {
     $erreur = "Veuillez remplir tous les champs.";
-    // - identifiants valides -> connexion + redirection
   } elseif ($db->goodLoginPasswordPair($login, $mdp)) {
     setConnecte($db->getUserByLogin($login));
     header('Location: pages/accueil.php');
     exit;
-    // - sinon -> erreur d’authentification
   } else {
     $erreur = "Identifiant ou mot de passe incorrect.";
   }
@@ -58,6 +57,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <h1>Université de Limoges</h1>
       <p>Bienvenue sur la plateforme interne de l’Université de Limoges. Veuillez vous connecter pour accéder à votre espace personnel.
       </p>
+      <!--
+      <p><strong><?php if ($addTest) {
+                    echo 'Course 1 added successfully<br>';
+                  } else {
+                    echo 'Course 1 addition failed<br>';
+                  } ?></strong></p>
+      <p><strong><?php if ($addTest2) {
+                    echo 'Course 2 added successfully<br>';
+                  } else {
+                    echo 'Course 2 addition failed<br>';
+                  } ?></strong></p>-->
     </div>
     <div class="section-connexion">
       <h2>Connexion</h2>
@@ -72,12 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input type="password" id="mdp" name="mdp" placeholder="Veuillez entrer votre mot de passe" required>
           <i class="fa-solid fa-lock"></i>
         </div>
-        <!-- Si $erreur n'est pas vide, ou égale à 0, on l'affiche tout en l’échappant 
-        pour éviter toute injection HTML avec htmlspecialchars (empêche l'exécution de code) 
-
-        La synthaxe "?= $erreur ?" permet de remplacer "php echo : $erreur; -->
         <?php if (!empty($erreur)): ?>
-          <p class="erreur"><?= htmlspecialchars($erreur) ?></p> 
+          <p class="erreur"><?= htmlspecialchars($erreur) ?></p>
         <?php endif; ?>
         <button type="submit" name="submit" class="btn btn-form">Se connecter</button>
       </form>
