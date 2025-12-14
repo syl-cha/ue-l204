@@ -853,4 +853,27 @@ class UniversiteDB extends DataBase
     $secondYear = (int)$matches[2];
     return $secondYear - $firstYear === 1;
   }
+
+  /**
+   *        FORMULAIRE DE RECHERCHE
+   */
+  /**
+ * Recherche des cours par code, nom ou description
+ * @param string $recherche Le terme de recherche
+ * @return array Liste des cours correspondants
+ */
+  public function searchCourses(string $recherche): array
+  {
+    $sql = "SELECT * FROM cours 
+            WHERE nom LIKE :recherche AND actif = 1
+            ORDER BY nom";
+    try {
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute([':recherche' => '%' . $recherche . '%']);
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      error_log('[' . date(DATE_RFC2822) . '] Erreur searchCourses : ' . $e->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      return [];
+    }
+  }
 }

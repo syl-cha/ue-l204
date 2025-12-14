@@ -25,6 +25,12 @@ $db = new UniversiteDB();
 
 // TRAITEMENT DES ACTIONS GET 
 
+// Formulaire de recherche des cours
+$recherche_cours = '';
+if(isset($_GET['search_cours']) AND !empty(trim($_GET['search_cours']))){
+  $recherche_cours = htmlspecialchars(trim($_GET['search_cours']));
+}
+
 $action = $_GET['action'] ?? 'liste_cours';
 
 // On gère l'inscription à un cours
@@ -61,7 +67,16 @@ $cours = [];
 $coursDejaSuivis = [];
 
 if ($action === 'liste_cours') {
-  $cours = $db->getAllCourses();
+  // Cas du formulaire de recherche
+  if (!empty($recherche_cours)){
+    $cours = $db->searchCourses($recherche_cours);
+  }
+
+  //Cas du bouton "lister les cours"
+  else{
+    $cours = $db->getAllCourses();
+  }
+  
   $coursDejaSuivis = $db -> getIdCoursInscritByStudent($etudiantId);
 
   $prerequisManquants = [];

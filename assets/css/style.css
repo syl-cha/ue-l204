@@ -216,6 +216,25 @@ a {
     gap: 0.5rem;
 }
 
+/*Mise en forme du formulaire de recherche*/
+.admin-actions .search-form{
+    margin-left: auto;
+}
+
+.admin-actions form{
+    border: 2px solid #ccc;
+    border-radius: 999px;
+}
+
+.admin-actions .search{
+    margin-left: .5rem;
+    border: none;
+}
+
+.admin-actions .search:focus{
+    outline: none;
+}
+
 /* Tableau (listes admin) */
 
 .table-container {

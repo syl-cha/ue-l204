@@ -109,7 +109,14 @@ require_once __DIR__ . '/../logic/student.logic.php';
     <div class="admin-actions">
       <a class="btn" href="student.php?action=liste_cours" title="Lister tous les cours">Lister tous les cours</a>
       <a class="btn" href="student.php?action=liste_enseignements" title="Lister mes enseignements">Lister mes cours</a>
-    </div>
+      <div class="search-form">
+        <form method="GET" action="student.php">
+          <input type="hidden" name="action" value="liste_cours">
+          <input type="search" name="search_cours" placeholder="Rechercher un cours" class="search">
+          <button type="submit" name="submit_search" class="btn">Rechercher</button>
+        </form>
+      </div>
+  </div>
 
     <hr>
 
