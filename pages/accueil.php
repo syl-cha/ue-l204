@@ -78,7 +78,8 @@ if (file_exists($elements['logic_path'])) {
         break;
 
       default:
-        # code...
+        // Rôle inconnu → on force la déconnexion
+        header('Location: deconnexion.php');
         break;
     } ?>
   </main>
