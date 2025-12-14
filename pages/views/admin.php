@@ -103,6 +103,7 @@
     <?php endif; ?>
     <!-- Formulaire d'ajout d'enseignant -->
     <?php if ($action === 'add_enseignant'): ?>
+      <div class="form-wrapper">
       <h3>Ajouter un enseignant</h3>
       <form method="post" class="edit-form">
         <input type="hidden" name="action" value="create_enseignant">
@@ -158,6 +159,7 @@
       </form>
 
       <hr>
+      <div class="form-wrapper">
     <?php endif; ?>
 
     <!-- Formulaire d'ajout d'étudiant -->
