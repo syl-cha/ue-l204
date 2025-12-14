@@ -52,7 +52,7 @@ function isStudent(): bool {
 }
 
 /* Redirige l'utilisateur sur sa page d'accueil en fonction de son rôle*/
-function redirectByRole(): void {
+function redirectByRole(): array {
     startSession();
 
     //Si pas de rôle, redirigé vers la page de connexion
@@ -63,20 +63,39 @@ function redirectByRole(): void {
 
     switch($_SESSION['role']) {
         case 'admin':
-            header('Location: views/admin.php');
+            require_once __DIR__ . '/pages/logic/admin.logic.php';
+            return [
+              'espace' => 'administration',
+              'tab' => 'Admin',
+              'accueil' => 'administrateur',
+              'message' => 'Administration des utilisateurs'
+            ];
             break;
         
         case 'enseignant':
-            header('Location: views/teacher.php');
+            require_once __DIR__ . '/pages/logic/teacher.logic.php';
+            return [
+              'espace' => 'enseignant',
+              'tab' => 'Enseignant',
+              'accueil' => 'enseignant',
+              'message' => 'Administration des cours et élèves'
+            ];
             break;
 
         case 'etudiant':
-            header('Location: views/student.php');
+            require_once __DIR__ . '/pages/logic/student.logic.php';
+            return [
+              'espace' => 'étudiant',
+              'tab' => 'Étudiant',
+              'accueil' => 'étudiant',
+              'message' => 'Gestion de vos cours'
+            ];
             break;
         
         //Si rôle inconnue -> déconnexion
         default:
             header('Location: deconnexion.php');
+            return [];
             exit;
     }
 }

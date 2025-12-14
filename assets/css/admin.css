@@ -1,0 +1,53 @@
+/* Corrige le bouton Annuler (ne fonctionne pas dans le CSS) */
+    .btn, .btn-secondary {
+        padding: 0.45rem 0.9rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 999px !important;
+        box-sizing: border-box !important;
+        line-height: 1 !important;
+        margin-top: 5px !important;
+    }
+
+    /* Wrapper titre + formulaire */
+    .form-wrapper {
+    max-width: 600px;
+    margin: 2rem auto;
+    }
+
+    /* Titre centré et aligné avec le formulaire */
+    .form-wrapper h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    }
+
+    /* Centrer le texte dans la colonne Niveau */
+    .table-admin td .badge-soft {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    }
+
+    .table-admin td:nth-child(1),  /* Numéro étudiant */
+    .table-admin td:nth-child(5),  /* Niveau */
+    .table-admin td:nth-child(6) {  /* Date d’inscription */ 
+    text-align: center;
+    }
+
+    h2 {
+     margin-top: 2rem;
+     margin-bottom: 1rem;
+    }
+
+    h2 + p {
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 + .table-container {
+      margin-top: 0.5rem;
+    }
