@@ -12,7 +12,7 @@ if (!isConnecte()) {
 
 // Sécurité : seuls les enseignants peuvent accéder à cette page
 if (!isTeacher()) {
-  header('Location: ../accueil.php');
+  header('Location: accueil.php');
   exit;
 }
 
@@ -35,13 +35,13 @@ $etudiants = [];
 
 // Formulaire de recherche des cours
 $recherche_cours = '';
-if(isset($_GET['search_cours']) AND !empty(trim($_GET['search_cours']))){
+if (isset($_GET['search_cours']) and !empty(trim($_GET['search_cours']))) {
   $recherche_cours = htmlspecialchars(trim($_GET['search_cours']));
 }
 
 if ($action === 'liste_cours' || $action === 'liste_enseignements') {
   // Cas du formulaire de recherche
-  if (!empty($recherche_cours)){
+  if (!empty($recherche_cours)) {
     $cours = $db->searchCourses($recherche_cours);
   } else {
     $cours = $db->getAllCourses();
@@ -72,18 +72,18 @@ if ($action === 'enseigner_cours' && $coursId) {
         $infosCours['annee_universitaire']
       );
       if ($succes) {
-        $_SESSION['feedback'] = ['message' => 'Vous enseignez à présent en '. $infosCours['code'] . " : " . $infosCours['nom']. '.', 'success' => true];
+        $_SESSION['feedback'] = ['message' => 'Vous enseignez à présent en ' . $infosCours['code'] . " : " . $infosCours['nom'] . '.', 'success' => true];
       } else {
-        $_SESSION['feedback'] = ['message' => 'Impossible de s\'inscrire. Enseignez-vous déjà en '. $infosCours['code'] . " : " . $infosCours['nom'] . ' ?', 'success' => false];
+        $_SESSION['feedback'] = ['message' => 'Impossible de s\'inscrire. Enseignez-vous déjà en ' . $infosCours['code'] . " : " . $infosCours['nom'] . ' ?', 'success' => false];
       }
     } else {
-        $_SESSION['feedback'] = ['message' => 'Le cours auquel vous tenter de vous inscrire est introuvable.', 'success' => false];
+      $_SESSION['feedback'] = ['message' => 'Le cours auquel vous tenter de vous inscrire est introuvable.', 'success' => false];
     }
   } else {
-        $_SESSION['feedback'] = ['message' => 'Enseignant introuvable.', 'success' => false];
+    $_SESSION['feedback'] = ['message' => 'Enseignant introuvable.', 'success' => false];
   }
-  header('Location: ../views/teacher.php?action=liste_cours');
-    exit;
+  header('Location: accueil.php?action=liste_cours');
+  exit;
 }
 
 // TRAITEMENT DES ACTIONS POST
@@ -121,14 +121,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'message' => 'Le cours a été ajouté',
         'success' => true,
       ];
-      header('Location: ../views/teacher.php');
+      header('Location: accueil.php');
       exit;
     } else {
       $_SESSION['feedback'] = [
         'message' => 'Erreur lors de l\'ajout du cours. Vérifier les champs',
         'success' => false
       ];
-      header('Location: ../views/teacher.php?action=creer_cours');
+      header('Location: accueil.php?action=creer_cours');
       exit;
     }
   }

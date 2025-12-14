@@ -17,7 +17,7 @@ $role  = $_SESSION['role']  ?? '';
 $etudiantId = $_SESSION['etudiant_id'] ?? null;
 
 if (!$etudiantId) {
-    die("Erreur : ID étudiant introuvable en session");
+  die("Erreur : ID étudiant introuvable en session");
 }
 
 // On instancie notre classe d'accès BDD
@@ -27,7 +27,7 @@ $db = new UniversiteDB();
 
 // Formulaire de recherche des cours
 $recherche_cours = '';
-if(isset($_GET['search_cours']) AND !empty(trim($_GET['search_cours']))){
+if (isset($_GET['search_cours']) and !empty(trim($_GET['search_cours']))) {
   $recherche_cours = htmlspecialchars(trim($_GET['search_cours']));
 }
 
@@ -37,9 +37,9 @@ $action = $_GET['action'] ?? 'liste_cours';
 if ($action === 'inscription_cours') {
   $coursId = filter_input(INPUT_GET, 'cours_id', FILTER_VALIDATE_INT);
 
-  if ($coursId){
+  if ($coursId) {
     try {
-      if ($db -> addEnrollment ($etudiantId, $coursId)){
+      if ($db->addEnrollment($etudiantId, $coursId)) {
         $_SESSION['feedback'] = [
           'success' => true,
           'message' => 'Inscription réussie !'
@@ -52,13 +52,13 @@ if ($action === 'inscription_cours') {
       }
     } catch (Exception $e) {
       $_SESSION['feedback'] = [
-        'success' => false, 
+        'success' => false,
         'message' => $e->getMessage()
       ];
     }
   }
 
-  header('Location: student.php?action=liste_cours');
+  header('Location: accueil.php?action=liste_cours');
   exit;
 }
 
@@ -68,16 +68,16 @@ $coursDejaSuivis = [];
 
 if ($action === 'liste_cours') {
   // Cas du formulaire de recherche
-  if (!empty($recherche_cours)){
+  if (!empty($recherche_cours)) {
     $cours = $db->searchCourses($recherche_cours);
   }
 
   //Cas du bouton "lister les cours"
-  else{
+  else {
     $cours = $db->getAllCourses();
   }
 
-  $coursDejaSuivis = $db -> getIdCoursInscritByStudent($etudiantId);
+  $coursDejaSuivis = $db->getIdCoursInscritByStudent($etudiantId);
 
   $prerequisManquants = [];
   foreach ($cours as $c) {
@@ -87,11 +87,11 @@ if ($action === 'liste_cours') {
         $prerequisManquants[$c['id']] = $missingPrereq;
       }
     }
-  } 
+  }
 }
 
 if ($action === 'liste_enseignements') {
-  $coursDejaSuivis = $db -> getCoursInscritByStudent($etudiantId);
+  $coursDejaSuivis = $db->getCoursInscritByStudent($etudiantId);
 }
 
 //On gère la désinscription
@@ -113,12 +113,12 @@ if ($action === 'desinscription_cours') {
       }
     } catch (Exception $e) {
       $_SESSION['feedback'] = [
-        'success' => false, 
+        'success' => false,
         'message' => $e->getMessage()
       ];
     }
   }
 
-  header('Location: student.php?action=liste_enseignements');
+  header('Location: accueil.php?action=liste_enseignements');
   exit;
 }

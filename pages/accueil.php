@@ -14,6 +14,12 @@ $login = $_SESSION['login'] ?? '';
 $role  = $_SESSION['role']  ?? '';
 
 $elements = redirectByRole();
+
+if (file_exists($elements['logic_path'])) {
+    require_once $elements['logic_path'];
+} else {
+    die("Erreur : fichier logique introuvable.");
+}
 ?>
 
 <!-- ---------- -->

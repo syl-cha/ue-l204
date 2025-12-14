@@ -1,24 +1,26 @@
     <!-- Boutons d'action (teacher) -->
     <div class="admin-actions">
-      <a class="btn" href="teacher.php?action=liste_cours" title="Lister les cours">Lister les cours</a>
-      <a class="btn" href="teacher.php?action=liste_enseignements" title="Lister mes enseignements">Lister vos enseignements</a>
-      <a class="btn btn-secondary" href="teacher.php?action=creer_cours" title="Créer un cours">Créer un cours</a>
+      <a class="btn" href="accueil.php?action=liste_cours" title="Lister les cours">Lister les cours</a>
+      <a class="btn" href="accueil.php?action=liste_enseignements" title="Lister mes enseignements">Lister vos enseignements</a>
+      <a class="btn btn-secondary" href="accueil.php?action=creer_cours" title="Créer un cours">Créer un cours</a>
+
 
       <div class="search-form">
-        <form method="GET" action="teacher.php">
+        <form method="GET" action="accueil.php">
           <input type="hidden" name="action" value="liste_cours">
           <input type="search" name="search_cours" placeholder="Rechercher un cours" class="search">
           <button type="submit" name="submit_search" class="btn">Rechercher</button>
         </form>
       </div>
-
-      <?php if (hasFeedbackInSession()): ?>
-        <span class=<?= $_SESSION['feedback']['success'] ? 'success' : 'warning'?> ><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
-        <?php unset($_SESSION['feedback']); ?>
-      <?php endif; ?>
     </div>
 
     <hr>
+
+
+    <?php if (hasFeedbackInSession()): ?>
+      <span class=<?= $_SESSION['feedback']['success'] ? 'success' : 'warning' ?>><?= htmlspecialchars($_SESSION['feedback']['message']) ?></span>
+      <?php unset($_SESSION['feedback']); ?>
+    <?php endif; ?>
 
     <?php if ($action === 'liste_cours'): ?>
       <?php if ($cours === false): ?>
@@ -61,11 +63,10 @@
                           <?php if (in_array($c['id'], $coursDejaEnseignes)): ?>
                             <span class="badge badge-soft">Membre</span>
                           <?php else: ?>
-                            <a href="teacher.php?action=enseigner_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Enseigner</a>
+                            <a href="accueil.php?action=enseigner_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Enseigner</a>
                           <?php endif; ?>
-                          <!-- <a href="teacher.php?action=supprimer_cours&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Supprimer</a> -->
                           <?php if ($c['nb_prerequis'] ?? 0) : ?>
-                            <a href="teacher.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
+                            <a href="accueil.php?action=liste_prerequis&cours_id=<?= (int)$c['id'] ?>" class="btn btn-xs">Prérequis</a>
                           <?php endif; ?>
                         </div>
                       </td>
@@ -161,7 +162,7 @@
                     <td><span class="badge badge-soft"><?= htmlspecialchars($cours['actif'] ? 'Actif' : 'Inactif') ?></span></td>
                     <td>
                       <div class="actions">
-                        <a href="teacher.php?action=liste_etudiants&cours_id=<?= (int)$cours['id'] ?>" class="btn btn-xs">Étudiants</a>
+                        <a href="accueil.php?action=liste_etudiants&cours_id=<?= (int)$cours['id'] ?>" class="btn btn-xs">Étudiants</a>
                       </div>
                     </td>
                   </tr>
@@ -176,20 +177,20 @@
     <?php if ($action === 'liste_etudiants'): ?>
       <h2>Etudiants inscrits dans votre cours</h2>
       <?php
-        $infosCours = $db->getCourseById((int)$coursId);
+      $infosCours = $db->getCourseById((int)$coursId);
 
-        if ($infosCours): ?>
-          <p class="subtitle">
-              <strong><?= htmlspecialchars($infosCours['code']) ?></strong> - 
-              <?= htmlspecialchars($infosCours['nom']) ?>
-          </p>
+      if ($infosCours): ?>
+        <p class="subtitle">
+          <strong><?= htmlspecialchars($infosCours['code']) ?></strong> -
+          <?= htmlspecialchars($infosCours['nom']) ?>
+        </p>
 
         <?php if (empty($etudiants)): ?>
-            <p>Aucun étudiant inscrit pour le moment.</p>
+          <p>Aucun étudiant inscrit pour le moment.</p>
 
         <?php else: ?>
           <div class="table-container">
-          <p class="subtitle">Total : <?= count($etudiants) ?> étudiant(s)</p>
+            <p class="subtitle">Total : <?= count($etudiants) ?> étudiant(s)</p>
             <div class="table-wrapper">
               <table class="table-admin">
                 <thead>
@@ -222,8 +223,8 @@
             </div>
           </div>
         <?php endif; ?>
-      <?php endif; ?>    
-    <?php endif; ?>               
+      <?php endif; ?>
+    <?php endif; ?>
 
     <?php if ($action === 'creer_cours'): ?>
       <div class="form-wrapper">
@@ -237,8 +238,8 @@
           <div>
             <label for="course-name">Nom : </label>
             <input type="text" name="course-name" id="course-name" required>
-         </div>
-         <div>
+          </div>
+          <div>
             <label for="course-credits">Credits : </label>
             <input type="number" min=1 max=12 name="course-credits" id="course-credits" required>
           </div>
@@ -249,7 +250,7 @@
           <div>
             <label for="course-year">Année : </label>
             <input type="text" name="course-year" id="course-year" required>
-         </div>
+          </div>
           <div>
             <label for="course-capacity">Capacité max : </label>
             <input type="number" min=1 max=100 name="course-capacity" id="course-capacity" required>
@@ -261,7 +262,7 @@
 
           <div class="edit-form-actions">
             <button type="submit" class="btn">Créer</button>
-            <a href="teacher.php?action=liste_cours" class="btn btn-secondary">Annuler</a>
+            <a href="accueil.php?action=liste_cours" class="btn btn-secondary">Annuler</a>
           </div>
         </form>
       </div>

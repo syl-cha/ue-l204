@@ -55,7 +55,6 @@ function isStudent(): bool {
 function redirectByRole(): array {
     startSession();
 
-    //Si pas de rôle, redirigé vers la page de connexion
     if (!isset($_SESSION['role'])) {
         header('Location: ../index.php');
         exit;
@@ -63,39 +62,38 @@ function redirectByRole(): array {
 
     switch($_SESSION['role']) {
         case 'admin':
-            require_once __DIR__ . '/pages/logic/admin.logic.php';
             return [
-              'espace' => 'administration',
-              'tab' => 'Admin',
-              'accueil' => 'administrateur',
-              'message' => 'Administration des utilisateurs'
+              'espace'     => 'administration',
+              'tab'        => 'Admin',
+              'accueil'    => 'administrateur',
+              'message'    => 'Administration des utilisateurs',
+              // On retourne les chemins des fichiers
+              'logic_path' => __DIR__ . '/pages/logic/admin.logic.php',
+              'view_path'  => __DIR__ . '/pages/views/admin.php'
             ];
-            break;
         
         case 'enseignant':
-            require_once __DIR__ . '/pages/logic/teacher.logic.php';
             return [
-              'espace' => 'enseignant',
-              'tab' => 'Enseignant',
-              'accueil' => 'enseignant',
-              'message' => 'Administration des cours et élèves'
+              'espace'     => 'enseignant',
+              'tab'        => 'Enseignant',
+              'accueil'    => 'enseignant',
+              'message'    => 'Administration des cours et élèves',
+              'logic_path' => __DIR__ . '/pages/logic/teacher.logic.php',
+              'view_path'  => __DIR__ . '/pages/views/teacher.php'
             ];
-            break;
 
         case 'etudiant':
-            require_once __DIR__ . '/pages/logic/student.logic.php';
             return [
-              'espace' => 'étudiant',
-              'tab' => 'Étudiant',
-              'accueil' => 'étudiant',
-              'message' => 'Gestion de vos cours'
+              'espace'     => 'étudiant',
+              'tab'        => 'Étudiant',
+              'accueil'    => 'étudiant',
+              'message'    => 'Gestion de vos cours',
+              'logic_path' => __DIR__ . '/pages/logic/student.logic.php',
+              'view_path'  => __DIR__ . '/pages/views/student.php'
             ];
-            break;
         
-        //Si rôle inconnue -> déconnexion
         default:
             header('Location: deconnexion.php');
-            return [];
             exit;
     }
 }

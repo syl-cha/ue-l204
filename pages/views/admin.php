@@ -1,13 +1,20 @@
     <!-- Boutons d'action (admin) -->
     <div class="admin-actions">
-      <a class="btn" href="admin.php?action=liste_enseignants">Lister les enseignants</a>
-      <a class="btn" href="admin.php?action=liste_etudiants">Lister les étudiants</a>
-      <a class="btn btn-secondary" href="admin.php?action=add_enseignant">Ajouter un enseignant</a>
-      <a class="btn btn-secondary" href="admin.php?action=add_etudiant">Ajouter un étudiant</a>
+      <a class="btn" href="accueil.php?action=liste_enseignants">Lister les enseignants</a>
+      <a class="btn" href="accueil.php?action=liste_etudiants">Lister les étudiants</a>
+      <a class="btn btn-secondary" href="accueil.php?action=add_enseignant">Ajouter un enseignant</a>
+      <a class="btn btn-secondary" href="accueil.php?action=add_etudiant">Ajouter un étudiant</a>
+
     </div>
 
     <hr>
 
+    <?php if (hasFeedbackInSession()): ?>
+      <div class="alert alert-<?= $_SESSION['feedback']['success'] ? 'success' : 'danger' ?>">
+        <?= htmlspecialchars($_SESSION['feedback']['message'], ENT_QUOTES, 'UTF-8') ?>
+      </div>
+      <?php unset($_SESSION['feedback']); ?>
+    <?php endif; ?>
     <!-- Formulaire d'ajout d'enseignant -->
     <?php if ($action === 'add_enseignant'): ?>
       <h3>Ajouter un enseignant</h3>
@@ -17,11 +24,6 @@
         <div>
           <label>Login</label>
           <input type="text" name="login" required>
-        </div>
-
-        <div>
-          <label>Mot de passe</label>
-          <input type="password" name="mot_de_passe" required>
         </div>
 
         <div>
@@ -65,7 +67,7 @@
 
         <div class="edit-form-actions">
           <button type="submit" class="btn">Créer</button>
-          <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
+          <a href="accueil.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
         </div>
       </form>
 
@@ -81,11 +83,6 @@
         <div>
           <label>Login</label>
           <input type="text" name="login" required>
-        </div>
-
-        <div>
-          <label>Mot de passe</label>
-          <input type="password" name="mot_de_passe" required>
         </div>
 
         <div>
@@ -119,7 +116,7 @@
 
         <div class="edit-form-actions">
           <button type="submit" class="btn">Créer</button>
-          <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
+          <a href="accueil.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
         </div>
       </form>
 
@@ -164,7 +161,7 @@
                     <td>
                       <div class="actions">
                         <a class="btn btn-xs"
-                          href="admin.php?action=edit_enseignant&id=<?= (int)$e['id_enseignant'] ?>">
+                          href="accueil.php?action=edit_enseignant&id=<?= (int)$e['id_enseignant'] ?>">
                           Modifier
                         </a>
                         <form method="post"
@@ -234,7 +231,7 @@
                           </div>
 
                           <div>
-                            <a href="admin.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
+                            <a href="accueil.php?action=liste_enseignants" class="btn btn-secondary">Annuler</a>
                           </div>
                         </form>
                       </td>
@@ -347,7 +344,7 @@
 
                           <div class="edit-form-actions">
                             <button type="submit" class="btn">Enregistrer</button>
-                            <a href="admin.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
+                            <a href="accueil.php?action=liste_etudiants" class="btn btn-secondary">Annuler</a>
                           </div>
                         </form>
                       </td>
