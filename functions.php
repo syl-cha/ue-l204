@@ -52,10 +52,9 @@ function isStudent(): bool {
 }
 
 /* Redirige l'utilisateur sur sa page d'accueil en fonction de son rôle*/
-function redirectByRole(): void {
+function redirectByRole(): array {
     startSession();
 
-    //Si pas de rôle, redirigé vers la page de connexion
     if (!isset($_SESSION['role'])) {
         header('Location: ../index.php');
         exit;
@@ -63,18 +62,36 @@ function redirectByRole(): void {
 
     switch($_SESSION['role']) {
         case 'admin':
-            header('Location: views/admin.php');
-            break;
+            return [
+              'espace'     => 'administration',
+              'tab'        => 'Admin',
+              'accueil'    => 'administrateur',
+              'message'    => 'Administration des utilisateurs',
+              // On retourne les chemins des fichiers
+              'logic_path' => __DIR__ . '/pages/logic/admin.logic.php',
+              'view_path'  => __DIR__ . '/pages/views/admin.php'
+            ];
         
         case 'enseignant':
-            header('Location: views/teacher.php');
-            break;
+            return [
+              'espace'     => 'enseignant',
+              'tab'        => 'Enseignant',
+              'accueil'    => 'enseignant',
+              'message'    => 'Administration des cours et élèves',
+              'logic_path' => __DIR__ . '/pages/logic/teacher.logic.php',
+              'view_path'  => __DIR__ . '/pages/views/teacher.php'
+            ];
 
         case 'etudiant':
-            header('Location: views/student.php');
-            break;
+            return [
+              'espace'     => 'étudiant',
+              'tab'        => 'Étudiant',
+              'accueil'    => 'étudiant',
+              'message'    => 'Gestion de vos cours',
+              'logic_path' => __DIR__ . '/pages/logic/student.logic.php',
+              'view_path'  => __DIR__ . '/pages/views/student.php'
+            ];
         
-        //Si rôle inconnue -> déconnexion
         default:
             header('Location: deconnexion.php');
             exit;
