@@ -625,6 +625,7 @@ h2+.table-container {
     margin-top: 0.5rem;
 }
 
+/**
 .table-wrapper {
     width: 100%;
     max-height: 65vh;
@@ -646,7 +647,7 @@ h2+.table-container {
     z-index: 2;
     background: linear-gradient(to top, #ffe4e1, #fff5f4);
 }
-
+**/
 
 /* Bouton PRÉREQUIS uniquement */
 .table-admin .actions a[href="liste_prerequis"] {
@@ -658,3 +659,4 @@ h2+.table-container {
 .table-admin .actions a[href="liste_prerequis"]:hover {
     background-color: #78350f;
 }
+
