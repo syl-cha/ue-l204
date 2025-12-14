@@ -164,6 +164,7 @@
 
     <!-- Formulaire d'ajout d'étudiant -->
     <?php if ($action === 'add_etudiant'): ?>
+      <div class="form-wrapper">
       <h3>Ajouter un étudiant</h3>
       <form method="post" class="edit-form">
         <input type="hidden" name="action" value="create_etudiant">
@@ -209,6 +210,7 @@
       </form>
 
       <hr>
+      </div>
     <?php endif; ?>
 
     <!-- Liste + édition enseignants -->
@@ -446,3 +448,4 @@
       <?php endif; ?>
 
     <?php endif; ?>
+
