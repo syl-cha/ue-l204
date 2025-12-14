@@ -6,7 +6,7 @@
       <a class="btn btn-secondary" href="accueil.php?action=add_etudiant">Ajouter un étudiant</a>
         <!--Formulaire de recherche-->
         <div class="search-form">
-            <form method="GET" action="admin.php">
+            <form method="GET" action="accueil.php">
                 <input type="hidden" name="action" value="recherche_user">
                 <input type="search" name="search_user" placeholder="Rechercher un utilisateur" class="search">
                 <button type="submit" name="submit_search" class="btn">Rechercher</button>

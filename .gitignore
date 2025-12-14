@@ -21,6 +21,7 @@
 *.listing
 *.lof
 *.log
+!database-errors.log
 *.lol
 *.lot
 *.maf

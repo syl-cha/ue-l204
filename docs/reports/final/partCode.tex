@@ -1,0 +1,392 @@
+\section{Codes}
+
+\subsection{Page unique}
+
+La page \bashcmd{accueil.php} charge les éléments communs comme le bandeau et reconnaît le rôle de l'utilisateur connecté.
+
+En fonction de ce rôle, la partie propre à chaque utilisateur est injectée (voir script \no\ref{php:accueil}) permettant de limiter les répétitions dans le code
+et de préserver la maintenance.
+
+\begin{php}[title={Page \texttt{accueil.php} (extrait)},label={php:accueil}]
+  <main style="margin: 2rem;">
+
+    <p>Connecté en tant que : <strong><?= htmlspecialchars($login, ENT_QUOTES, 'UTF-8') ?></strong></p>
+
+    <h2>Accueil <?= $elements['accueil'] ?></h2>
+    <p>
+      <?= $elements['message'] ?>
+    </p>
+    <?php
+    switch ($role) {
+      case 'admin':
+        include('views/admin.php');
+        break;
+      case 'enseignant':
+        include('views/teacher.php');
+        break;
+      case 'etudiant':
+        include('views/student.php');
+        break;
+
+      default:
+        # code...
+        break;
+    } ?>
+  </main>
+\end{php}
+
+\subsection{Chargement des dépendances et structure commune}
+
+Les pages reposent sur l’utilisation systématique de \texttt{require\_once} pour charger les fichiers nécessaires (configuration, fonctions communes, logique métier).
+Cela permet d’éviter les redéfinitions multiples et garantit que toutes les dépendances sont disponibles avant l’exécution du code.
+
+\begin{php}[title={Dépendances},label={php:dependances}]
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../functions.php';
+require_once __DIR__ . '/../../classes/universite-db.class.php';
+\end{php}
+
+\subsection{Gestion des sessions et contrôle d’accès}
+La gestion des sessions est centralisée dans functions.php.
+Chaque page sensible vérifie que l’utilisateur est connecté et qu’il possède le rôle adéquat avant de continuer.
+
+
+\begin{php}[title={Vérification de la connexion},label={php:connexion}]
+startSession();
+
+if (!isConnecte()) {
+    header('Location: ../index.php');
+    exit;
+}
+
+if (!isAdmin()) {
+    header('Location: ../accueil.php');
+    exit;
+}
+\end{php}
+
+Ce mécanisme empêche l’accès direct aux pages via l’URL et renforce la sécurité côté serveur.
+
+\subsection{Centralisation de l’accès à la base de données}
+
+Toutes les requêtes SQL sont regroupées dans une classe dédiée (\bashcmd{UniversiteDB}),
+héritant d'une classe générique \texttt{Database} permettant la gestion de la connection à la base de données de l'université.
+
+\begin{php}[title={Classe \texttt{Database}},label={php:database}]
+class DataBase
+{
+  private $host = DB_HOST;
+  private $dbname = DB_NAME;
+  private $user = DB_USER;
+  private $pwd = DB_PWD;
+
+  private $pdo = null;
+
+  /**
+   * Établit et retourne une connexion PDO à la BDD de l'université.
+   * @return PDO La connexion à la BDD
+   * @throws Exception si la connexion échoue.
+   */
+  protected function connect()
+  {
+    if ($this->pdo !== null) {
+      // la connection à la base de données est déjà établie
+      return $this->pdo;
+    }
+
+    $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname . ';charset=utf8';
+    
+    try {
+      $this->pdo = new PDO($dsn, $this->user, $this->pwd, [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+      ]);
+    } catch (PDOException $exception) {
+      error_log('[' . date(DATE_RFC2822) . '] Database connection error : ' . $exception->getMessage() . PHP_EOL, 3, ERROR_LOG_PATH);
+      throw new Exception("Connection to database failed");
+    }
+    return $this->pdo;
+  }
+
+  /**
+   * Ferme la connexion à la BDD de l'université
+   */
+  protected function disconnect() {
+    if ($this->pdo !== null) {
+      $this->pdo = null;
+    }
+  }
+}
+\end{php}
+
+\begin{php}[title={Classe \texttt{UniversiteDB}},label={php:universitedb}]
+class UniversiteDB extends DataBase
+{
+  /**
+   * Récupère un utilisateur par son login
+   * @param string $login Le login de l'utilisateur
+   * @return array|null L'utilisateur trouvé ou null si non
+   */
+  public function getUserByLogin(string $login): ?array
+  {
+    $sql = "SELECT id, login, mot_de_passe, role
+            FROM utilisateur 
+            WHERE login = :login";
+
+    $stmt = $this->connect()->prepare($sql);
+    $stmt->execute([':login' => $login]);
+    $user = $stmt->fetch();
+
+    return $user ?: null;
+  }
+
+  // Méthodes suivent
+}
+\end{php}
+
+Les pages appellent uniquement des méthodes métier, sans manipuler directement PDO.
+
+\begin{php}[title={Exemple de fonction de la classe \texttt{UniversiteDB}},label={php:classe:fonction}]
+public function getAllEnseignants(): array {
+    $stmt = $this->connect()->query("SELECT * FROM enseignant_view");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+\end{php}
+
+\begin{php}[title={Exemple d'utilisation de la classe \texttt{UniversiteDB}},label={php:classe}]
+$db = new UniversiteDB();
+$enseignants = $db->getAllEnseignants();
+\end{php}
+
+\subsection{Utilisation des transactions et gestion des erreurs}
+
+Les opérations critiques utilisent des transactions afin de garantir la cohérence des données.
+En cas d’erreur, la transaction est annulée et l’erreur est enregistrée dans un fichier de log.
+
+\begin{php}[title={Exemple de gestion de transaction},label={php:transaction}]
+$pdo->beginTransaction();
+
+try {
+    // Insertion utilisateur
+    // Insertion enseignant
+    $pdo->commit();
+    return true;
+} catch (PDOException $e) {
+    $pdo->rollBack();
+    error_log($e->getMessage(), 3, ERROR_LOG_PATH);
+    return false;
+}
+\end{php}
+
+\subsection{Validation des formulaires côté serveur}
+
+Les formulaires sont validés côté serveur à l’aide de fonctions dédiées.
+Cela garantit l’intégrité des données, même si les contrôles HTML sont contournés.
+
+\begin{php}[title={Exemple de fonction de validation},label={php:validation:fct}]
+function validate_email_required(array &$errors, string $field, string $label): ?string {
+    if (!isset($_POST[$field]) || trim($_POST[$field]) === '') {
+        $errors[] = "$label obligatoire.";
+        return null;
+    }
+
+    if (!filter_var($_POST[$field], FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "$label invalide.";
+        return null;
+    }
+
+    return htmlspecialchars($_POST[$field], ENT_QUOTES, 'UTF-8');
+}
+\end{php}
+
+\begin{php}[title={Exemple de vérifications},label={php:validation:usage}]
+  $email = validate_email_required($errors, 'email', 'Email');
+$nom   = validate_required_text($errors, 'nom', 'Nom', 1, 32);
+\end{php}
+
+\subsection{Réutilisabilité grâce aux fonctions de validation}
+
+Les fonctions de validation sont génériques et réutilisables dans l’ensemble du projet.
+Elles sont utilisées aussi bien lors de la création que de la modification des utilisateurs.
+
+\begin{php}[title={Exemple de fonction de validation},label={php:validation:ex}]
+  function validate_required_text(
+    array &$errors,
+    string $key,
+    string $label,
+    int $minLen,
+    int $maxLen
+): ?string {
+    $v = trim($_POST[$key] ?? '');
+    if ($v === '') {
+        $errors[$key] = "$label obligatoire.";
+        return null;
+    }
+    if (mb_strlen($v) < $minLen || mb_strlen($v) > $maxLen) {
+        $errors[$key] = "$label doit contenir entre $minLen et $maxLen caractères.";
+        return null;
+    }
+    return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+}
+\end{php}
+
+\subsection{Système d’actions pour la gestion des pages}
+
+La page \bashcmd{accueil.php} utilise un paramètre \texttt{action} pour déterminer le traitement à effectuer.
+Cela permet de centraliser la logique dans un seul fichier par espace utilisateur.
+
+\begin{php}[title={Exemple de gestion d'une action utilisateur},label={php:action:ex}]
+$action = $_GET['action'] ?? null;
+
+if ($action === 'liste_enseignants') {
+    $enseignants = $db->getAllEnseignants();
+}
+
+if ($action === 'edit_enseignant') {
+    $enseignantCourant = $db->getEnseignantById((int)$_GET['id']);
+}
+\end{php}
+
+\subsection{Séparation logique / affichage}
+
+La logique applicative est séparée de l’affichage HTML :
+\begin{itemize}
+  \item Les fichiers \texttt{*.logic.php} contiennent les traitements PHP sont regroupés dans un dossier \bashcmd{pages/logic} ;
+  \item tandis que les éléments de codes ajoutés à la page \bashcmd{accueil.php} et regroupés dans \bashcmd{pages/views} se concentrent sur l’interface.
+\end{itemize}
+
+\begin{php}[title={Exemple de séparation logique/affichage},label={php:logic}]
+  // admin.logic.php
+$enseignants = $db->getAllEnseignants();
+
+<!-- admin.php -->
+<?php foreach ($enseignants as $e): ?>
+<tr>
+    <td><?= htmlspecialchars($e['nom']) ?></td>
+    <td><?= htmlspecialchars($e['prenom']) ?></td>
+</tr>
+<?php endforeach; ?>
+\end{php}
+
+\subsection{Mécanisme de feedback utilisateur}
+
+Un système de feedback basé sur la session permet d’informer l’utilisateur du résultat des actions effectuées.
+
+\begin{php}[title={Exemple de feedback},label={php:feedback:un}]
+$_SESSION['feedback'] = [
+    'message' => 'Utilisateur ajouté avec succès',
+    'success' => true
+];
+\end{php}
+
+\begin{php}[title={Utilisation du feedback à l'affichage},label={php:feedback:deux}]
+<?php if (hasFeedbackInSession()): ?>
+    <p class="<?= $_SESSION['feedback']['success'] ? 'success' : 'warning' ?>">
+        <?= htmlspecialchars($_SESSION['feedback']['message']) ?>
+    </p>
+<?php unset($_SESSION['feedback']); endif; ?>
+\end{php}
+
+\subsection{Authentification sécurisée côté serveur}
+
+Mise en place d’une authentification robuste côté serveur. D’une part, 
+la récupération de l’utilisateur s’appuie sur une requête préparée PDO 
+avec paramètre nommé (\texttt{:login}), ce qui empêche les injections 
+SQL en évitant toute concaténation directe de données utilisateur 
+dans la requête. D’autre part, la vérification du mot de passe repose 
+sur \bashcmd{password\_verify()}, qui compare un mot de passe saisi 
+à un hash stocké en base, sans jamais manipuler ou stocker le mot de passe 
+en clair.
+
+\begin{php}[title={Méthodes de la classe \texttt{UniversiteDB} pour l'authentiofication},label={php:auth}]
+public function getUserByLogin(string $login): ?array
+{
+  $sql = "SELECT id, login, mot_de_passe, role
+          FROM utilisateur 
+          WHERE login = :login";
+
+  $stmt = $this->connect()->prepare($sql);
+  $stmt->execute([':login' => $login]);
+  $user = $stmt->fetch();
+
+  return $user ?: null;
+}
+
+public function goodLoginPasswordPair(string $login, string $password): bool
+{
+  $user = $this->getUserByLogin($login);
+  if (!$user) return false;
+
+  if (!password_verify($password, $user['mot_de_passe'])) {
+    return false;
+  }
+  return true;
+}
+\end{php}
+
+\subsection[Ajout d’un cours]{Ajout d’un cours : transaction + gestion des prérequis}
+
+Choix important pour garantir l’intégrité de la base de données : l’utilisation de transactions
+ lors d’opérations complexes. L’ajout d’un cours peut entraîner plusieurs insertions 
+ (création du cours + insertion des prérequis). En encapsulant l’ensemble dans une transaction
+(\bashcmd{beginTransaction}, \bashcmd{commit}, \bashcmd{rollBack} -- voir exemple \no\ref{php:addcourse}), le système garantit un comportement \og{}tout ou rien\fg{} : 
+  si un prérequis est invalide (ex. code inexistant), la transaction est annulée et la base reste dans un état cohérent, sans cours partiellement créé.
+
+\begin{php}[title={Extraits de la méthode \texttt{addCourse}} de la classe \texttt{UniversiteDB},label={php:addcourse}]
+$pdo->beginTransaction();
+
+$stmtCours = $pdo->prepare($sqlCours);
+$stmtCours->execute([
+  ':code'    => $code,
+  ':nom'     => $nom,
+  ':credits' => $credits,
+  ':desc'    => $description,
+  ':cap'     => $capaciteMax,
+  ':annee'   => $annee
+]);
+
+// Ajout des prérequis (si présents)...
+foreach ($prerequisCodes as $prerequisCode) {
+  $stmtGetId->execute([':code_prerequis' => $prerequisCode]);
+  $prerequisId = $stmtGetId->fetchColumn();
+  if ($prerequisId == false) { $succes = false; break; }
+
+  $stmtInsertPrerequis->execute([
+    ':cours_id' => $nouveauCoursId,
+    ':prerequis_cours_id' => $prerequisId
+  ]);
+}
+
+if ($succes) {
+  $pdo->commit();
+} else {
+  $pdo->rollBack();
+}
+\end{php}
+
+\subsection[Inscription d'un étudiant]{Inscription d’un étudiant : contrôle métier “prérequis” + exception explicite}
+
+% Cette partie met en avant l’intégration de règles métier directement dans la couche d’accès aux données. 
+Avant l’inscription, le code vérifie les prérequis via une requête dédiée (\bashcmd{getMissingPrerequisites}). 
+Si des prérequis ne sont pas validés, le système bloque l’opération et déclenche une exception explicite, 
+ce qui permet de remonter un message clair côté interface (feedback). 
+
+Cette séparation entre “contrôle métier” (prérequis) et “action technique” (INSERT) améliore la fiabilité 
+et évite que des inscriptions incohérentes soient enregistrées en base.
+
+\begin{php}[title={Extrait de la méthode \texttt{addEnrollment}} de la classe \texttt{UniversiteDB},label={php:addenrollment}]
+  $missing = $this->getMissingPrerequisites($etudiantId, $coursId);
+if (!empty($missing)) {
+  $missingCodes = array_column($missing, 'code');
+  $missingCodesStr = implode(', ', $missingCodes);
+
+  throw new Exception('Inscription impossible : manquent la validation de ' . $missingCodes);
+}
+
+$sql = "INSERT INTO inscription (etudiant_id, cours_id) VALUES (:etudiant_id, :cours_id)";
+$stmt = $this->connect()->prepare($sql);
+$stmt->execute([
+  ':etudiant_id' => $etudiantId,
+  ':cours_id' => $coursId
+]);
+\end{php}
