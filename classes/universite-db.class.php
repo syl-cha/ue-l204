@@ -735,7 +735,7 @@ class UniversiteDB extends DataBase
       $stmtUser = $pdo->prepare($sqlUser);
       $stmtUser->execute([
         ':login'        => $login,
-        ':mot_de_passe' => password_hash($motDePasse, PASSWORD_DEFAULT),
+        ':mot_de_passe' => password_hash('123456', PASSWORD_DEFAULT),
         ':nom'          => $nom,
         ':prenom'       => $prenom,
         ':email'        => $email,
@@ -799,7 +799,7 @@ class UniversiteDB extends DataBase
       $stmtUser = $pdo->prepare($sqlUser);
       $stmtUser->execute([
         ':login'        => $login,
-        ':mot_de_passe' => password_hash($motDePasse, PASSWORD_DEFAULT),
+        ':mot_de_passe' => password_hash('123456', PASSWORD_DEFAULT),
         ':nom'          => $nom,
         ':prenom'       => $prenom,
         ':email'        => $email,
