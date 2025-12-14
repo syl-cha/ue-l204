@@ -133,7 +133,7 @@
           <h2>Liste de vos enseignements</h2>
           <p class="subtitle">Visualisation du catalogue des cours auxquels vous participez</p>
           <div class="table-wrapper">
-            <table class="table-admin">
+            <table class="table-cours">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -267,3 +267,4 @@
         </form>
       </div>
     <?php endif; ?>
+
