@@ -2,8 +2,10 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
 
+// On démarre la session
 startSession();
 
+// Si pas connecté, redirection vers page de connexion
 if (!isConnecte()) {
   header('Location: ../index.php');
   exit;
@@ -13,17 +15,16 @@ if (!isConnecte()) {
 $login = $_SESSION['login'] ?? '';
 $role  = $_SESSION['role']  ?? '';
 
+// On redirige l'user connecté en fonction de son rôle
 $elements = redirectByRole();
 
+// Si on fichier n'existe pas, on arrête le script
 if (file_exists($elements['logic_path'])) {
     require_once $elements['logic_path'];
 } else {
     die("Erreur : fichier logique introuvable.");
 }
 ?>
-
-<!-- ---------- -->
-<!-- A ENLEVER ??-->
 <!DOCTYPE html>
 <html lang="fr">
 
