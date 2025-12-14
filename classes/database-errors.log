@@ -1,0 +1,20 @@
+[Wed, 10 Dec 2025 13:55:44 +0000] Database connection error : SQLSTATE[HY000] [1698] Access denied for user 'user204-'@'localhost'
+[Wed, 10 Dec 2025 18:42:16 +0000] Erreur addCourse : SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'annee_universitaire' at row 1
+[Wed, 10 Dec 2025 19:05:01 +0000] Erreur addCourse : SQLSTATE[42S02]: Base table or view not found: 1146 Table 'universite1.course' doesn't exist
+[Wed, 10 Dec 2025 19:06:03 +0000] Erreur addCourse : SQLSTATE[42S02]: Base table or view not found: 1146 Table 'universite1.course' doesn't exist
+[Wed, 10 Dec 2025 19:07:37 +0000] Erreur addCourse : SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+[Thu, 11 Dec 2025 22:51:51 +0000] Erreur addAllCourses : SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.id' in 'SELECT'
+[Thu, 11 Dec 2025 23:52:48 +0000] Erreur addAllCourses : SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'SELECT COUNT(*) FROM prerequis p WHERE p.cours_id = c.id) as nb_prerequis
+   ...' at line 10
+[Thu, 11 Dec 2025 23:52:50 +0000] Erreur addAllCourses : SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'SELECT COUNT(*) FROM prerequis p WHERE p.cours_id = c.id) as nb_prerequis
+   ...' at line 10
+[Fri, 12 Dec 2025 08:27:00 +0000] Erreur getTeacherByLogin : SQLSTATE[42S22]: Column not found: 1054 Unknown column 'e.id_utilisateur' in 'ON'
+[Fri, 12 Dec 2025 08:27:23 +0000] Erreur getTeacherByLogin : SQLSTATE[42S22]: Column not found: 1054 Unknown column 'e.id_utilisateur' in 'ON'
+[Fri, 12 Dec 2025 08:48:18 +0000] Erreur addTeaching : SQLSTATE[22007]: Invalid datetime format: 1366 Incorrect integer value: '' for column `universite1`.`enseigne`.`responsable` at row 1
+[Fri, 12 Dec 2025 08:48:27 +0000] Erreur addTeaching : SQLSTATE[22007]: Invalid datetime format: 1366 Incorrect integer value: '' for column `universite1`.`enseigne`.`responsable` at row 1
+[Fri, 12 Dec 2025 08:50:16 +0000] Erreur addTeaching : SQLSTATE[22007]: Invalid datetime format: 1366 Incorrect integer value: '' for column `universite1`.`enseigne`.`responsable` at row 1
+[Fri, 12 Dec 2025 08:58:15 +0000] Erreur addTeaching : SQLSTATE[22007]: Invalid datetime format: 1366 Incorrect integer value: '' for column `universite1`.`enseigne`.`responsable` at row 1
+[Fri, 12 Dec 2025 08:58:19 +0000] Erreur addTeaching : SQLSTATE[22007]: Invalid datetime format: 1366 Incorrect integer value: '' for column `universite1`.`enseigne`.`responsable` at row 1
+[Fri, 12 Dec 2025 09:25:34 +0000] Erreur getTeachedCoursesId : SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+[Fri, 12 Dec 2025 09:25:37 +0000] Erreur getTeachedCoursesId : SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+[Fri, 12 Dec 2025 09:26:29 +0000] Erreur getTeachedCoursesId : SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
