@@ -23,6 +23,15 @@ $db = new UniversiteDB();
 $login = $_SESSION['login'] ?? '';
 $role  = $_SESSION['role']  ?? '';
 
+// Formulaire de recherche
+$resultat_recherche = [];
+$search_user = '';
+
+if (isset($_GET['search_user']) && !empty($_GET['search_user'])){
+    $search_user = htmlspecialchars($_GET['search_user']);
+    $resultat_recherche = $db->searchAllUsers($search_user);
+}
+
 // TRAITEMENT DES ACTIONS POST (admin uniquement)
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

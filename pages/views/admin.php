@@ -4,16 +4,102 @@
       <a class="btn" href="accueil.php?action=liste_etudiants">Lister les étudiants</a>
       <a class="btn btn-secondary" href="accueil.php?action=add_enseignant">Ajouter un enseignant</a>
       <a class="btn btn-secondary" href="accueil.php?action=add_etudiant">Ajouter un étudiant</a>
+        <!--Formulaire de recherche-->
+        <div class="search-form">
+            <form method="GET" action="admin.php">
+                <input type="hidden" name="action" value="recherche_user">
+                <input type="search" name="search_user" placeholder="Rechercher un utilisateur" class="search">
+                <button type="submit" name="submit_search" class="btn">Rechercher</button>
+            </form>
+        </div>
 
     </div>
 
     <hr>
+
+    
 
     <?php if (hasFeedbackInSession()): ?>
       <div class="alert alert-<?= $_SESSION['feedback']['success'] ? 'success' : 'danger' ?>">
         <?= htmlspecialchars($_SESSION['feedback']['message'], ENT_QUOTES, 'UTF-8') ?>
       </div>
       <?php unset($_SESSION['feedback']); ?>
+    <?php endif; ?>
+
+    <!--Affichage des résultats de recherche-->
+    <?php if ($action === 'recherche_user'): ?>
+        <?php if (empty($resultat_recherche)): ?>
+            <p>Aucun utilisateur trouvé pour cette recherche.</p>
+        <?php else: ?>
+            <div class="table-container">
+                <h2>Résultat de votre recherche</h2>
+                <div class="table-wrapper">
+                    <table class="table-admin">
+                        <thead>
+                            <tr>
+                                <th>Rôle</th>
+                                <th>Login</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
+                                <th>Autres informations</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($resultat_recherche as $user): ?>
+                                <tr>
+                                    <td>
+                                        <span class="badge badge-soft">
+                                            <?= $user['type_utilisateur'] === 'etudiant' ? 'Étudiant' : 'Enseignant' ?>
+                                        </span>
+                                    </td>
+                                    <td><?= htmlspecialchars($user['login']) ?></td>
+                                    <td><?= htmlspecialchars($user['nom']) ?></td>
+                                    <td><?= htmlspecialchars($user['prenom']) ?></td>
+                                    <td><?= htmlspecialchars($user['email']) ?></td>
+                                    <td>
+                                        <?php if ($user['type_utilisateur'] === 'etudiant'): ?>
+                                           <strong>Niveau </strong>: <?= htmlspecialchars($user['info_supplementaire']) ?>
+                                        <?php else: ?>
+                                            <strong>Spécialité </strong>: <?= htmlspecialchars($user['info_supplementaire']) ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="actions">
+                                            <?php if ($user['type_utilisateur'] === 'etudiant'): ?>
+                                                <form method="get">
+                                                    <input type="hidden" name="action" value="edit_etudiant">
+                                                    <input type="hidden" name="id" value="<?= (int)$e['id_etudiant'] ?>">
+                                                    <button type="submit" class="btn btn-xs">Modifier</button>
+                                                </form>
+                                                <form method="post"
+                                                    onsubmit="return confirm('Supprimer cet étudiant ?');">
+                                                    <input type="hidden" name="action" value="delete_etudiant">
+                                                    <input type="hidden" name="id_utilisateur" value="<?= (int)$e['id_utilisateur'] ?>">
+                                                    <button type="submit" class="btn btn-xs btn-danger">Supprimer</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <form method="get">
+                                                    <input type="hidden" name="action" value="edit_enseignant">
+                                                    <input type="hidden" name="id" value="<?= (int)$e['id_enseignant'] ?>">
+                                                    <button type="submit" class="btn btn-xs">Modifier</button>
+                                                </form>
+                                                <form method="post" onsubmit="return confirm('Supprimer cet enseignant ?');">
+                                                    <input type="hidden" name="action" value="delete_enseignant">
+                                                    <input type="hidden" name="id_utilisateur" value="<?= (int)$e['id_utilisateur'] ?>">
+                                                    <button type="submit" class="btn btn-xs btn-danger">Supprimer</button>
+                                                </form>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
     <!-- Formulaire d'ajout d'enseignant -->
     <?php if ($action === 'add_enseignant'): ?>
