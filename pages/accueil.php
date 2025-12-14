@@ -21,9 +21,7 @@ if (file_exists($elements['logic_path'])) {
     die("Erreur : fichier logique introuvable.");
 }
 ?>
-
-<!-- ---------- -->
-<!-- A ENLEVER ??-->
+ 
 <!DOCTYPE html>
 <html lang="fr">
 

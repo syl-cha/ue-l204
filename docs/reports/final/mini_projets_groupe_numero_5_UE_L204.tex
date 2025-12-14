@@ -137,9 +137,9 @@ Zoé Van De Moortele}
 
 
 \clearpage
-\part{Méthode travail}
+\part{Le projet}
 
-\section{Outils utilisés}
+\section{Méthodes de travail et outils utilisés}
 \begin{itemize}
   \item \textbf{Teams} pour la communication et le partage de fichiers ;
   \item \textbf{GitHub} pour la mise en commun du code sur un \href{https://github.com/syl-cha/ue-l204}{dépôt}
@@ -147,10 +147,73 @@ Zoé Van De Moortele}
   \item Forum de groupe de l'UE : communication et retour sur l'avancement du projet ;
   \item \textbf{Word} pour une rédaction commune et \LaTeX pour la finalisation des rapports ;
   \item un système d'intelligence artificielle générationnelle (\textbf{Gemini}) pour générer les entrées dans les tables.
+  \item \textbf{Diagram.net} pour créer un modèle de notre future BDD et visualiser les tables et leurs connexions
   \item \textbf{PhpMyAdmin} pour la création des tables et la génération des entrées dans ces table
   \item \textbf{VS Code} (ou autre éditeurs) : rédaction du code
   \item \textbf{XAMPP} sous Windows ou un stack \textbf{LAMP} sous Linux.
 \end{itemize}
+
+\section{Organisation du groupe}
+
+\subsection{Échanges synchrones et asynchrones}
+
+\begin{itemize}
+  \item Réunion synchrone par semaine (soit 2 en tout) pour tout le groupe, et autres réunions synchrones pour faire des points d'avancement sur certaines parties du projet, expliquer des changements, etc.
+  \item Communication continue tout au long du projet, points d'étapes réguliers entre nous.
+\end{itemize}
+
+\subsection{Répartition des tâches}
+
+Afin d’assurer une progression efficace et structurée du projet, les tâches ont été réparties au sein du groupe en fonction des différents domaines à couvrir. Chaque membre a pris en charge une ou plusieurs parties spécifiques du projet, tout en participant activement aux réflexions communes et aux décisions globales. Cette organisation a permis de travailler efficacement tout en garantissant la cohérence et l’évolution continue du projet.
+
+\begin{center}
+  \begin{tblr}{width=\linewidth,colspec={X[l,3]X[c,1]},hlines,vlines,stretch=2,%
+    row{1}={bg={vert!30},font={\bfseries}}}
+    Tâches                                             & Assignation         \\
+    Création du Github et de la BDD                    & Sylvain Chambon     \\
+    Mise à jour des idées et de l'avancement du projet & Sylvain Chambon     \\
+    Mise en forme des rapports sur \LaTeX              & Sylvain Chambon     \\
+    Scénario du projet                                 & Zoe Van De Moortele \\
+    Gestion de l'admin et des sessions                 & Jeanne Salvadori \\
+    Gestion des enseignants                            & Sylvain Chambon     \\
+    Gestion des étudiants                              & Zoe Van De Moortele \\
+    Mise en forme CSS                                  & Jade Faroux         \\
+    Création du support de présentation                & Jade Faroux         \\
+    Création du rapport final                          & Jeanne Salvadori    \\
+  \end{tblr}
+\end{center}
+
+\begin{center}
+  \begin{tblr}{width=\linewidth,colspec={X[l,1]},hlines,vlines,stretch=2,%
+    row{1}={bg={vert!30},font={\bfseries}}}
+    Tâches        communes                                   \\
+    Création, reflexion sur le projet et ses fonctionnalités \\
+    Amélioration continue, apport d'idées                    \\
+    Communication continue                                   \\
+  \end{tblr}
+\end{center}
+
+\section{Difficultés rencontrées}
+
+\begin{itemize}
+  \item Prise en main de la BDD avec PDO : configuration PDO différente selon Windows / Linux, activation des extensions PDO MySQL ou du serveur Apache.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
+
+  \item Problème : les mots de passe fournis dans la BDD ne correspondaient pas au hash réel de "\texttt{123456}". Nous avons fait des tests avec \texttt{password\_hash()} et \texttt{password\_verify()}
+        $\longrightarrow$ découverte que le hash était invalide $\longrightarrow$ remplacement des mots de passe hachés directement en BDD.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
+
+  \item Gestion des chemins relatifs entre les pages (\texttt{index.php}, \texttt{pages/accueil.php}, \texttt{pages/deconnexion.php}) : erreurs 404 ou redirections incorrectes à cause de chemins mal construits\\ \faCheckSquare[regular]\quad \textbf{Résolue}
+  \item Hashages réalisés par l'IA pour les utilisateurs fictifs se sont avérés faux. NOus avons dû les refaire à l'aide de commande PHP.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
+
+
+  \item Manque de temps personnel pour cette semaine pour la plupart d'entre nous à causes de raisons personnelles. À adapter en deuxième semaine.
+\end{itemize}
+
+\clearpage
+\part{Code, techniques\\ et choix de développement}
+
+Depuis le début du projet, nous avons progressivement fait évoluer l’architecture et le code afin de gagner en lisibilité, 
+en sécurité et en maintenabilité. Le projet a d’abord été développé avec des fonctionnalités 
+essentielles, puis celles-ci ont été progressivement améliorées et complétées au fil du temps.
 
 \section{Étude préliminaire}
 
@@ -215,9 +278,31 @@ Avant d’enregistrer quoi que ce soit dans la BDD, tests de sécurité à effec
   \item Pas de caractères dangereux (balise html)
   \item Messages d’erreur si une de ces vérifications est non conforme
 \end{itemize}
-\clearpage
-\part{Avancement du projet}
 
+\section{Finalisation}
+
+\subsection{Arborescence}
+
+Choix d'une arborescence claire :
+\begin{enumerate}
+  \item Le dossier \bashcmd{assets} regroupe tout ce qui concerne la mise en forme et les ressources statiques (CSS, images, polices).
+  \item Le dossier  \bashcmd{classes} contient les classes PHP, notamment celles dédiées à l’accès à la base de données et à la centralisation des requêtes SQL.
+  \item Le dossier \bashcmd{docs} est utilisé pour stocker des documents de travail, notamment des fichiers Markdown servant à noter les idées, les pistes d’amélioration et l’avancement du projet.
+  \item Le dossier \bashcmd{pages} est structuré en sous-dossiers afin de séparer la logique applicative (logic) de l’affichage (views). Cette séparation, faite en deuxième semaine, permet de rendre le code plus lisible et plus facile à maintenir.
+  \item Au premier niveau du projet, on retrouve les fichiers \bashcmd{index.php}, \bashcmd{config.php}, \bashcmd{functions.php} ainsi que les scripts SQL de la base de données, qui centralisent la configuration, l’initialisation et les fonctions communes utilisées par l’ensemble des pages.
+\end{enumerate}
+\subsection{Fonctionnalités}
+
+Au fil du développement, plusieurs fonctionnalités majeures ont été implémentées : 
+\begin{itemize}
+  \item Un système \textbf{d’authentification} permettant de différencier les utilisateurs \textbf{selon leur rôle} (administrateur, enseignant, étudiant). 
+  En fonction de ce rôle, l’utilisateur est redirigé vers des pages spécifiques (\bashcmd{admin.php}, \bashcmd{teacher.php} et \bashcmd{student.php}) et n’a accès qu’aux fonctionnalités qui le concernent.
+  \item L’\textbf{espace administrateur} permet de gérer les utilisateurs : lister les enseignants et les étudiants, modifier leurs informations, les supprimer, ou encore en ajouter via des formulaires dédiés.
+  \item L’\textbf{espace enseignant} propose quant à lui des fonctionnalités liées aux cours, comme la consultation du catalogue, la création de nouveaux cours avec gestion des prérequis, et des actions préparatoires pour l’enseignement ou la suppression de cours.
+  \item L’\textbf{espace étudiant} propose des fonctionnalités qui permettent de lister tous les cours de l'université, de pouvoir s'y inscrire et ensuite de pouvoir visualiser ses propres cours. Par contre, certains cours nécessitent des prérequis à l'inscription. Exemple : si on veut s'inscrire à \texttt{INFO-L204}, il faudra avoir suivi le cours \texttt{INFO-L104}.
+  \item Un fichier de log \bashcmd{database-errors.log} est également utilisé afin de \textbf{tracer les erreurs} liées à la base de données, ce qui facilite le débogage et l’analyse des problèmes côté serveur.
+  
+\end{itemize}
 \section{Base de données}
 
 Nous avons modélisé notre base de données dans \href{https://app.diagrams.net/}{diagrams.net}.
@@ -233,7 +318,7 @@ Dans cette base de données, nous aurons évidemment aussi une entité \texttt{c
 Nous aurons enfin des tables de liaison :
 \begin{itemize}
   \item une table permettant d'associer des enseignants avec des cours (entité \texttt{enseigne}) ;
-  \item un autre permttant d'associer des étudiants avec des cours (entité \texttt{etudiant}) ;
+  \item un autre permettant d'associer des étudiants avec des cours (entité \texttt{etudiant}) ;
   \item une dernière permettant de définir des contraintes sur les inscriptions dans certains cours (entité \texttt{prerequis}).
 \end{itemize}
 
@@ -409,132 +494,59 @@ On remarque que plutôt que d'utiliser directement les ID des cours, on utilise 
 sur une condition dans une clause qui va nous permettre de retrouver l'ID du cours. Cette méthode est plus robuste car
 si l'ID d'un cours venait à changer alors on ne perdrait pas la relation de prérequis.
 
+\subsection{Cohérences des données}
+
+La base de données a été pensée de manière relationnelle, avec une table centrale utilisateur 
+et des tables spécifiques pour les enseignants, les étudiants et les cours
+avec des systèmes de vérifications propres à une base de données (identifiants unique, repérage des doublons, etc.).
+
+Les opérations sensibles (ajout d’un enseignant ou d’un étudiant) sont réalisées à l’aide de transactions 
+afin de garantir la cohérence des données. C'est la base de données seule qui est responsable de cette cohérence 
+et non le code PHP qui ne fait qu'interpréter les erreurs renvoyées et agir en conséquence. 
+En cas d’erreur, les modifications sont annulées 
+et l’erreur est enregistrée dans les logs.
+
+L’utilisation de clés étrangères permet également de gérer automatiquement certaines suppressions grâce aux mécanismes de cascade.
+
 \includepdf[pages={1},angle=90]{UE_L204_mini-Projet_DB.pdf}
 
-\section{Connexion à la base de données}
-
-Nous avons mis en place un système de connexion sécurisé permettant d’accéder à l’espace étudiant/enseignant.
-Pour l'instant, on peut s'y connecter et accéder à la page qui permettra aux utilisateurs selon leurs rôles
-d'effectuer diverses actions la recherche ou la modification dans la BDD. Cette page est en attente de développement :
-seul un bouton de déconnexion est présent, qui renvoie à une page \texttt{deconnexion.php} qui détruit la session
-et puis redirige vers \texttt{index.php}.
-
-\subsection{Mise en place de la page de connexion et de déconnexion}
-
-Création et mise en forme d'une page \texttt{index.php} contenant un formulaire de connexion (HTML/CSS) :
-\begin{itemize}
-  \item Saisie de l’identifiant et du mot de passe
-  \item Vérification du remplissage des champs
-  \item Affichage d’un message d’erreur si les données entrées sont incorrectes (voir photo)
-  \item Si connecté $\longrightarrow$ \texttt{accueil.php} avec bouton de déconnexion  $\longrightarrow$ \texttt{deconnexion.php} et redirection vers \texttt{index.php}
-\end{itemize}
-
-
-\begin{center}
-  \includegraphics[width=\linewidth]{index.png}
-\end{center}
-
-\subsection{Gestion sécurisée de la base de données}
-
-\begin{itemize}
-  \item Création d’une connexion PDO dans \texttt{functions.php} (voir Script PHP \no{\ref{php:pdo}})
-        qui permet de stocker les variables nécessaires permettant de se connecter à MySQL,
-        de gérer les erreurs et de récupérer les résultats dans un tableau associatif.
-
-  \begin{php}[title={Gestion de la connexion PDO},label=php:pdo]
-    function getPDO(): PDO {
-        $host = 'localhost';
-        $dbname = 'universite1';
-        $user = 'root';
-        $pass = '';
-
-        $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
-
-          return new PDO($dsn, $user, $pass, [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-          ]);
-      }
-  \end{php}
-
-  \item Utilisation de requêtes préparées pour éviter les injections SQL
-  \item Vérification des utilisateurs via la table utilisateur
-  \item Mise en place de sessions via des fonctions :
-        \begin{itemize}
-          \item \texttt{setConnecte()}  $\longrightarrow$ enregistre l’utilisateur connecté (voir Script PHP \no{\ref{php:set}});
-          \item \texttt{isConnecte()}  $\longrightarrow$ vérifie l’état de connexion (voir Script PHP \no{\ref{php:is}}).
-        \end{itemize}
-
-\begin{php}[title={Fonction \texttt{setConnecte()}},label=php:set]
-  function setConnecte(array $user): void {
-    startSession();
-  $_SESSION['user_id'] = (int) $user['id'];
-  $_SESSION['login']   = $user['login'];
-  $_SESSION['role']    = $user['role'];
-  }
-\end{php}
-
-\begin{php}[title={Fonction \texttt{isConnecte()}},label=php:is]
-  function isConnecte(): bool {
-  startSession();
-  return isset($_SESSION['user_id']);
-  }
-\end{php}
-
-\end{itemize}
-
-\subsection{Page d’accueil protégée}
-La page \texttt{pages/accueil.php} n’est accessible que si l’utilisateur est connecté, sinon redirection automatique
+\input{partCode}
 
 \clearpage
-\part{Bilan à mi-parcours}
-\section{Difficultés rencontrées / pas encore résolues}
+\part{Prolongements}
+
+Il existe bien évidemment une foules de possibilités à partir d'une base de données comme celle-ci.
+
+Dans l'immédiat, nous aurions voulu avoir le temps d'implémenter ces fonctionnalités :
 
 \begin{itemize}
-  \item Prise en main de la BDD avec PDO : configuration PDO différente selon Windows / Linux, activation des extensions PDO MySQL ou du serveur Apache.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
-
-  \item Problème : les mots de passe fournis dans la BDD ne correspondaient pas au hash réel de "\texttt{123456}". Nous avons fait des tests avec \texttt{password\_hash()} et \texttt{password\_verify()}
-        $\longrightarrow$ découverte que le hash était invalide $\longrightarrow$ remplacement des mots de passe hachés directement en BDD.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
-
-  \item Gestion des chemins relatifs entre les pages (\texttt{index.php}, \texttt{pages/accueil.php}, \texttt{pages/deconnexion.php}) : erreurs 404 ou redirections incorrectes à cause de chemins mal construits\\ \faCheckSquare[regular]\quad \textbf{Résolue}
-  \item Hashages réalisés par l'IA pour les utilisateurs fictifs se sont avérés faux. NOus avons dû les refaire à l'aide de commande PHP.\\ \faCheckSquare[regular]\quad \textbf{Résolue}
-  
-
-  \item Manque de temps personnel pour cette semaine pour la plupart d'entre nous à causes de raisons personnelles. À adapter en deuxième semaine.
+  \item Mécanisme de gestion de durée de connexion.
+  \item Vérification sur les champs des formulaires (à perfectionner).
+  \item Gestion des mots de passe provisoires (un attribut dans l'entité \texttt{utilisateur} a été prévu à cet égard).
+  \item Les demandes d'inscription (des élèves) et de création de cours (des enseignants) devraient rester en attente de validation de l'admin.
+  \item Gestion des notes.
+  \item Possibilité pour les utilisateurs de changer des données personnelles.
+  \item Système de contrôle des spécialités dans la création d'un cours (nécessiterait une table particulière et la table de liaison afférente).
+  \item Gestion de la responsabilité d'un cours (délégation de la validation de l'inscription d'un étudiant d'un cours à l'enseignant responsable -- flag prévu dans l'entité \texttt{cours}).
+  \item Possibilité de lister les enseignants animant un cours.
 \end{itemize}
 
+\clearpage
+\part{Annexe :\\ génération de la base de données}
 
-\section{Projections pour la 2\ieme{} semaine}
+La base utilisée par l'application porte le nom de \texttt{universite1}.
+Afin d'initialiser cette base de données pour cette application,
+de créer les entités nécessaires et de les alimenter de quelques entrées,
+il convient d'exécuter les scripts suivants (présents dans l'archive du projet) \textbf{en respectant l'ordre} !
 
-\subsection{Les tâches restantes}
+\begin{enumerate}
+  \item \bashcmd{universiteDB\_access.sql}
+  \item \bashcmd{universiteDB\_tables.sql}
+  \item \bashcmd{universiteDB\_populate.sql}
+\end{enumerate}
 
-Notre but en deuxième semaine sera de mettre en place les fonctionnalités liées aux étudiants et aux professeurs une fois connectés, et de perfectionner le système de gestion de connexion et des rôles :
+L'utilisateur administrateur de l'application est \texttt{admin}. 
+Il pourra lister les autres utilisateurs pour faire  éventuellement des tests avec différents rôles.
 
-\begin{itemize}
-  \item Finaliser le système de connexion : ajouter un bouton déconnexion sur chaque page et améliorer si besoin
-  \item Créer la page d’accueil (affiche différentes fonctionnalités selon le rôle de l'utilisateur connecté)
-  \item Créer une page listant des données depuis la BDD
-  \item Créer une page d’ajout (INSERT INTO) pour un nouveau cours par exemple
-  \item Vérification poussée des données utilisateurs
-  \item Gestion des rôles. Exemple : redirection automatique si un étudiant tente d’accéder à une page admin
-  \item Tester en continu
-  \item Rédiger le rapport final
-\end{itemize}
-
-\subsection{L'organisation du groupe}
-
-\begin{description}
-  \item[Sylvain] : Création du GitHub et de la base de données. Mise en forme du rapport final.
-  \item[Zoé] Réflexion sur le scénario du projet et des fonctionnalités.
-  \item[Jeanne] Création de la page de connexion et des fonctions utiles à la connexion/déconnexion
-  \item[Jade] Réflexion sur le projet et ses fonctionnalités
-\end{description}
-
-\subsection{Tâches communes}
-
-\begin{itemize}
-  \item Rédaction du rapport intermédaire
-  \item Mise en commun des idées
-  \item Communication continue
-\end{itemize}
+Tous les mots de passe sont \texttt{123456} par défaut, y compris lors de création de nouvel utilisateur dans la base.
 \end{document}
