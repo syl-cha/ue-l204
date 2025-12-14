@@ -650,13 +650,13 @@ h2+.table-container {
 **/
 
 /* Bouton PRÉREQUIS uniquement */
-.table-admin .actions a[href="liste_prerequis"] {
-    background-color: #92400e;
+.orange {
+    background-color: #d35f17;
     color: #fff;
 }
 
 /* Hover bouton Prérequis */
-.table-admin .actions a[href="liste_prerequis"]:hover {
+.orange:hover {
     background-color: #78350f;
 }
 
