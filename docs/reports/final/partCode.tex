@@ -29,7 +29,8 @@ et de préserver la maintenance.
         break;
 
       default:
-        # code...
+        // Rôle inconnu → on force la déconnexion
+        header('Location: deconnexion.php');
         break;
     } ?>
   </main>
